@@ -2,7 +2,7 @@
 // Anas Hodali Architecture — main.js
 // Handles: hero auto-cycling, header scroll state, mobile nav toggle,
 // scroll-reveal effects (project grid + generic section/content reveal),
-// and the randomized hover blob field on project cards.
+// the randomized hover blob field on project cards, and the map pins.
 // ==========================================================================
 
 (function () {
@@ -413,6 +413,279 @@
     });
   }
 
+  /* ---------------- Map pins ---------------- */
+  /* The map image is displayed with object-fit: cover, so its rendered box
+     is cropped differently at every viewport size. To keep each pin locked
+     to a real point on the map, we size the .map-pins layer to the actual
+     visible image rectangle (letterbox math below) and position pins as a
+     percentage inside that layer. Pin coordinates therefore stay valid on
+     any screen. Clicking a pin re-uses the project overlay by forwarding
+     the click to the matching .project-card[data-project]. Load the page
+     with #calibrate in the URL to click the map and read off coordinates. */
+  function initMapPins() {
+    var figure = document.querySelector(".map-figure");
+    var img = figure && figure.querySelector(".map-image");
+    var layer = document.getElementById("mapPins");
+    if (!figure || !img || !layer) return;
+
+    function sizeLayer() {
+      var nw = img.naturalWidth;
+      var nh = img.naturalHeight;
+      if (!nw || !nh) return;
+
+      var fw = figure.clientWidth;
+      var fh = figure.clientHeight;
+      // match whatever object-fit the image is actually using (cover on
+      // desktop, contain on phones) so the pin layer tracks the visible map
+      var contain = getComputedStyle(img).objectFit === "contain";
+      var scale = contain
+        ? Math.min(fw / nw, fh / nh)
+        : Math.max(fw / nw, fh / nh);
+      var dw = nw * scale;
+      var dh = nh * scale;
+
+      layer.style.width = dw + "px";
+      layer.style.height = dh + "px";
+      layer.style.left = (fw - dw) / 2 + "px";
+      layer.style.top = (fh - dh) / 2 + "px";
+    }
+
+    if (img.complete) sizeLayer();
+    img.addEventListener("load", sizeLayer);
+    window.addEventListener("resize", sizeLayer, { passive: true });
+
+    // keep the hover label from spilling off the map: pins near an edge
+    // anchor their label toward the middle instead of centering it.
+    layer.querySelectorAll(".map-pin").forEach(function (pin) {
+      var x = parseFloat(pin.style.getPropertyValue("--x")) || 50;
+      if (x > 68) pin.classList.add("map-pin--edge-right");
+      else if (x < 32) pin.classList.add("map-pin--edge-left");
+    });
+
+    // pin -> open project by forwarding to its card; also lift that card's
+    // photo into the hover label so it previews above the project name.
+    layer.querySelectorAll(".map-pin[data-project]").forEach(function (pin) {
+      var id = pin.getAttribute("data-project");
+      var card = document.querySelector('.project-card[data-project="' + id + '"]');
+
+      var cardImg = card && card.querySelector(".project-placeholder img");
+      var labelEl = pin.querySelector(".map-pin-label");
+      if (cardImg && labelEl && !labelEl.querySelector(".map-pin-thumb")) {
+        var thumb = document.createElement("img");
+        thumb.className = "map-pin-thumb";
+        thumb.src = cardImg.getAttribute("src");
+        thumb.alt = "";
+        labelEl.insertBefore(thumb, labelEl.firstChild);
+        pin.classList.add("map-pin--has-thumb");
+      }
+
+      pin.addEventListener("click", function () {
+        if (card) card.click();
+      });
+    });
+
+    // calibration helper: #calibrate in the URL turns the map into a
+    // coordinate picker — click anywhere on it to log a paste-ready line.
+    if (/calibrate/.test(window.location.hash)) {
+      var readout = document.createElement("div");
+      readout.className = "map-calibrate-readout";
+      readout.textContent = "calibrate: click the map";
+      document.body.appendChild(readout);
+
+      layer.style.pointerEvents = "auto";
+      layer.style.cursor = "crosshair";
+      layer.addEventListener("click", function (e) {
+        if (e.target.closest(".map-pin")) return;
+        var rect = layer.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+        var line = "--x:" + x.toFixed(1) + "%; --y:" + y.toFixed(1) + "%";
+        readout.textContent = line;
+        // eslint-disable-next-line no-console
+        console.log("[map pin] " + line);
+      });
+    }
+  }
+
+  /* ---------------- Map pan & zoom ---------------- */
+  /* Transforms one wrapper (#mapPan) that holds both the map image and the
+     pin layer, so they move together. State is kept in three CSS custom
+     properties on #mapPan (--map-zoom, --map-pan-x, --map-pan-y) and the
+     pins are counter-scaled via --pin-scale so they keep a constant size.
+     Interactions: drag to pan, +/- buttons, double-click, ⌘/Ctrl + wheel,
+     and two-finger pinch. Plain wheel is left alone so the page still
+     scrolls past the full-height map band. */
+  function initMapPanZoom() {
+    var figure = document.querySelector(".map-figure");
+    var pan = document.getElementById("mapPan");
+    var layer = document.getElementById("mapPins");
+    var zoomInBtn = document.getElementById("mapZoomIn");
+    var zoomOutBtn = document.getElementById("mapZoomOut");
+    if (!figure || !pan) return;
+
+    var MIN = 1;
+    var MAX = 4;
+    var zoom = 1;
+    var panX = 0;
+    var panY = 0;
+    var dragging = false;
+    var lastX = 0;
+    var lastY = 0;
+    var interactTimer;
+
+    function clamp(v, lo, hi) {
+      return Math.min(hi, Math.max(lo, v));
+    }
+
+    // keep the scaled content covering the band — no empty gutters
+    function clampPan() {
+      var w = figure.clientWidth;
+      var h = figure.clientHeight;
+      panX = clamp(panX, w - w * zoom, 0);
+      panY = clamp(panY, h - h * zoom, 0);
+    }
+
+    function apply() {
+      clampPan();
+      pan.style.setProperty("--map-zoom", zoom);
+      pan.style.setProperty("--map-pan-x", panX + "px");
+      pan.style.setProperty("--map-pan-y", panY + "px");
+      if (layer) layer.style.setProperty("--pin-scale", 1 / zoom);
+      figure.classList.toggle("is-zoomable", zoom > MIN + 0.001);
+      // once zoomed in, take over touch gestures for panning
+      figure.style.touchAction = zoom > MIN + 0.001 ? "none" : "";
+      if (zoomInBtn) zoomInBtn.disabled = zoom >= MAX - 0.001;
+      if (zoomOutBtn) zoomOutBtn.disabled = zoom <= MIN + 0.001;
+    }
+
+    // zoom so the map point under (px, py) — figure-local pixels — stays put
+    function zoomAt(px, py, nextZoom) {
+      nextZoom = clamp(nextZoom, MIN, MAX);
+      if (nextZoom === zoom) return;
+      var k = nextZoom / zoom;
+      panX = px - (px - panX) * k;
+      panY = py - (py - panY) * k;
+      zoom = nextZoom;
+      apply();
+    }
+
+    function zoomCentre(nextZoom) {
+      figure.classList.remove("is-interacting");
+      zoomAt(figure.clientWidth / 2, figure.clientHeight / 2, nextZoom);
+    }
+
+    function markInteracting() {
+      figure.classList.add("is-interacting");
+      clearTimeout(interactTimer);
+      interactTimer = setTimeout(function () {
+        if (!dragging) figure.classList.remove("is-interacting");
+      }, 200);
+    }
+
+    if (zoomInBtn)
+      zoomInBtn.addEventListener("click", function () {
+        zoomCentre(zoom * 1.6);
+      });
+    if (zoomOutBtn)
+      zoomOutBtn.addEventListener("click", function () {
+        zoomCentre(zoom / 1.6);
+      });
+
+    figure.addEventListener("dblclick", function (e) {
+      if (e.target.closest(".map-pin") || e.target.closest(".map-zoom-controls")) return;
+      var rect = figure.getBoundingClientRect();
+      figure.classList.remove("is-interacting");
+      zoomAt(e.clientX - rect.left, e.clientY - rect.top, zoom < MAX ? zoom * 1.8 : MIN);
+    });
+
+    figure.addEventListener(
+      "wheel",
+      function (e) {
+        if (!(e.ctrlKey || e.metaKey)) return; // plain scroll -> page scrolls
+        e.preventDefault();
+        var rect = figure.getBoundingClientRect();
+        markInteracting();
+        zoomAt(
+          e.clientX - rect.left,
+          e.clientY - rect.top,
+          zoom * Math.pow(0.9975, e.deltaY)
+        );
+      },
+      { passive: false }
+    );
+
+    // --- pointer drag to pan + two-finger pinch to zoom ---
+    var pts = new Map();
+    var pinchDist = 0;
+    var pinchZoom = 1;
+
+    figure.addEventListener("pointerdown", function (e) {
+      if (e.target.closest(".map-zoom-controls")) return;
+      pts.set(e.pointerId, e);
+
+      if (pts.size === 2) {
+        var p = Array.from(pts.values());
+        pinchDist = Math.hypot(p[0].clientX - p[1].clientX, p[0].clientY - p[1].clientY);
+        pinchZoom = zoom;
+        dragging = false;
+        figure.classList.remove("is-panning");
+        figure.classList.add("is-interacting");
+        return;
+      }
+
+      if (zoom <= MIN + 0.001 || e.target.closest(".map-pin")) return;
+      // stop the browser turning the press into a native image-drag / selection
+      e.preventDefault();
+      dragging = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      figure.classList.add("is-panning", "is-interacting");
+      figure.setPointerCapture(e.pointerId);
+    });
+
+    // belt-and-braces: kill any drag-image the browser still tries to start
+    figure.addEventListener("dragstart", function (e) {
+      e.preventDefault();
+    });
+
+    figure.addEventListener("pointermove", function (e) {
+      if (pts.has(e.pointerId)) pts.set(e.pointerId, e);
+
+      if (pts.size === 2 && pinchDist) {
+        var p = Array.from(pts.values());
+        var dist = Math.hypot(p[0].clientX - p[1].clientX, p[0].clientY - p[1].clientY);
+        var rect = figure.getBoundingClientRect();
+        var midX = (p[0].clientX + p[1].clientX) / 2 - rect.left;
+        var midY = (p[0].clientY + p[1].clientY) / 2 - rect.top;
+        zoomAt(midX, midY, pinchZoom * (dist / pinchDist));
+        return;
+      }
+
+      if (!dragging) return;
+      panX += e.clientX - lastX;
+      panY += e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      apply();
+    });
+
+    function endPointer(e) {
+      pts.delete(e.pointerId);
+      if (pts.size < 2) pinchDist = 0;
+      if (pts.size === 0) {
+        dragging = false;
+        figure.classList.remove("is-panning", "is-interacting");
+        if (figure.hasPointerCapture(e.pointerId)) figure.releasePointerCapture(e.pointerId);
+      }
+    }
+    figure.addEventListener("pointerup", endPointer);
+    figure.addEventListener("pointercancel", endPointer);
+
+    window.addEventListener("resize", apply, { passive: true });
+
+    apply();
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initHero();
     initHeaderScroll();
@@ -421,5 +694,7 @@
     initScrollReveal();
     initProjectBlobs();
     initProjectOverlay();
+    initMapPins();
+    initMapPanZoom();
   });
 })();

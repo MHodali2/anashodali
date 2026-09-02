@@ -767,6 +767,244 @@ ul { list-style: none; }
 }
 
 /* ==========================================================================
+   Map section — "Where We Are on the Map". The heading is held within the
+   normal container width; .map-figure breaks out of it to span the full
+   viewport width, left edge to right edge.
+========================================================================== */
+.map-section {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 40px 120px;
+  /* keep the heading clear of the fixed header when jumped to via #map */
+  scroll-margin-top: calc(var(--header-h) + 28px);
+}
+
+.map-figure {
+  position: relative;
+  /* break out of the centred, max-width container to hit both screen edges */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  /* same footprint as the hero at the top of the page */
+  height: 100vh;
+  min-height: 560px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  overflow: hidden;
+  /* single-finger drags scroll the page until the map is zoomed in
+     (initMapPanZoom flips this to `none` while --map-zoom > 1) */
+  touch-action: pan-y;
+  /* dragging to pan must never start a text selection or an image drag */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.map-figure img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Everything that pans/zooms together — the map image and the pin layer.
+   initMapPanZoom() drives --map-zoom / --map-pan-x / --map-pan-y. */
+.map-pan {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  transform: translate(var(--map-pan-x, 0px), var(--map-pan-y, 0px))
+             scale(var(--map-zoom, 1));
+  transition: transform 0.25s ease;
+  will-change: transform;
+}
+/* no easing while the user is actively dragging / wheeling / pinching */
+.map-figure.is-interacting .map-pan { transition: none; }
+.map-figure.is-zoomable { cursor: grab; }
+.map-figure.is-panning { cursor: grabbing; }
+
+.map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay layer — initMapPins() in main.js resizes this to match the
+   actually-displayed area of .map-image (accounting for object-fit: cover),
+   so each pin's --x / --y percentage maps to a fixed point on the map. */
+.map-pins {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.map-pin {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  /* anchor the pin's tip (bottom-centre) on the coordinate; --pin-scale
+     (set by initMapPanZoom = 1 / zoom) cancels the parent's scale so pins
+     stay the same on-screen size no matter how far the map is zoomed */
+  transform: translate(-50%, -100%) scale(var(--pin-scale, 1));
+  width: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.4));
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+}
+
+/* markers with no project view wired up — still hover for the label */
+.map-pin--static {
+  cursor: default;
+}
+
+.map-pin img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+
+.map-pin:hover,
+.map-pin:focus-visible {
+  transform: translate(-50%, -100%) scale(calc(var(--pin-scale, 1) * 1.18));
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+  outline: none;
+  z-index: 3;
+}
+
+.map-pin-label {
+  --label-x: -50%;
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translate(var(--label-x), 4px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--charcoal);
+  color: var(--white);
+  border-radius: 4px;
+  box-shadow: 0 12px 26px -10px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* edge pins slide their label toward the map centre so it doesn't clip */
+.map-pin--edge-right .map-pin-label { --label-x: -90%; }
+.map-pin--edge-left .map-pin-label { --label-x: -10%; }
+
+.map-pin-thumb {
+  display: block;
+  width: 100%;
+  height: 92px;
+  object-fit: cover;
+}
+
+.map-pin-name {
+  padding: 6px 10px;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.map-pin--has-thumb .map-pin-label {
+  width: 172px;
+}
+
+.map-pin:hover .map-pin-label,
+.map-pin:focus-visible .map-pin-label {
+  opacity: 1;
+  transform: translate(var(--label-x), 0);
+}
+
+/* readout shown only in ?#calibrate mode */
+.map-calibrate-readout {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 400;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  background: rgba(28, 26, 23, 0.9);
+  border: 1px solid var(--orange);
+  padding: 10px 14px;
+  border-radius: 4px;
+}
+
+/* zoom in / out buttons, pinned to the bottom-right of the map band */
+.map-zoom-controls {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-zoom-controls button {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--charcoal);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.5);
+  transition: background 0.15s ease;
+}
+
+.map-zoom-controls button:hover { background: #fff; }
+.map-zoom-controls button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+.map-zoom-controls button:disabled { opacity: 0.4; cursor: default; }
+
+@media (max-width: 640px) {
+  .map-section { padding: 0 20px 80px; }
+  .map-pin { width: 28px; }
+
+  /* On a phone the viewport is tall and narrow, so a 100vh band would
+     crop most of the (landscape) map away with no way to pan to it.
+     Instead give the band the map's own aspect ratio and `contain` it,
+     so the whole map is visible at zoom 1 and pinch / drag explore it. */
+  .map-figure {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 2748 / 1742;
+    /* drop the full-bleed breakout: sit inside the section gutter with a
+       soft, blurred orange glow so the map reads as part of the page
+       rather than a band slicing across it */
+    width: auto;
+    margin: 8px 0;
+    border: 1px solid rgba(217, 84, 30, 0.55); /* var(--orange) */
+    border-radius: 6px;
+    box-shadow:
+      0 0 0 1px rgba(217, 84, 30, 0.22),
+      0 0 16px rgba(217, 84, 30, 0.38),
+      0 0 40px rgba(217, 84, 30, 0.20);
+  }
+  .map-image { object-fit: contain; }
+
+  /* bigger hit targets for touch */
+  .map-zoom-controls button { width: 44px; height: 44px; }
+}
+
+/* ==========================================================================
    Contact section (in-page, sits between Projects and the footer)
 ========================================================================== */
 .contact-section {

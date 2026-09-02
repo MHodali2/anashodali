@@ -30,6 +30,7 @@
 
     <nav class="main-nav" id="mainNav">
       <a href="#projects" class="nav-link">Projects</a>
+      <a href="#map" class="nav-link">Map</a>
       <a href="#contact" class="nav-link">Contact</a>
     </nav>
 
@@ -302,6 +303,58 @@
       </div>
     </article>
 
+  </div>
+</section>
+
+<!-- =========================================================
+     MAP — full-bleed "where we are" band. The heading keeps the normal
+     container gutter; the image itself stretches from the left edge of
+     the viewport to the right.
+========================================================== -->
+<section class="map-section" id="map">
+  <div class="section-heading reveal">
+    <span class="eyebrow">Location</span>
+    <h2>Our Projects on the Map</h2>
+  </div>
+
+  <div class="map-figure">
+   <!-- .map-pan is the single element that initMapPanZoom() transforms, so the
+        map image and every pin zoom / pan together and stay aligned. -->
+   <div class="map-pan" id="mapPan">
+    <img class="map-image" src="assets/images/map ramallah no pins.png" alt="Map of Ramallah showing where the practice is located" draggable="false">
+
+    <!-- Pin overlay. JS (initMapPins) sizes .map-pins to the actual
+         displayed image area so the per-pin --x / --y percentages stay
+         locked to the map itself regardless of viewport size / cover crop.
+         --x / --y are percentages measured from the top-left of the map
+         image. Add ?#calibrate to the URL and click the map to read off
+         coordinates for new pins. Each pin opens its project via the
+         matching .project-card[data-project]. -->
+    <div class="map-pins" id="mapPins">
+      <button class="map-pin" type="button" data-project="omary"       style="--x:80.3%; --y:41.3%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Omary</span></span></button>
+      <button class="map-pin" type="button" data-project="sakhr"       style="--x:91.6%; --y:45.7%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Sakhr</span></span></button>
+      <button class="map-pin" type="button" data-project="band"        style="--x:91.1%; --y:47.4%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Band</span></span></button>
+      <button class="map-pin" type="button" data-project="abdallah"    style="--x:94.0%; --y:42.7%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Abdallah Eweis</span></span></button>
+      <button class="map-pin" type="button" data-project="bireh-plaza" style="--x:80.1%; --y:62.8%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Bireh Plaza</span></span></button>
+      <button class="map-pin" type="button" data-project="jaradat"     style="--x:38.8%; --y:18.9%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Iyyad Jaradat</span></span></button>
+
+      <!-- markers only — hover shows the title, no project view wired up yet -->
+      <span class="map-pin map-pin--static" style="--x:92.7%; --y:20.4%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Al-Nada Building</span></span></span>
+      <span class="map-pin map-pin--static" style="--x:87.5%; --y:41.9%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Brazil Tower</span></span></span>
+      <span class="map-pin map-pin--static" style="--x:86.1%; --y:41.0%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Arz 2</span></span></span>
+      <span class="map-pin map-pin--static" style="--x:76.5%; --y:6.0%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Al-Bazzar</span></span></span>
+      <span class="map-pin map-pin--static" style="--x:66.7%; --y:15.1%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Talet Bahar</span></span></span>
+      <span class="map-pin map-pin--static" style="--x:48.2%; --y:24.2%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Al-Nile Building</span></span></span>
+      <span class="map-pin map-pin--static" style="--x:36.2%; --y:70.9%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Omar Thalji</span></span></span>
+      <span class="map-pin map-pin--static" style="--x:88.8%; --y:80.3%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Imad Mushusher</span></span></span>
+    </div>
+   </div>
+
+   <!-- zoom buttons; drag to pan, ⌘/Ctrl + scroll or pinch also zoom -->
+   <div class="map-zoom-controls">
+     <button type="button" id="mapZoomIn" aria-label="Zoom in">+</button>
+     <button type="button" id="mapZoomOut" aria-label="Zoom out" disabled>&minus;</button>
+   </div>
   </div>
 </section>
 
