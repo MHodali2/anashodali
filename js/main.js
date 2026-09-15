@@ -180,6 +180,34 @@
     targets.forEach(function (t) { observer.observe(t); });
   }
 
+  /* ---------------- All-projects year nav (scroll-spy) ---------------- */
+  function initYearNav() {
+    var nav = document.getElementById("yearNav");
+    var groups = document.querySelectorAll(".year-group[id]");
+    if (!nav || !groups.length) return;
+
+    var items = nav.querySelectorAll(".year-nav-item");
+
+    function setActive(id) {
+      var year = id.replace("year-", "");
+      items.forEach(function (item) {
+        item.classList.toggle("is-active", item.getAttribute("data-year") === year);
+      });
+    }
+
+    setActive(groups[0].id);
+
+    if (!("IntersectionObserver" in window)) return;
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+
+    groups.forEach(function (group) { observer.observe(group); });
+  }
+
   /* ---------------- Project card hover blobs ---------------- */
   /* Builds a .project-blob-field inside each card's .project-body, seeded
      once at load with a random count/color/size/position/speed/path per
@@ -699,6 +727,7 @@
     initNavToggle();
     initProjectReveal();
     initScrollReveal();
+    initYearNav();
     initProjectBlobs();
     initProjectOverlay();
     initMapPins();
