@@ -335,8 +335,15 @@
 
       html += '<div class="ov-gallery-heading"><span class="eyebrow">Gallery</span></div>';
       html += '<div class="ov-gallery">';
+      // Projects with at least one real gallery photo skip any unfilled
+      // slots instead of padding them out with a placeholder tile — mixing
+      // real photos and placeholders in the same grid reads as broken.
+      // Projects with zero real photos still show the full placeholder set
+      // as an intentional "gallery coming soon" signal.
+      var hasGalleryPhotos = !!(project.galleryImages && project.galleryImages.length);
       GALLERY_TILE_CLASSES.forEach(function (cls, i) {
         var img = project.galleryImages && project.galleryImages[i];
+        if (!img && hasGalleryPhotos) return;
         html += ovGalleryFigure(project, cls, img, tones[2 + i]);
       });
       html += '</div>';

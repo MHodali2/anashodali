@@ -593,6 +593,35 @@ a.hero-media {
   transform: scale(1.045);
 }
 
+/* ---------- All Projects page — year-grouped grid ---------- */
+.all-projects {
+  padding-top: calc(var(--header-h) + 64px);
+}
+
+.year-group + .year-group {
+  margin-top: 96px;
+}
+
+.year-heading {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.year-heading .year-number {
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--charcoal);
+}
+
+.year-heading .year-line {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
 /* .project-body holds the flowing blob field (.project-blob-field,
    injected by initProjectBlobs() in main.js) behind the actual text,
    which lives in .project-content so it always paints on top —
@@ -1447,7 +1476,9 @@ body.overlay-locked { overflow: hidden; }
   .hero-controls { padding: 0 20px; bottom: 30px; }
   .hero-progress { max-width: 100%; }
   .projects { padding: 90px 20px 80px; }
+  .all-projects { padding: calc(var(--header-h) + 40px) 20px 80px; }
   .project-grid { grid-template-columns: 1fr; }
+  .year-group + .year-group { margin-top: 64px; }
   .footer-top { grid-template-columns: 1fr; padding: 36px 20px 24px; }
   .footer-bottom { padding: 14px 20px; }
 
