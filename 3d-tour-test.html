@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bireh Plaza — Walkthrough</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Scroll-driven 3D walkthrough of Bireh Plaza — a working prototype.">
+
+<!-- Standalone proof-of-concept. Not linked from the main site.
+     Vanilla Three.js via ES-module CDN import; GSAP ScrollTrigger + Lenis as
+     classic-script globals. No bundler.
+
+     PHASE 2  load + light the optimised GLB (Phase 1).
+     PHASE 3  CatmullRomCurve3 camera path (plaza-camera-path.json).
+     PHASE 4  scroll -> progress along the path; a clipping plane sections the
+              roof/tower away for the interior, rebuilds for the "look back".
+     PHASE 5  a real scrolling page around it — chapters of text locked to the
+              camera, a loading screen, a progress rail, and a
+              performance pass (quality tiers + adaptive downgrade).
+              KTX2/Basis: N/A — the source model has no textures.
+
+     Serve over http(s):  python3 -m http.server 8777 --bind 127.0.0.1
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Cairo:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink:        #F1E7D3;   /* cream, used as the text colour over the 3D */
+    --ink-dim:    rgba(241, 231, 211, 0.60);
+    --ink-faint:  rgba(241, 231, 211, 0.34);
+    --panel:      rgba(18, 17, 13, 0.62);
+    --panel-solid:#171512;
+    --line:       rgba(241, 231, 211, 0.18);
+    --orange:     #D9541E;
+    --bg:         #100F0C;
+    --font:       'DM Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
+    --font-ar:    'Cairo', 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { height: 100%; -webkit-text-size-adjust: 100%; }
+  body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    font-weight: 300;
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- pinned WebGL stage ---------- */
+  #stage { position: fixed; inset: 0; z-index: 1; }
+  #stage canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
+  /* a permanent soft vignette + bottom gradient so text always has ground */
+  #veil {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background:
+      radial-gradient(120% 90% at 50% 8%, transparent 40%, rgba(16,15,12,0.30) 100%),
+      linear-gradient(to bottom, rgba(16,15,12,0.34) 0%, transparent 22%, transparent 55%, rgba(16,15,12,0.72) 100%);
+  }
+
+  /* ---------- back-to-site button ---------- */
+  #backHome {
+    position: fixed; top: 20px; left: 22px; z-index: 7;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+    padding: 9px 15px; border-radius: 3px; backdrop-filter: blur(6px);
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  #backHome:hover, #backHome:focus-visible { border-color: var(--orange); color: var(--orange); }
+  #backHome .arrow { transition: transform .2s ease; }
+  #backHome:hover .arrow, #backHome:focus-visible .arrow { transform: translateX(-3px); }
+
+  /* ---------- wordmark + tour label ---------- */
+  #wordmark {
+    position: fixed; top: 64px; left: 23px; z-index: 6;
+    font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  #wordmark b { color: var(--ink); font-weight: 500; }
+  #wordmark .sep { color: var(--ink-faint); margin: 0 .5em; }
+
+  /* ---------- progress rail ---------- */
+  #rail {
+    position: fixed; top: 0; right: 0; bottom: 0; width: 46px; z-index: 6;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 84px 0 96px; pointer-events: none;
+  }
+  #rail .track { position: relative; flex: 1; width: 1px; background: var(--line); }
+  #rail .fill { position: absolute; top: 0; left: 0; width: 100%; background: var(--orange); height: 0%; }
+  #rail .chap {
+    position: absolute; right: 10px; transform: translateY(-50%);
+    font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-faint); white-space: nowrap;
+    writing-mode: vertical-rl;
+  }
+  #rail .chap.on { color: var(--ink); }
+
+  /* ---------- loading screen ---------- */
+  #loader {
+    position: fixed; inset: 0; z-index: 30; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 22px; transition: opacity .7s ease;
+  }
+  #loader.done { opacity: 0; pointer-events: none; }
+  #loader .mark { font-size: 10px; letter-spacing: .34em; text-transform: uppercase; color: var(--ink-faint); }
+  #loader .proj { text-align: center; }
+  #loader .proj .en { font-size: clamp(22px, 4vw, 34px); letter-spacing: .04em; font-weight: 400; }
+  #loader .proj .ar { font-family: var(--font-ar); font-size: 18px; color: var(--ink-dim); margin-top: 4px; }
+  #loader .barwrap { width: min(300px, 62vw); }
+  #loader .bar { height: 1px; background: var(--line); overflow: hidden; }
+  #loader .bar > i { display: block; height: 100%; width: 0%; background: var(--orange); transition: width .25s ease; }
+  #loader .meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: var(--ink-faint); letter-spacing: .08em; }
+  #loader.error .mark { color: var(--orange); }
+  #loader.error .meta { color: var(--ink); }
+
+  /* ---------- the scrolling story ---------- */
+  #story { position: relative; z-index: 4; }
+  .step { min-height: 118vh; display: flex; }
+  .step .panel {
+    align-self: flex-end;
+    max-width: 460px;
+    margin: 0 0 15vh 6vw;
+    opacity: 0; transform: translateY(24px);
+    will-change: opacity, transform;
+  }
+  .step .eyebrow {
+    font-size: 10px; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 14px;
+  }
+  .step h2 {
+    font-size: clamp(19px, 2.5vw, 26px); font-weight: 400; line-height: 1.3;
+    letter-spacing: .01em; margin-bottom: 14px;
+    text-shadow: 0 1px 30px rgba(16,15,12,0.6);
+  }
+  .step p {
+    font-size: 13.5px; color: var(--ink-dim); margin-bottom: 10px;
+    text-shadow: 0 1px 20px rgba(16,15,12,0.7);
+  }
+  .step .panel-bg {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0;
+    background: linear-gradient(105deg, rgba(16,15,12,0.66) 0%, rgba(16,15,12,0.28) 42%, transparent 70%);
+    transition: opacity .5s ease;
+  }
+
+  /* hero + outro: centred chapter cards */
+  .step.hero, .step.outro { align-items: center; justify-content: center; text-align: center; }
+  .step.hero .panel, .step.outro .panel {
+    align-self: center; margin: 0; max-width: 640px; padding: 0 24px;
+    opacity: 1; transform: none;
+  }
+  .step.hero .kicker { font-size: 10px; letter-spacing: .28em; text-transform: uppercase; color: var(--orange); }
+  .step.hero .title {
+    font-size: clamp(34px, 8vw, 76px); font-weight: 400; letter-spacing: .02em;
+    line-height: 1.02; margin: 18px 0 6px;
+  }
+  .step.hero .title-ar { font-family: var(--font-ar); font-size: clamp(18px, 3.4vw, 30px); color: var(--ink-dim); }
+  .step.hero .loc { margin-top: 16px; font-size: 12px; color: var(--ink-dim); letter-spacing: .06em; }
+  .step.hero .cue { margin-top: 40px; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-faint); }
+  .step.hero .cue span { display: block; margin-top: 8px; animation: bob 1.7s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(5px) } }
+
+  .step.outro { min-height: 128vh; }
+  .step.outro .panel { background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(10px); padding: 46px 40px; }
+  .step.outro h2 { font-size: clamp(20px, 3vw, 30px); margin-bottom: 16px; }
+  .step.outro .facts { list-style: none; margin: 22px 0 26px; border-top: 1px solid var(--line); }
+  .step.outro .facts li {
+    display: flex; justify-content: space-between; gap: 20px;
+    padding: 9px 0; border-bottom: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .step.outro .facts .k { color: var(--ink-faint); letter-spacing: .1em; text-transform: uppercase; font-size: 10px; }
+  .step.outro .back {
+    display: inline-block; margin-top: 4px; font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+    border: 1px solid var(--line); padding: 10px 18px; transition: border-color .2s, color .2s;
+  }
+  .step.outro .back:hover { border-color: var(--orange); color: var(--orange); }
+  .step.outro .disclaimer { margin-top: 26px; font-size: 10.5px; color: var(--ink-faint); line-height: 1.6; }
+
+  /* ---------- dev bar (Phase 2-4 tools, collapsed by default) ---------- */
+  #dev {
+    position: fixed; right: 12px; bottom: 12px; z-index: 20;
+    font-size: 11px; color: var(--ink-dim);
+  }
+  #dev .toggle {
+    font: inherit; color: var(--ink-faint); background: var(--panel); border: 1px solid var(--line);
+    border-radius: 3px; padding: 4px 9px; cursor: pointer; letter-spacing: .12em;
+  }
+  #dev .toggle:hover { color: var(--ink); }
+  #dev .tools {
+    display: none; align-items: center; gap: 10px;
+    margin-top: 8px; padding: 9px 11px;
+    background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(8px);
+    border-radius: 3px;
+  }
+  #dev.open .tools { display: flex; }
+  #dev.open .toggle { color: var(--orange); border-color: var(--orange); }
+  #dev button {
+    font: inherit; font-size: 10px; color: var(--ink); background: transparent;
+    border: 1px solid var(--line); border-radius: 3px; padding: 3px 8px; cursor: pointer;
+  }
+  #dev button.on { border-color: var(--orange); color: var(--orange); }
+  #dev input[type=range] { width: 150px; accent-color: var(--orange); }
+  #dev input[type=number] { width: 42px; font: inherit; font-size: 10px; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 3px; padding: 2px 3px; }
+  #dev .read { color: var(--ink-faint); white-space: nowrap; min-width: 26ch; }
+  #dev .read b { color: var(--ink); font-weight: 500; }
+
+  #stats {
+    position: fixed; left: 12px; bottom: 12px; z-index: 20; display: none;
+    font-size: 10px; color: var(--ink-dim); background: var(--panel);
+    border: 1px solid var(--line); padding: 6px 9px; letter-spacing: .06em;
+  }
+  #stats.show { display: block; }
+
+  #hud-info { position: fixed; left: 12px; bottom: 44px; z-index: 19; display: none;
+    background: var(--panel); border: 1px solid var(--line); padding: 8px 10px;
+    font-size: 10px; color: var(--ink-faint); }
+  #hud-info.show { display: block; }
+  #hud-info b { color: var(--ink); }
+
+  #downgrade {
+    position: fixed; left: 50%; top: 22px; transform: translateX(-50%); z-index: 22;
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-dim); background: var(--panel); border: 1px solid var(--line);
+    padding: 6px 12px; opacity: 0; transition: opacity .4s ease; pointer-events: none;
+  }
+  #downgrade.show { opacity: 1; }
+
+  @media (max-width: 720px) {
+    #rail { display: none; }
+    .step .panel { margin: 0 5vw 12vh; max-width: none; }
+    .step.hero .panel, .step.outro .panel { padding: 0 6vw; }
+    .step.outro .panel { padding: 34px 26px; }
+    #backHome { top: 14px; left: 14px; padding: 8px 12px; font-size: 10px; }
+    #wordmark { font-size: 10px; top: 54px; left: 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .step .panel { transition: none; }
+    .step.hero .cue span { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage"></div>
+<div id="veil"></div>
+
+<a id="backHome" href="index.html"><span class="arrow">&#8592;</span> Back to site</a>
+
+<div id="wordmark">
+  <b>Anas Hodali</b> Architecture
+  <span class="sep">/</span> Bireh Plaza — walkthrough <span class="sep">/</span> <span style="color:var(--ink-faint)">prototype</span>
+</div>
+
+<div id="rail">
+  <div class="track"><div class="fill" id="rail-fill"></div></div>
+</div>
+
+<div id="loader">
+  <div class="mark">Anas Hodali Architecture</div>
+  <div class="proj">
+    <div class="en">Bireh Plaza</div>
+    <div class="ar" lang="ar" dir="rtl">ساحة البلد</div>
+  </div>
+  <div class="barwrap">
+    <div class="bar"><i></i></div>
+    <div class="meta"><span id="l-status">preparing model</span><span id="l-pct">0%</span></div>
+  </div>
+</div>
+
+<div id="downgrade">reduced quality for a smoother framerate</div>
+
+<main id="story">
+  <section class="step hero" data-at="0.00">
+    <div class="panel">
+      <div class="kicker">Case Study — 07 / Cultural — Commercial</div>
+      <div class="title">Bireh Plaza</div>
+      <div class="title-ar" lang="ar" dir="rtl">ساحة البلد</div>
+      <div class="loc">City Center, Al-Bireh, Palestine</div>
+      <div class="cue">Scroll to walk through<span>&#8595;</span></div>
+    </div>
+  </section>
+
+  <section class="step" data-at="0.16">
+    <div class="panel">
+      <div class="eyebrow">01 — Arrival</div>
+      <h2>A deep city-center block, opened up</h2>
+      <p>Bireh Plaza reworks a dense block in the middle of Al-Bireh into ground-floor retail with a public plaza cut straight through it — turning a single deep footprint into a shortcut people actually want to take.</p>
+      <p>The walkthrough comes in from the south, where the tower and the podium first read as one mass.</p>
+    </div>
+  </section>
+
+  <section class="step" data-at="0.32">
+    <div class="panel">
+      <div class="eyebrow">02 — The cut</div>
+      <h2>“A plaza only works if it's also the fastest way to get somewhere.”</h2>
+      <p>Shops line the new plaza at eye level; offices and a small event hall sit above. The plaza itself is treated as the project's real civic contribution — deliberately more generous than the retail alone requires.</p>
+    </div>
+  </section>
+
+  <section class="step" data-at="0.55">
+    <div class="panel">
+      <div class="eyebrow">03 — The west entrance</div>
+      <h2>Crossing the threshold</h2>
+      <p>The route picks the revolving door on the western face as its way in — the one unambiguous civic threshold on the model — and drops to eye level to pass through it.</p>
+      <p>As the camera crosses, the roof and tower section away overhead so the ground floor stays readable.</p>
+    </div>
+  </section>
+
+  <section class="step" data-at="0.72">
+    <div class="panel">
+      <div class="eyebrow">04 — Under the canopy</div>
+      <h2>The covered arcade</h2>
+      <p>Inside, the path follows the colonnade that runs off the entrance: a rhythm of columns and soffit beams, the shopfronts to one side, the plaza opening out to the other.</p>
+      <p>A steel canopy shades the plaza without enclosing it; the flanking buildings are finished in a warm limestone that ties the project to the older city-center facades around it.</p>
+    </div>
+  </section>
+
+  <section class="step" data-at="0.90">
+    <div class="panel">
+      <div class="eyebrow">05 — Looking back</div>
+      <h2>Retail below, offices above, a route through the middle</h2>
+      <p>The camera lifts back out at the far end and turns to take in the whole block — the piece the plaza was carved out of.</p>
+    </div>
+  </section>
+
+  <section class="step outro" data-at="1.00">
+    <div class="panel">
+      <h2>Bireh Plaza</h2>
+      <ul class="facts">
+        <li><span class="k">Location</span><span class="v">City Center, Al-Bireh, Palestine</span></li>
+        <li><span class="k">Program</span><span class="v">Cultural — Commercial</span></li>
+        <li><span class="k">Status</span><span class="v">In Design Development</span></li>
+        <li><span class="k">Year</span><span class="v">2025 –</span></li>
+        <li><span class="k">Practice</span><span class="v">Anas Hodali Architecture</span></li>
+      </ul>
+      <a class="back" href="index.html">&#8592; Back to all projects</a>
+      <p class="disclaimer">Working prototype. The model is a straight import from a detailed CAD file with automated cleanup only, the camera path and copy are drafts, and the roof "section" is a viewer effect — not a design proposal.</p>
+    </div>
+  </section>
+</main>
+
+<div id="hud-info"><b>cam</b> <span id="v-cam">–</span> &nbsp; <b>meta</b> <span id="v-cam-m">–</span></div>
+<div id="stats">–</div>
+
+<div id="dev">
+  <button class="toggle" id="dev-toggle">dev</button>
+  <div class="tools">
+    <button id="m-scroll" class="on" title="S">Scroll</button>
+    <button id="m-manual" title="M">Manual</button>
+    <button id="m-free" title="F">Free</button>
+    <button id="p-play" title="Space">▶</button>
+    <input id="p-scrub" type="range" min="0" max="1" step="0.0005" value="0">
+    <span class="read" id="p-read"><b>u</b> 0.000 &nbsp; –</span>
+    <label>play <input id="p-dur" type="number" min="2" max="90" step="1" value="18">s</label>
+    <button id="p-copy">Copy path</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls }   from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader }      from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader }     from 'three/addons/loaders/DRACOLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+/* =========================================================================
+   CONFIG
+   ========================================================================= */
+const MODEL_URL     = 'assets/models/plaza-full.glb';
+const META_URL      = 'assets/models/plaza-meta.json';
+const PATH_JSON_URL = 'assets/models/plaza-camera-path.json';
+const DRACO_CDN     = 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/';
+
+const GLASS_NAMES = new Set(['glass', 'Rail glass', 'aq gl', '\\screen',
+                             'Revolving_door_Glass Plate-Glass']);
+
+const REVEAL_CEIL_ABOVE_M = 7;
+const REVEAL_SWEEP_M      = 74;
+function roofVis(u) {
+  if (u <= 0.40) return 1;
+  if (u <  0.58) return 1 - (u - 0.40) / 0.18;
+  if (u <  0.86) return 0;
+  if (u <  1.00) return (u - 0.86) / 0.14;
+  return 1;
+}
+
+const DEFAULT_WAYPOINTS = [
+  { pos: [ 200,  68, -155],   look: [ 22, 40, -18] },
+  { pos: [  70,  54, -195],   look: [ 16, 36, -22] },
+  { pos: [ -95,  40, -150],   look: [  8, 28, -30] },
+  { pos: [-140,  26,  -85],   look: [  5, 19, -37] },
+  { pos: [ -95,  18,  -40],   look: [ 3.5, 13.0, -38.4] },
+  { pos: [ -42, 15.5, -38.4], look: [  4, 12.5, -38.6] },
+  { pos: [ -13, 13.2, -38.6], look: [  6, 12.0, -38.7] },
+  { pos: [ 3.5, 12.0, -38.8], look: [ 16, 11.7, -38.7] },
+  { pos: [  13, 11.9, -38.5], look: [ 28, 11.6, -38.0] },
+  { pos: [  28, 12.0, -37.8], look: [ 44, 11.7, -37.2] },
+  { pos: [  44, 12.1, -36.8], look: [ 56, 11.9, -36.2] },
+  { pos: [  54, 12.3, -36.6], look: [ 60, 12.1, -31.0] },
+  { pos: [  82, 34,   -14 ],  look: [ 20, 28, -22] },
+];
+const DEFAULT_PACING = [[0, 0], [1, 1]];
+const CURVE_TYPE = 'centripetal';
+
+/* ---- quality tier -------------------------------------------------------- */
+const qs = new URLSearchParams(location.search);
+const forcedQ = qs.get('q');                       // ?q=lo | ?q=hi
+const coarseSmall = matchMedia('(pointer: coarse)').matches && matchMedia('(max-width: 900px)').matches;
+const weak = (navigator.hardwareConcurrency || 8) <= 4 ||
+             (navigator.deviceMemory || 8) <= 4 || coarseSmall;
+let TIER = forcedQ === 'lo' ? 'low' : forcedQ === 'hi' ? 'high' : (weak ? 'low' : 'high');
+const Q = {
+  get dpr()      { return TIER === 'low' ? 1 : Math.min(devicePixelRatio, 2); },
+  get shadows()  { return TIER === 'high'; },
+  get shadowMap(){ return TIER === 'high' ? 2048 : 1024; },
+  get aa()       { return TIER === 'high'; },
+  get logDepth() { return TIER === 'high'; },
+};
+console.info(`[perf] tier=${TIER}  cores=${navigator.hardwareConcurrency}  mem=${navigator.deviceMemory}  coarseSmall=${coarseSmall}`);
+
+/* =========================================================================
+   RENDERER / SCENE / CAMERA
+   ========================================================================= */
+const stage = document.getElementById('stage');
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: Q.aa,
+  powerPreference: 'high-performance',
+  logarithmicDepthBuffer: Q.logDepth,
+});
+renderer.setPixelRatio(Q.dpr);
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = Q.shadows;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.autoUpdate = false;            // static scene: refreshed only on clip change
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const SKY = 0x2a2c30;
+scene.background = new THREE.Color(SKY);
+
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 20000);
+camera.position.set(120, 90, 140);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.screenSpacePanning = false;
+controls.maxPolarAngle = Math.PI * 0.495;
+controls.minDistance = 2;
+controls.maxDistance = 1200;
+controls.enabled = false;
+
+/* =========================================================================
+   LIGHTING
+   ========================================================================= */
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const hemi = new THREE.HemisphereLight(0xdfe6f0, 0x2b2620, Q.shadows ? 0.35 : 0.6);
+scene.add(hemi);
+
+const sun = new THREE.DirectionalLight(0xffffff, 2.6);
+sun.position.set(-120, 180, 90);
+sun.castShadow = Q.shadows;
+sun.shadow.mapSize.set(Q.shadowMap, Q.shadowMap);
+sun.shadow.bias = -0.0005;
+scene.add(sun);
+scene.add(sun.target);
+
+/* =========================================================================
+   DEBUG HELPERS
+   ========================================================================= */
+const grid = new THREE.GridHelper(400, 40, 0x555148, 0x36332c); grid.visible = false; scene.add(grid);
+const axes = new THREE.AxesHelper(20); axes.visible = false; scene.add(axes);
+let entryMarker = null, pathGroup = null;
+
+/* =========================================================================
+   LOAD
+   ========================================================================= */
+const loaderEl = document.getElementById('loader');
+const lBar = loaderEl.querySelector('.bar > i');
+const lPct = document.getElementById('l-pct');
+const lStatus = document.getElementById('l-status');
+
+function setProgress(frac, bytes) {
+  const p = Math.round(THREE.MathUtils.clamp(frac, 0, 1) * 100);
+  lBar.style.width = p + '%';
+  lPct.textContent = p + '%';
+  if (bytes) lStatus.textContent = `model · ${(bytes / 1e6).toFixed(1)} MB`;
+}
+function fail(msg) {
+  loaderEl.classList.add('error');
+  loaderEl.querySelector('.mark').textContent = 'Could not load the model';
+  lStatus.textContent = msg; lPct.textContent = '';
+  console.error(msg);
+}
+
+const manager = new THREE.LoadingManager();
+const draco = new DRACOLoader().setDecoderPath(DRACO_CDN);
+const gltfLoader = new GLTFLoader(manager).setDRACOLoader(draco);
+
+let META = null, PATH_OVERRIDE = null, model = null;
+let modelOffset = new THREE.Vector3();
+
+Promise.allSettled([
+  fetch(META_URL).then(r => r.ok ? r.json() : null),
+  fetch(PATH_JSON_URL).then(r => r.ok ? r.json() : null),
+]).then(([m, p]) => {
+  META = m.value || null;
+  PATH_OVERRIDE = (p.value && Array.isArray(p.value.waypoints) && p.value.waypoints.length > 1) ? p.value : null;
+}).finally(loadModel);
+
+function loadModel() {
+  lStatus.textContent = 'downloading model';
+  gltfLoader.load(MODEL_URL, (gltf) => {
+    model = gltf.scene;
+    const box = new THREE.Box3().setFromObject(model);
+    const size = box.getSize(new THREE.Vector3());
+    const ctr  = box.getCenter(new THREE.Vector3());
+    model.position.set(-ctr.x, -box.min.y, -ctr.z);
+    modelOffset.copy(model.position);
+    scene.add(model);
+
+    tuneMaterials(model);
+    enableShadows(model, size);
+    buildReveal(model);
+    frameEverything(size);
+    buildEntryMarker();
+    buildPath();
+    setupScroll();
+    buildStory();
+
+    document.getElementById('v-cam-m').dataset.stats =
+      `${countTris(model).toLocaleString()} tris · ${size.x.toFixed(0)}×${size.y.toFixed(0)}×${size.z.toFixed(0)} m`;
+
+    setMode('scroll');
+    applyPath(0); updateReveal(0); updateStory(0);
+    renderer.shadowMap.needsUpdate = true;
+    loaderEl.classList.add('done');
+
+    window.__tour = { THREE, scene, camera, controls, renderer, model, meta: META,
+                      toScene, toMeta, applyPath, setMode, tier: () => TIER,
+                      lenis: () => lenis, clip: () => clipPlane };
+  },
+  (ev) => { if (ev.lengthComputable) setProgress(ev.loaded / ev.total, ev.total); },
+  (err) => fail(String(err && err.message || err)));
+}
+
+function toScene(v) {
+  const a = Array.isArray(v) ? v : [v.x, v.y, v.z];
+  return new THREE.Vector3(a[0], a[1], a[2]).add(modelOffset);
+}
+function toMeta(v) { return v.clone().sub(modelOffset); }
+
+/* =========================================================================
+   POST-LOAD PASSES
+   ========================================================================= */
+function tuneMaterials(root) {
+  const glass = new Set(GLASS_NAMES);
+  if (META && Array.isArray(META.glass_materials)) META.glass_materials.forEach(n => glass.add(n));
+  root.traverse((o) => {
+    if (!o.isMesh || !o.material) return;
+    (Array.isArray(o.material) ? o.material : [o.material]).forEach((mat) => {
+      mat.envMapIntensity = 1.0;
+      const name = mat.name || '';
+      if (glass.has(name)) {
+        mat.transparent = true;
+        mat.opacity = name.toLowerCase().includes('rail') ? 0.34 : 0.26;
+        mat.roughness = 0.06; mat.metalness = 0.0;
+        mat.depthWrite = false; mat.envMapIntensity = 1.6;
+        mat.side = THREE.DoubleSide;
+      } else if (name === 'water') {
+        mat.color.setHex(0x2e5a74);
+        mat.transparent = true; mat.opacity = 0.6;
+        mat.roughness = 0.08; mat.metalness = 0.0; mat.envMapIntensity = 1.4;
+      } else if (name === 'parquewt') {
+        mat.color.setHex(0x8a5a2b); mat.roughness = 0.72; mat.metalness = 0.0;
+      } else if (name === 'Metal' || name === 'SS') {
+        mat.metalness = 0.65; mat.roughness = name === 'SS' ? 0.35 : 0.5;
+      } else if (mat.roughness !== undefined && mat.roughness < 0.25) {
+        mat.roughness = 0.7;
+      }
+    });
+  });
+}
+
+function enableShadows(root, size) {
+  if (Q.shadows) root.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  const r = Math.max(size.x, size.z) * 0.62;
+  const c = sun.shadow.camera;
+  c.left = -r; c.right = r; c.top = r; c.bottom = -r;
+  c.near = 1; c.far = Math.max(size.y * 3, 600);
+  c.updateProjectionMatrix();
+  sun.position.set(-r * 0.7, Math.max(size.y * 1.6, 180), r * 0.5);
+  sun.target.position.set(0, size.y * 0.25, 0);
+}
+
+/* ---- roof section: a downward clipping plane --------------------------- */
+let clipPlane = null, ceilYScene = 0, roofFadeEnabled = true, lastRoofV = -1;
+
+function buildReveal(root) {
+  const groundY = ((META && META.ground_floor_y) || 9.4) + modelOffset.y;
+  ceilYScene = groundY + REVEAL_CEIL_ABOVE_M;
+  clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), ceilYScene + REVEAL_SWEEP_M);
+  renderer.localClippingEnabled = true;
+  root.traverse((o) => {
+    if (!o.isMesh || !o.material) return;
+    (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => {
+      m.clippingPlanes = [clipPlane]; m.clipShadows = true;
+    });
+  });
+  updateReveal(0);
+}
+function updateReveal(u) {
+  if (!clipPlane) return;
+  const v = roofFadeEnabled ? roofVis(u) : 1;
+  if (Math.abs(v - lastRoofV) < 0.002) return;
+  lastRoofV = v;
+  clipPlane.constant = ceilYScene + v * REVEAL_SWEEP_M;
+  renderer.shadowMap.needsUpdate = true;                   // roof moved -> refresh shadow map
+}
+
+function frameEverything(size) {
+  controls.target.set(0, size.y * 0.32, 0);
+  const d = Math.max(size.x, size.z) * 0.95 + size.y * 0.3;
+  camera.far = d * 20; camera.updateProjectionMatrix();
+}
+
+function buildEntryMarker() {
+  if (!META || !META.entry_point) return;
+  const g = new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(1.1, 24, 18), new THREE.MeshBasicMaterial({ color: 0xff5a1e })));
+  const dir = new THREE.Vector3(...(META.entry_point.inward_dir_yup || [1, 0, 0])).normalize();
+  g.add(new THREE.ArrowHelper(dir, new THREE.Vector3(), 8, 0xff5a1e, 2.4, 1.4));
+  g.position.copy(toScene(META.entry_point.center_yup));
+  g.visible = false; scene.add(g); entryMarker = g;
+}
+
+/* =========================================================================
+   CAMERA PATH
+   ========================================================================= */
+let posCurve = null, lookCurve = null;
+let WP = DEFAULT_WAYPOINTS, PACING = DEFAULT_PACING;
+const captured = [];
+
+function buildPath() {
+  if (PATH_OVERRIDE) {
+    WP = PATH_OVERRIDE.waypoints;
+    PACING = Array.isArray(PATH_OVERRIDE.pacing) ? PATH_OVERRIDE.pacing : DEFAULT_PACING;
+  }
+  const ctype = (PATH_OVERRIDE && PATH_OVERRIDE.curveType) || CURVE_TYPE;
+  const posPts  = WP.map((w) => toScene(w.pos));
+  const lookPts = WP.map((w) => toScene(w.look));
+  posCurve  = new THREE.CatmullRomCurve3(posPts,  false, ctype, 0.5);
+  lookCurve = new THREE.CatmullRomCurve3(lookPts, false, ctype, 0.5);
+
+  if (pathGroup) scene.remove(pathGroup);
+  pathGroup = new THREE.Group(); pathGroup.visible = false;
+  pathGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(posCurve.getPoints(500)),
+    new THREE.LineBasicMaterial({ color: 0xff5a1e })));
+  const dot = new THREE.SphereGeometry(0.7, 16, 12);
+  posPts.forEach((p, i) => {
+    const s = new THREE.Mesh(dot, new THREE.MeshBasicMaterial({
+      color: i === 0 ? 0x8fd14f : (i === posPts.length - 1 ? 0xff3b30 : 0xffb27a) }));
+    s.position.copy(p); pathGroup.add(s);
+    pathGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([p, lookPts[i]]),
+      new THREE.LineBasicMaterial({ color: 0x5b7fff, transparent: true, opacity: 0.4 })));
+  });
+  scene.add(pathGroup);
+}
+
+const _p = new THREE.Vector3(), _l = new THREE.Vector3();
+let lastLook = new THREE.Vector3();
+
+function pace(u) {
+  u = THREE.MathUtils.clamp(u, 0, 1);
+  const P = PACING;
+  for (let i = 0; i < P.length - 1; i++) {
+    const [u0, t0] = P[i], [u1, t1] = P[i + 1];
+    if (u <= u1) { const f = (u - u0) / Math.max(u1 - u0, 1e-6); return t0 + (t1 - t0) * f; }
+  }
+  return 1;
+}
+function segName(t) {
+  const i = t * (WP.length - 1);
+  if (i < 4.5)  return 'exterior';
+  if (i < 6.5)  return 'approach';
+  if (i < 7.5)  return 'entrance';
+  if (i < 11.5) return 'interior';
+  return 'looking back';
+}
+function applyPath(u) {
+  if (!posCurve) return;
+  const t = pace(u);
+  posCurve.getPoint(t, _p);
+  lookCurve.getPoint(t, _l);
+  camera.position.copy(_p);
+  camera.up.set(0, 1, 0);
+  camera.lookAt(_l);
+  lastLook.copy(_l);
+  pReadEl.innerHTML = `<b>u</b> ${u.toFixed(3)} &nbsp; ${segName(t)}`;
+}
+
+/* =========================================================================
+   SCROLL BINDING  (GSAP ScrollTrigger scrub + Lenis; native fallback)
+   ========================================================================= */
+const gsap = window.gsap, ScrollTrigger = window.ScrollTrigger, Lenis = window.Lenis;
+const hasGsap = !!(gsap && ScrollTrigger);
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let lenis = null;
+const scrollProxy = { u: 0 };
+function nativeScrollU() {
+  const h = document.documentElement.scrollHeight - innerHeight;
+  return h > 0 ? THREE.MathUtils.clamp(scrollY / h, 0, 1) : 0;
+}
+function scrollU() { return hasGsap ? scrollProxy.u : nativeScrollU(); }
+
+function setupScroll() {
+  if (Lenis && !reduceMotion) {
+    lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, touchMultiplier: 1.6, smoothWheel: true });
+    lenis.stop();
+    if (hasGsap) lenis.on('scroll', ScrollTrigger.update);
+  }
+  if (hasGsap) {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.to(scrollProxy, {
+      u: 1, ease: 'none',
+      scrollTrigger: { trigger: '#story', start: 'top top', end: 'bottom bottom', scrub: true },
+    });
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  } else {
+    console.warn('[scroll] GSAP not available — native scroll.');
+  }
+}
+
+/* =========================================================================
+   STORY  (text chapters locked to camera progress u)
+   ========================================================================= */
+const steps = [...document.querySelectorAll('#story .step')];
+const stepData = steps.map((el) => ({ el, panel: el.querySelector('.panel'), at: parseFloat(el.dataset.at) }));
+const railFill = document.getElementById('rail-fill');
+const heroStep = document.querySelector('.step.hero');
+let lastStoryPaint = -1;
+
+function buildStory() {
+  // chapter ticks on the rail
+  const rail = document.getElementById('rail').querySelector('.track');
+  stepData.forEach((s, i) => {
+    if (i === 0 || i === stepData.length - 1) return;
+    const c = document.createElement('div');
+    c.className = 'chap'; c.textContent = String(i).padStart(2, '0');
+    c.style.top = (s.at * 100) + '%';
+    c.dataset.at = s.at;
+    rail.appendChild(c);
+  });
+}
+
+function smoothPulse(x, halfWidth) {           // 1 at x=0, 0 by |x|=halfWidth, smooth
+  const t = THREE.MathUtils.clamp(1 - Math.abs(x) / halfWidth, 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+function updateStory(u) {
+  if (Math.abs(u - lastStoryPaint) < 0.001) return;
+  lastStoryPaint = u;
+  railFill.style.height = (u * 100).toFixed(1) + '%';
+
+  stepData.forEach((s, i) => {
+    let vis;
+    if (i === 0) vis = u < 0.02 ? 1 : smoothPulse(u - 0.0, 0.06);      // hero: fades out fast
+    else if (i === stepData.length - 1) vis = u > 0.985 ? 1 : smoothPulse(u - 1.0, 0.05);
+    else vis = smoothPulse(u - s.at, 0.11);
+    s.panel.style.opacity = vis.toFixed(3);
+    s.panel.style.transform = `translateY(${((1 - vis) * 24).toFixed(1)}px)`;
+    s.el.style.pointerEvents = vis > 0.5 ? 'auto' : 'none';
+  });
+
+  // veil intensifies while a caption chapter is on screen
+  const mid = stepData.slice(1, -1).some((s) => Math.abs(u - s.at) < 0.08);
+  document.getElementById('veil').style.setProperty('opacity', mid ? '1' : '0.82');
+
+  document.querySelectorAll('#rail .chap').forEach((c) => {
+    c.classList.toggle('on', Math.abs(u - parseFloat(c.dataset.at)) < 0.09);
+  });
+}
+
+/* =========================================================================
+   MODES  —  scroll | manual | free   (dev bar)
+   ========================================================================= */
+let mode = 'scroll', playing = false, uNow = 0;
+
+const devEl   = document.getElementById('dev');
+const scrubEl = document.getElementById('p-scrub');
+const playEl  = document.getElementById('p-play');
+const durEl   = document.getElementById('p-dur');
+const copyEl  = document.getElementById('p-copy');
+const pReadEl = document.getElementById('p-read');
+const modeBtns = { scroll: document.getElementById('m-scroll'),
+                   manual: document.getElementById('m-manual'),
+                   free:   document.getElementById('m-free') };
+
+document.getElementById('dev-toggle').addEventListener('click', () => devEl.classList.toggle('open'));
+
+function setMode(m) {
+  mode = m;
+  for (const k in modeBtns) modeBtns[k].classList.toggle('on', k === m);
+  controls.enabled = (m === 'free');
+  renderer.domElement.style.touchAction = (m === 'free') ? 'none' : 'pan-y';
+  if (m === 'scroll') { playing = false; updatePlayBtn(); lenis && lenis.start(); }
+  else lenis && lenis.stop();
+  if (m === 'manual') applyPath(uNow);
+  else if (m === 'free') { controls.target.copy(lastLook); controls.update(); updateReveal(1); }
+}
+function updatePlayBtn() { playEl.textContent = playing ? '❚❚' : '▶'; }
+
+modeBtns.scroll.addEventListener('click', () => setMode('scroll'));
+modeBtns.manual.addEventListener('click', () => setMode('manual'));
+modeBtns.free.addEventListener('click', () => setMode('free'));
+scrubEl.addEventListener('input', () => {
+  uNow = parseFloat(scrubEl.value);
+  if (mode !== 'manual') setMode('manual');
+  playing = false; updatePlayBtn();
+  applyPath(uNow); updateReveal(uNow); updateStory(uNow);
+});
+playEl.addEventListener('click', () => {
+  if (mode !== 'manual') setMode('manual');
+  playing = !playing; if (playing && uNow >= 1) uNow = 0; updatePlayBtn();
+});
+copyEl.addEventListener('click', () => {
+  const list = captured.length > 1 ? captured : WP;
+  const out = {
+    _readme: "Camera path for the Bireh Plaza walkthrough. space:'meta' = plaza-meta.json coords " +
+             "(glTF Y-up, metres). Blender (x,y,z) -> meta (x, z, -y). pos = camera, look = aim point.",
+    space: "meta", curveType: CURVE_TYPE, pacing: PACING,
+    waypoints: list.map((w) => ({ pos: w.pos.map((n) => +n.toFixed(2)), look: w.look.map((n) => +n.toFixed(2)) })),
+  };
+  navigator.clipboard?.writeText(JSON.stringify(out, null, 2));
+  copyEl.textContent = 'copied'; setTimeout(() => copyEl.textContent = 'Copy path', 1400);
+});
+
+/* =========================================================================
+   HELPERS
+   ========================================================================= */
+function countTris(root) {
+  let n = 0;
+  root.traverse((o) => {
+    if (o.isMesh && o.geometry) {
+      const g = o.geometry;
+      n += g.index ? g.index.count / 3 : g.attributes.position.count / 3;
+    }
+  });
+  return Math.round(n);
+}
+const f2 = (v) => `${v.x.toFixed(1)}, ${v.y.toFixed(1)}, ${v.z.toFixed(1)}`;
+const f2a = (v) => [ +v.x.toFixed(2), +v.y.toFixed(2), +v.z.toFixed(2) ];
+
+/* =========================================================================
+   PERFORMANCE  —  fps sample, one-way adaptive downgrade, ?stats readout
+   ========================================================================= */
+const statsEl = document.getElementById('stats');
+const hudInfo = document.getElementById('hud-info');
+if (qs.has('stats')) statsEl.classList.add('show');
+let frames = 0, fpsT = performance.now(), fps = 60;
+let slowFor = 0, downgraded = false;
+const dgEl = document.getElementById('downgrade');
+
+function samplePerf(now) {
+  frames++;
+  const dt = now - fpsT;
+  if (dt < 500) return;
+  fps = Math.round((frames * 1000) / dt);
+  frames = 0; fpsT = now;
+
+  if (statsEl.classList.contains('show')) {
+    statsEl.textContent = `${fps} fps · ${TIER}${downgraded ? ' (auto)' : ''} · dpr ${renderer.getPixelRatio().toFixed(1)} · ` +
+      (renderer.shadowMap.enabled ? 'shadows' : 'no shadows');
+  }
+  if (downgraded || mode !== 'scroll') return;
+  slowFor = fps < 38 ? slowFor + dt : 0;
+  if (slowFor > 2500) autoDowngrade();
+}
+function autoDowngrade() {
+  downgraded = true; TIER = 'low';
+  renderer.setPixelRatio(1);
+  if (renderer.shadowMap.enabled) { renderer.shadowMap.enabled = false; sun.castShadow = false; hemi.intensity = 0.6; }
+  dgEl.classList.add('show');
+  setTimeout(() => dgEl.classList.remove('show'), 3200);
+  console.warn('[perf] auto-downgrade: dpr 1, shadows off');
+}
+
+/* =========================================================================
+   KEYS
+   ========================================================================= */
+addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  const k = e.key.toLowerCase();
+  if (k === ' ') { e.preventDefault(); playEl.click(); }
+  else if (k === 's') setMode('scroll');
+  else if (k === 'm') setMode('manual');
+  else if (k === 'f') setMode('free');
+  else if (k === 'r') { roofFadeEnabled = !roofFadeEnabled; lastRoofV = -1; updateReveal(uNow); }
+  else if (k === 'p' && pathGroup) pathGroup.visible = !pathGroup.visible;
+  else if (k === 'x') {
+    const look = mode === 'free' ? controls.target.clone() : lastLook.clone();
+    captured.push({ pos: f2a(toMeta(camera.position)), look: f2a(toMeta(look)) });
+    copyEl.textContent = `wp ${captured.length}`; setTimeout(() => copyEl.textContent = 'Copy path', 1200);
+  }
+  else if (k === 'g') { grid.visible = !grid.visible; axes.visible = grid.visible; }
+  else if (k === 'e' && entryMarker) entryMarker.visible = !entryMarker.visible;
+  else if (k === 'i') { hudInfo.classList.toggle('show'); statsEl.classList.toggle('show'); }
+  else if (k === ',' || k === '.') {
+    if (mode !== 'manual') setMode('manual');
+    uNow = THREE.MathUtils.clamp(uNow + (k === '.' ? 0.005 : -0.005), 0, 1);
+    scrubEl.value = uNow; applyPath(uNow); updateReveal(uNow); updateStory(uNow);
+  }
+});
+
+/* =========================================================================
+   RESIZE + LOOP
+   ========================================================================= */
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(downgraded ? 1 : Q.dpr);
+  if (hasGsap) ScrollTrigger.refresh();
+});
+
+const vCam = document.getElementById('v-cam');
+const vCamM = document.getElementById('v-cam-m');
+const clock = new THREE.Clock();
+
+renderer.setAnimationLoop((timeMs) => {
+  if (lenis) lenis.raf(timeMs);
+  if (document.hidden) return;                    // don't burn frames on a hidden tab
+  const dt = clock.getDelta();
+
+  if (mode === 'scroll') {
+    const u = scrollU();
+    uNow = u;
+    applyPath(u); updateReveal(u); updateStory(u);
+    if (devEl.classList.contains('open')) scrubEl.value = u;
+  } else if (mode === 'manual') {
+    if (playing) {
+      const dur = Math.max(parseFloat(durEl.value) || 18, 1);
+      uNow = Math.min(uNow + dt / dur, 1);
+      if (uNow >= 1) { playing = false; updatePlayBtn(); }
+      scrubEl.value = uNow;
+    }
+    applyPath(uNow); updateReveal(uNow); updateStory(uNow);
+  } else {
+    controls.update();
+  }
+
+  if (statsEl.classList.contains('show') || hudInfo.classList.contains('show')) {
+    vCam.textContent = f2(camera.position);
+    vCamM.textContent = f2(toMeta(camera.position)) + ' · ' + (vCamM.dataset.stats || '');
+  }
+  renderer.render(scene, camera);
+  samplePerf(timeMs);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "_readme": "Camera path for 3d-tour-test.html. space:'meta' = plaza-meta.json coords (glTF Y-up, metres). Blender (x,y,z) -> meta (x, z, -y). pos = camera position, look = aim point. pacing remaps scrubber u -> curve t.",
+  "space": "meta",
+  "curveType": "centripetal",
+  "pacing": [[0, 0], [1, 1]],
+  "waypoints": [
+    { "pos": [200, 68, -155],    "look": [22, 40, -18] },
+    { "pos": [70, 54, -195],     "look": [16, 36, -22] },
+    { "pos": [-95, 40, -150],    "look": [8, 28, -30] },
+    { "pos": [-140, 26, -85],    "look": [5, 19, -37] },
+    { "pos": [-95, 18, -40],     "look": [3.5, 13.0, -38.4] },
+    { "pos": [-42, 15.5, -38.4], "look": [4, 12.5, -38.6] },
+    { "pos": [-13, 13.2, -38.6], "look": [6, 12.0, -38.7] },
+    { "pos": [3.5, 12.0, -38.8], "look": [16, 11.7, -38.7] },
+    { "pos": [13, 11.9, -38.5],  "look": [28, 11.6, -38.0] },
+    { "pos": [28, 12.0, -37.8],  "look": [44, 11.7, -37.2] },
+    { "pos": [44, 12.1, -36.8],  "look": [56, 11.9, -36.2] },
+    { "pos": [54, 12.3, -36.6],  "look": [60, 12.1, -31.0] },
+    { "pos": [82, 34, -14],      "look": [20, 28, -22] }
+  ]
+}

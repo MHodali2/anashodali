@@ -1,0 +1,260 @@
+{
+  "generated_by": "phase1_convert.py",
+  "profile": "balanced",
+  "source_blend": "/Users/mohammadhodali/Documents/website arch copy/assets/objects/plaza2.blend",
+  "units": "meters",
+  "coordinate_space": "glTF Y-up (Three.js). Blender Z-up converted (x,y,z)->(x,z,-y).",
+  "triangles": {
+    "before_merge": 1860623,
+    "after": 567585,
+    "raw_scene_estimate": 1864471
+  },
+  "files": {
+    "full": {
+      "path": "assets/models/plaza-full.glb",
+      "bytes": 2423024
+    },
+    "shell": {
+      "path": "assets/models/plaza-shell.glb",
+      "bytes": 453376,
+      "objects": 25
+    },
+    "interior": {
+      "path": "assets/models/plaza-interior.glb",
+      "bytes": 1974768,
+      "objects": 32
+    }
+  },
+  "full_aabb_yup": {
+    "min": [
+      -42.5004997253418,
+      0.36042165756225586,
+      -61.43095397949219
+    ],
+    "max": [
+      112.90933227539062,
+      76.95320892333984,
+      27.996456146240234
+    ],
+    "size": [
+      155.40983200073242,
+      76.59278726577759,
+      89.42741012573242
+    ],
+    "center": [
+      35.204416275024414,
+      38.65681529045105,
+      -16.717248916625977
+    ]
+  },
+  "core_aabb_yup": {
+    "min": [
+      -44.51203155517578,
+      -7.913212776184082,
+      -49.45176315307617
+    ],
+    "max": [
+      79.57144165039062,
+      70.98216247558594,
+      17.204376220703125
+    ],
+    "size": [
+      124.0834732055664,
+      78.89537525177002,
+      66.6561393737793
+    ],
+    "center": [
+      17.529705047607422,
+      31.534474849700928,
+      -16.123693466186523
+    ]
+  },
+  "ground_floor_y": 9.44395923614502,
+  "basement_min_y": 0.36042165756225586,
+  "entry_point": {
+    "description": "Revolving-door entrance, ground floor, low-X (west) facade. Chosen automatically - no entry was marked in the source. The revolving-door leaves are ~2.2 m tall; the bbox below also catches the surrounding storefront frame / canopy.",
+    "center_yup": [
+      3.4714651107788086,
+      11.292999267578125,
+      -38.868934631347656
+    ],
+    "bbox_min_yup": [
+      2.5126304626464844,
+      9.44395923614502,
+      -37.44729995727539
+    ],
+    "bbox_max_yup": [
+      4.430299758911133,
+      13.142040252685547,
+      -40.29056930541992
+    ],
+    "inward_dir_yup": [
+      1.0,
+      -0.0,
+      0.0
+    ],
+    "outward_dir_yup": [
+      -1.0,
+      0.0,
+      -0.0
+    ],
+    "opening_width_m": 2.84,
+    "opening_height_m": 3.7,
+    "door_leaf_height_m": 2.2
+  },
+  "glass_materials": [
+    "Rail glass",
+    "Revolving_door_Glass Plate-Glass",
+    "\\screen",
+    "aq gl",
+    "glass",
+    "water"
+  ],
+  "zone_split": {
+    "method": "spatial heuristic (roof band + outer-wall band of the raw building AABB). RESULT IS POOR: the raw AABB is inflated by the plaza deck / parking apron so almost everything landed in INTERIOR. Treat plaza-full.glb as the deliverable; refine the split in Blender (two collections) or with explicit name lists later.",
+    "wall_band_m": 3.5,
+    "roof_band_m": 3.5,
+    "shell_objects": 25,
+    "interior_objects": 32,
+    "shell_buckets": [
+      "SHELL__01_-_Default",
+      "SHELL__01_-_Defaultd",
+      "SHELL__1",
+      "SHELL__22_-_Default",
+      "SHELL__Material_1541173809",
+      "SHELL__Material_1541173845",
+      "SHELL__Material_1541173860",
+      "SHELL__Material_1541173878",
+      "SHELL__Material_1541173937",
+      "SHELL__Material_1541173961",
+      "SHELL__Material_1541173962",
+      "SHELL__Material_1541173997",
+      "SHELL__Material_1541174138",
+      "SHELL__Material_1541174139",
+      "SHELL__Material_4",
+      "SHELL__Metal",
+      "SHELL__Rail_glass",
+      "SHELL__SS",
+      "SHELL___nomat",
+      "SHELL__aq_gl",
+      "SHELL__bol5",
+      "SHELL__curb",
+      "SHELL__tiles",
+      "SHELL__water",
+      "SHELL__yellow_lines"
+    ],
+    "interior_buckets": [
+      "INTERIOR__01_-_Default",
+      "INTERIOR__01_-_Defaultd",
+      "INTERIOR__22_-_Default",
+      "INTERIOR__Material_1541173809",
+      "INTERIOR__Material_1541173845",
+      "INTERIOR__Material_1541173878",
+      "INTERIOR__Material_1541173937",
+      "INTERIOR__Material_1541173961",
+      "INTERIOR__Material_1541173963",
+      "INTERIOR__Material_1541173983",
+      "INTERIOR__Material_1541173997",
+      "INTERIOR__Material_1541174138",
+      "INTERIOR__Material_1541174139",
+      "INTERIOR__Material_37",
+      "INTERIOR__Material_4",
+      "INTERIOR__Metal",
+      "INTERIOR__Rail_glass",
+      "INTERIOR__Revolving_door_Glass_Plate-Glass",
+      "INTERIOR__Revolving_door_Special_Oil_Rubbed_Venetian_Bronze",
+      "INTERIOR__SS",
+      "INTERIOR___nomat",
+      "INTERIOR___screen",
+      "INTERIOR__bol5",
+      "INTERIOR__curb",
+      "INTERIOR__elevator_door",
+      "INTERIOR__glass",
+      "INTERIOR__maqloob",
+      "INTERIOR__parking_epoxy",
+      "INTERIOR__parquewt",
+      "INTERIOR__standar",
+      "INTERIOR__tiles",
+      "INTERIOR__tiles2"
+    ]
+  },
+  "original_blend_camera": {
+    "location": [
+      -248.0488739013672,
+      252.90814208984375,
+      13.751197814941406
+    ],
+    "rotation_euler": [
+      1.1093189716339111,
+      0.0,
+      0.8149281740188599
+    ],
+    "lens_mm": 50.0
+  },
+  "camera_anchors_yup": {
+    "_note": "Rough starting path only - review in phase 3, likely replaced by Blender-authored coords. Order: orbit exterior -> approach -> through door -> interior.",
+    "exterior_orbit": [
+      [
+        108.18396263122558,
+        44.946879386901855,
+        -2.5255548286438003
+      ],
+      [
+        40.193269443511966,
+        40.45219144821167,
+        74.53056411743164
+      ],
+      [
+        -54.993701019287116,
+        35.95750350952149,
+        38.26886108398437
+      ],
+      [
+        -59.9865151977539,
+        16.292999267578125,
+        -38.868934631347656
+      ]
+    ],
+    "approach_entry": [
+      [
+        -5.528534889221191,
+        12.892999267578125,
+        -38.868934631347656
+      ],
+      [
+        1.4714651107788086,
+        12.892999267578125,
+        -38.868934631347656
+      ]
+    ],
+    "through_entry": [
+      [
+        3.4714651107788086,
+        12.892999267578125,
+        -38.868934631347656
+      ],
+      [
+        7.471465110778809,
+        12.892999267578125,
+        -38.868934631347656
+      ]
+    ],
+    "interior": [
+      [
+        15.471465110778809,
+        11.143959236145019,
+        -38.868934631347656
+      ],
+      [
+        17.529705047607422,
+        11.143959236145019,
+        -16.123693466186523
+      ]
+    ],
+    "look_at_hint_yup": [
+      17.529705047607422,
+      11.44395923614502,
+      -16.123693466186523
+    ]
+  }
+}

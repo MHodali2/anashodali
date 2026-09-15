@@ -222,6 +222,11 @@ ul { list-style: none; }
   overflow: hidden;
 }
 
+a.hero-media {
+  display: block;
+  cursor: pointer;
+}
+
 .hero-video,
 .hero-image {
   position: absolute;
