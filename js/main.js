@@ -114,12 +114,24 @@
       toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
     });
 
+    function close() {
+      nav.classList.remove("is-open");
+      toggle.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+
     nav.querySelectorAll(".nav-link").forEach(function (link) {
-      link.addEventListener("click", function () {
-        nav.classList.remove("is-open");
-        toggle.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      });
+      link.addEventListener("click", close);
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!nav.classList.contains("is-open")) return;
+      if (nav.contains(e.target) || toggle.contains(e.target)) return;
+      close();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
     });
   }
 
@@ -446,6 +458,18 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && overlay.classList.contains("is-open")) closeOverlay();
     });
+
+    // deep link: ?project=<id> (used by the home map pins for projects that
+    // only live in the all-projects grid) jumps straight to that card and
+    // opens its overlay on load.
+    var deepLinkId = new URLSearchParams(window.location.search).get("project");
+    if (deepLinkId) {
+      var deepLinkCard = document.querySelector('.project-card[data-project="' + deepLinkId + '"]');
+      if (deepLinkCard) {
+        deepLinkCard.scrollIntoView({ block: "center" });
+        deepLinkCard.click();
+      }
+    }
   }
 
   /* ---------------- Map pins ---------------- */

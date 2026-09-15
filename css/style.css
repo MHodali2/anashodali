@@ -104,6 +104,7 @@ ul { list-style: none; }
   box-shadow: 0 1px 0 var(--line);
 }
 
+
 .header-inner {
   max-width: var(--container);
   height: 100%;
@@ -1055,6 +1056,14 @@ a.hero-media {
 .map-pin--edge-right .map-pin-label { --label-x: -90%; }
 .map-pin--edge-left .map-pin-label { --label-x: -10%; }
 
+/* pins near the top of the map flip their label to open downward instead
+   of upward, so it doesn't get clipped above the map's edge */
+.map-pin--edge-top .map-pin-label {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translate(var(--label-x), -4px);
+}
+
 .map-pin-thumb {
   display: block;
   width: 100%;
@@ -1564,28 +1573,58 @@ body.overlay-locked { overflow: hidden; }
 }
 
 @media (max-width: 860px) {
+  /* Mobile: always show a solid header instead of only after scrolling —
+     a transparent bar over a short/cropped hero is unreadable at this size. */
+  .site-header {
+    background: rgba(241, 231, 211, 0.92);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    box-shadow: 0 1px 0 var(--line);
+  }
+
+  .logo,
+  .nav-link { color: var(--charcoal); }
+
+  .logo-tagline { color: var(--orange); }
+
+  .nav-toggle span { background: var(--charcoal); }
+
   .main-nav {
-    position: fixed;
-    top: var(--header-h); left: 0; right: 0; bottom: 0;
+    position: absolute;
+    top: calc(var(--header-h) + 12px);
+    right: 20px;
+    width: min(70vw, 280px);
     background: var(--paper);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(28, 26, 23, 0.22);
     flex-direction: column;
     align-items: flex-start;
     gap: 0;
-    padding: 20px 40px;
-    transform: translateX(100%);
-    transition: transform 0.35s ease;
+    padding: 8px 24px;
+    transform-origin: top right;
+    transform: scale(0.95) translateY(-6px);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.2s ease, opacity 0.2s ease, visibility 0s linear 0.2s;
     z-index: 90;
   }
 
-  .main-nav.is-open { transform: translateX(0); }
+  .main-nav.is-open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    visibility: visible;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
 
   .main-nav .nav-link {
     width: 100%;
-    padding: 18px 0;
+    padding: 16px 0;
     border-bottom: 1px solid var(--line);
     color: var(--charcoal) !important;
     font-size: 15px;
   }
+
+  .main-nav .nav-link:last-child { border-bottom: none; }
 
   .nav-toggle { display: flex; }
 
