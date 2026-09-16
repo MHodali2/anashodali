@@ -626,6 +626,181 @@ a.hero-media {
   transform: scale(1.045);
 }
 
+/* ---------- All Projects page — filter bar ---------- */
+/* Three custom dropdowns (trigger button + listbox), built to match the
+   site's own boxy, bordered, mono-uppercase button language rather than
+   a browser's native <select> menu. Options are populated at runtime by
+   initProjectFilters() in js/main.js from the cards already in the DOM,
+   so this is purely presentational; the JS there also owns open/close
+   state, selection and keyboard nav. */
+.project-filters {
+  /* .project-filters carries .reveal, whose transform gives it its own
+     stacking context; without an explicit position + z-index here, that
+     whole context sits at the default stacking level (0) alongside the
+     .year-group elements below it — and each .year-heading also gets its
+     own context via the same .reveal transform, so being later in the DOM
+     it would win ties and paint over the dropdown menu (z-index: 30 below)
+     despite that z-index, since it only outranks siblings *inside* this
+     stacking context, not separate ones after it. */
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 32px;
+  margin-bottom: 56px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--charcoal-soft);
+}
+
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-dd-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--charcoal);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 10px 14px;
+  min-width: 168px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-dd-trigger:hover,
+.filter-dd-trigger:focus-visible,
+.filter-dd-trigger.is-open {
+  border-color: rgba(217, 84, 30, 0.5);
+  outline: none;
+}
+
+.filter-dd-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filter-dd-arrow {
+  flex-shrink: 0;
+  width: 10px;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23D9541E' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+  transition: transform 0.25s ease;
+}
+
+.filter-dd-trigger.is-open .filter-dd-arrow {
+  transform: rotate(180deg);
+}
+
+.filter-dd-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 100%;
+  max-height: 264px;
+  overflow-y: auto;
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(217, 84, 30, 0.1), 0 20px 40px -16px rgba(28, 26, 23, 0.35);
+}
+
+/* the [hidden] attribute is how JS opens/closes this menu (menu.hidden = true/false
+   in initProjectFilters()) — without this, `.filter-dd-menu { display: flex }`
+   above ties [hidden]'s specificity and an author rule always wins that tie over
+   the browser's built-in [hidden] { display: none }, so the menu would render
+   open regardless of the attribute */
+.filter-dd-menu[hidden] {
+  display: none;
+}
+
+.filter-dd-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--charcoal-soft);
+  background: transparent;
+  border-radius: 4px;
+  padding: 9px 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.filter-dd-option:hover,
+.filter-dd-option:focus-visible {
+  background: rgba(217, 84, 30, 0.1);
+  color: var(--charcoal);
+  outline: none;
+}
+
+.filter-dd-option.is-selected {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.filter-reset {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 0.3s ease;
+}
+
+.filter-reset:hover {
+  border-color: var(--orange);
+}
+
+.filter-empty {
+  font-size: 13.5px;
+  color: var(--charcoal-soft);
+  padding: 40px 0;
+}
+
+@media (max-width: 640px) {
+  .project-filters {
+    gap: 18px;
+  }
+  .filter-group {
+    flex: 1 1 140px;
+  }
+  .filter-dd-trigger {
+    min-width: 0;
+  }
+}
+
 /* ---------- All Projects page — year-grouped grid ---------- */
 .all-projects {
   padding-top: calc(var(--header-h) + 64px);

@@ -78,6 +78,61 @@
     <h2>All Projects</h2>
   </div>
 
+  <!-- =========================================================
+       PROJECT FILTERS — three custom dropdown facets (Year, Typology,
+       Location) built to match the site's own button/border language
+       instead of the browser's native <select> menu. Each is a button
+       (trigger) + an absolutely-positioned listbox (menu); options are
+       populated at runtime by initProjectFilters() in js/main.js so
+       they always match whatever cards exist below. Year stays the
+       default/primary facet (grid is already grouped by year);
+       Typology and Location narrow further and combine with it.
+       Filtering hides non-matching cards and, if a whole year-group
+       ends up empty, that group's heading + its year-nav dot on the
+       right.
+  ========================================================== -->
+  <div class="project-filters reveal" id="projectFilters">
+    <div class="filter-group">
+      <span class="filter-label" id="filterYearLabel">Year</span>
+      <div class="filter-dropdown" data-filter="year">
+        <button type="button" class="filter-dd-trigger" id="filterYearTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="filterYearLabel filterYearTrigger">
+          <span class="filter-dd-value">All Years</span>
+          <span class="filter-dd-arrow" aria-hidden="true"></span>
+        </button>
+        <div class="filter-dd-menu" id="filterYearMenu" role="listbox" aria-labelledby="filterYearLabel" hidden>
+          <button type="button" class="filter-dd-option is-selected" role="option" aria-selected="true" data-value="all">All Years</button>
+        </div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label" id="filterTypologyLabel">Typology</span>
+      <div class="filter-dropdown" data-filter="typology">
+        <button type="button" class="filter-dd-trigger" id="filterTypologyTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="filterTypologyLabel filterTypologyTrigger">
+          <span class="filter-dd-value">All Typologies</span>
+          <span class="filter-dd-arrow" aria-hidden="true"></span>
+        </button>
+        <div class="filter-dd-menu" id="filterTypologyMenu" role="listbox" aria-labelledby="filterTypologyLabel" hidden>
+          <button type="button" class="filter-dd-option is-selected" role="option" aria-selected="true" data-value="all">All Typologies</button>
+        </div>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label" id="filterLocationLabel">Location</span>
+      <div class="filter-dropdown" data-filter="location">
+        <button type="button" class="filter-dd-trigger" id="filterLocationTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="filterLocationLabel filterLocationTrigger">
+          <span class="filter-dd-value">All Locations</span>
+          <span class="filter-dd-arrow" aria-hidden="true"></span>
+        </button>
+        <div class="filter-dd-menu" id="filterLocationMenu" role="listbox" aria-labelledby="filterLocationLabel" hidden>
+          <button type="button" class="filter-dd-option is-selected" role="option" aria-selected="true" data-value="all">All Locations</button>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="filter-reset" id="filterReset" hidden>Reset</button>
+  </div>
+
+  <p class="filter-empty" id="filterEmpty" hidden>No projects match these filters.</p>
+
   <div class="year-group" id="year-2025">
     <div class="year-heading reveal">
       <span class="year-number">2025</span>

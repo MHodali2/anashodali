@@ -220,6 +220,215 @@
     groups.forEach(function (group) { observer.observe(group); });
   }
 
+  /* ---------------- All-projects filter bar (year / typology / location) ---------------- */
+  /* Each facet in #projectFilters is a custom trigger-button + listbox
+     pair (.filter-dropdown), built to match the site's own button/border
+     language instead of a native <select>'s OS-styled menu. Options are
+     populated at runtime from whatever .project-card markup already
+     exists on the page (year-group id, .project-tag classes,
+     .project-location text) so they never drift out of sync with the
+     cards themselves, then filters cards by the combination of active
+     facets (AND across facets). A year-group with zero visible cards
+     after filtering is hidden along with its dot in the year-nav;
+     pages without #projectFilters (e.g. index.html) skip this entirely. */
+  function initProjectFilters() {
+    var bar = document.getElementById("projectFilters");
+    var resetBtn = document.getElementById("filterReset");
+    var emptyMsg = document.getElementById("filterEmpty");
+    if (!bar) return;
+
+    var groups = Array.prototype.slice.call(document.querySelectorAll(".year-group[id]"));
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".project-card[data-project]"));
+    if (!cards.length) return;
+
+    function titleCase(slug) {
+      return slug.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+    }
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    // derive + cache each card's filter facets straight off its existing markup
+    var typologies = {};
+    var locations = {};
+
+    cards.forEach(function (card) {
+      var group = card.closest(".year-group[id]");
+      card.dataset.year = group ? group.id.replace("year-", "") : "";
+
+      var tagEl = card.querySelector(".project-tag");
+      var cardTypologies = [];
+      if (tagEl) {
+        tagEl.classList.forEach(function (cls) {
+          var match = cls.match(/^tag-(.+)$/);
+          if (match) cardTypologies.push(match[1]);
+        });
+      }
+      card.dataset.typologies = cardTypologies.join(",");
+      cardTypologies.forEach(function (t) { typologies[t] = true; });
+
+      var locEl = card.querySelector(".project-location");
+      var parts = (locEl ? locEl.textContent : "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+      if (parts.length > 1 && parts[parts.length - 1].toLowerCase() === "palestine") parts.pop();
+      var location = parts.length ? parts[parts.length - 1] : "";
+      card.dataset.location = location;
+      if (location) locations[location] = true;
+    });
+
+    var state = { year: "all", typology: "all", location: "all" };
+    var dropdowns = [];
+
+    /* Builds one custom dropdown: appends a .filter-dd-option button per
+       value onto the listbox already in the markup (which ships with just
+       the "All ..." option), then wires up open/close, selection and
+       keyboard nav (Arrow keys, Escape, Tab-to-close). */
+    function buildDropdown(key, values, labelFor) {
+      var trigger = document.getElementById("filter" + capitalize(key) + "Trigger");
+      var menu = document.getElementById("filter" + capitalize(key) + "Menu");
+      if (!trigger || !menu) return null;
+
+      var valueEl = trigger.querySelector(".filter-dd-value");
+      var allLabel = valueEl.textContent;
+
+      values.forEach(function (v) {
+        var opt = document.createElement("button");
+        opt.type = "button";
+        opt.className = "filter-dd-option";
+        opt.setAttribute("role", "option");
+        opt.setAttribute("aria-selected", "false");
+        opt.dataset.value = v;
+        opt.textContent = labelFor(v);
+        menu.appendChild(opt);
+      });
+
+      var options = Array.prototype.slice.call(menu.querySelectorAll(".filter-dd-option"));
+
+      function close() {
+        if (menu.hidden) return;
+        menu.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.classList.remove("is-open");
+      }
+
+      function open() {
+        dropdowns.forEach(function (d) { if (d.key !== key) d.close(); });
+        menu.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        trigger.classList.add("is-open");
+        var selected = menu.querySelector('.filter-dd-option[aria-selected="true"]') || options[0];
+        if (selected) selected.focus();
+      }
+
+      function select(value, label) {
+        state[key] = value;
+        valueEl.textContent = label;
+        options.forEach(function (opt) {
+          var isSelected = opt.dataset.value === value;
+          opt.classList.toggle("is-selected", isSelected);
+          opt.setAttribute("aria-selected", isSelected ? "true" : "false");
+        });
+        close();
+        trigger.focus();
+        applyFilters();
+      }
+
+      trigger.addEventListener("click", function () {
+        if (menu.hidden) open(); else close();
+      });
+
+      trigger.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          e.preventDefault();
+          open();
+        }
+      });
+
+      options.forEach(function (opt) {
+        opt.addEventListener("click", function () {
+          select(opt.dataset.value, opt.textContent);
+        });
+      });
+
+      menu.addEventListener("keydown", function (e) {
+        var idx = options.indexOf(document.activeElement);
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          options[Math.min(options.length - 1, idx + 1)].focus();
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          options[Math.max(0, idx - 1)].focus();
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          close();
+          trigger.focus();
+        } else if (e.key === "Tab") {
+          close();
+        }
+      });
+
+      var api = {
+        key: key,
+        close: close,
+        reset: function () { select("all", allLabel); }
+      };
+      dropdowns.push(api);
+      return api;
+    }
+
+    buildDropdown("year", groups.map(function (g) { return g.id.replace("year-", ""); }), function (y) { return y; });
+    buildDropdown("typology", Object.keys(typologies).sort(), titleCase);
+    buildDropdown("location", Object.keys(locations).sort(), function (n) { return n; });
+
+    document.addEventListener("click", function (e) {
+      dropdowns.forEach(function (d) {
+        var wrapper = document.querySelector('.filter-dropdown[data-filter="' + d.key + '"]');
+        if (wrapper && !wrapper.contains(e.target)) d.close();
+      });
+    });
+
+    function applyFilters() {
+      var year = state.year;
+      var typology = state.typology;
+      var location = state.location;
+      var visibleCount = 0;
+      var groupHasVisible = {};
+
+      cards.forEach(function (card) {
+        var cardTypologies = card.dataset.typologies ? card.dataset.typologies.split(",") : [];
+        var matches =
+          (year === "all" || card.dataset.year === year) &&
+          (typology === "all" || cardTypologies.indexOf(typology) !== -1) &&
+          (location === "all" || card.dataset.location === location);
+
+        card.style.display = matches ? "" : "none";
+        // a card revealed by a filter (rather than by scrolling) may never
+        // have crossed the IntersectionObserver threshold in initProjectReveal(),
+        // so force it visible immediately instead of leaving it stuck at
+        // opacity:0 waiting for a scroll event that already happened
+        if (matches) {
+          card.classList.add("is-visible");
+          visibleCount++;
+          groupHasVisible[card.dataset.year] = true;
+        }
+      });
+
+      groups.forEach(function (group) {
+        var groupYear = group.id.replace("year-", "");
+        var hasVisible = !!groupHasVisible[groupYear];
+        group.style.display = hasVisible ? "" : "none";
+        var navItem = document.querySelector('.year-nav-item[data-year="' + groupYear + '"]');
+        if (navItem) navItem.style.display = hasVisible ? "" : "none";
+      });
+
+      if (emptyMsg) emptyMsg.hidden = visibleCount !== 0;
+      if (resetBtn) resetBtn.hidden = (year === "all" && typology === "all" && location === "all");
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        dropdowns.forEach(function (d) { d.reset(); });
+      });
+    }
+  }
+
   /* ---------------- Project card hover blobs ---------------- */
   /* Builds a .project-blob-field inside each card's .project-body, seeded
      once at load with a random count/color/size/position/speed/path per
@@ -830,6 +1039,7 @@
     initProjectReveal();
     initScrollReveal();
     initYearNav();
+    initProjectFilters();
     initProjectBlobs();
     initProjectOverlay();
     initMapPins();
