@@ -364,7 +364,7 @@
         <div class="project-body">
           <div class="project-content">
             <div class="project-title-row">
-              <h3><span class="title-en">Bazzar</span><span class="title-ar" lang="ar" dir="rtl">البازار</span></h3>
+              <h3><span class="title-en">Bazzar</span><span class="title-ar" lang="ar" dir="rtl">البزار</span></h3>
               <span class="project-arrow" aria-hidden="true">&rarr;</span>
             </div>
             <p class="project-location">Al-Baloo', Palestine</p>
@@ -413,7 +413,7 @@
         <div class="project-body">
           <div class="project-content">
             <div class="project-title-row">
-              <h3><span class="title-en">Tallet Bahar</span><span class="title-ar" lang="ar" dir="rtl">تلة بحر</span></h3>
+              <h3><span class="title-en">Tallet Bahar</span><span class="title-ar" lang="ar" dir="rtl">طلة بحر</span></h3>
               <span class="project-arrow" aria-hidden="true">&rarr;</span>
             </div>
             <p class="project-location">Ramallah, Palestine</p>
@@ -432,7 +432,7 @@
         <div class="project-body">
           <div class="project-content">
             <div class="project-title-row">
-              <h3><span class="title-en">Nabali Al-Faris</span><span class="title-ar" lang="ar" dir="rtl">نابلسي الفارس</span></h3>
+              <h3><span class="title-en">Nabali Al-Faris</span><span class="title-ar" lang="ar" dir="rtl">نبالي والفارس</span></h3>
               <span class="project-arrow" aria-hidden="true">&rarr;</span>
             </div>
             <p class="project-location">Ramallah, Palestine</p>
@@ -475,8 +475,8 @@
 
     <div class="footer-col reveal">
       <h4>Follow</h4>
-      <a href="https://wa.me/972599269356">WhatsApp</a>
-      <a href="https://www.youtube.com/@AnasHodaliArchitecture">Youtube</a>
+      <a href="https://wa.me/972599269356" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <a href="https://www.youtube.com/@AnasHodaliArchitecture" target="_blank" rel="noopener noreferrer">Youtube</a>
     </div>
   </div>
 
@@ -504,6 +504,22 @@
       <!-- populated per-project by renderOverlay() in js/main.js -->
     </div>
   </div>
+</div>
+
+<!-- =========================================================
+     PHOTO LIGHTBOX — same shared shell as index.html, see the comment
+     there for how it's wired up.
+========================================================== -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close photo" type="button">
+    <span></span><span></span>
+  </button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous photo" type="button">&larr;</button>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next photo" type="button">&rarr;</button>
+  <figure class="lightbox-stage">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  </figure>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
 </div>
 
 <script src="js/projects-data.js"></script>

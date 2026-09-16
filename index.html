@@ -348,6 +348,10 @@
       <span class="map-pin map-pin--static" style="--x:48.2%; --y:24.2%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Al-Nile Building</span></span></span>
       <span class="map-pin map-pin--static" style="--x:36.2%; --y:70.9%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><span class="map-pin-name">Omar Thalji</span></span></span>
       <a class="map-pin map-pin--has-thumb" href="all-projects.html?project=imad-mshosher" style="--x:88.8%; --y:80.3%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><img class="map-pin-thumb" src="assets/images/imad-mshosher.webp" alt=""><span class="map-pin-name">Imad Mshosher</span></span></a>
+      <a class="map-pin map-pin--has-thumb" href="all-projects.html?project=imm-jad-sarsour" style="--x:95.1%; --y:42.9%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><img class="map-pin-thumb" src="assets/images/imm-jad-sarsour.webp" alt=""><span class="map-pin-name">Imm Jad Sarsour</span></span></a>
+      <a class="map-pin map-pin--has-thumb" href="all-projects.html?project=omar-aaqel" style="--x:95.7%; --y:26.0%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><img class="map-pin-thumb" src="assets/images/omar-aaqel.webp" alt=""><span class="map-pin-name">Omar Aaqel</span></span></a>
+      <a class="map-pin map-pin--has-thumb map-pin--edge-top" href="all-projects.html?project=mikkawi" style="--x:68.4%; --y:10.6%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><img class="map-pin-thumb" src="assets/images/mikkawi.webp" alt=""><span class="map-pin-name">Mikkawi</span></span></a>
+      <a class="map-pin map-pin--has-thumb" href="all-projects.html?project=nabali-al-faris" style="--x:91.3%; --y:59.5%"><img src="assets/images/pin.png" alt=""><span class="map-pin-label"><img class="map-pin-thumb" src="assets/images/nabali-al-faris.webp" alt=""><span class="map-pin-name">Nabali Al-Faris</span></span></a>
     </div>
    </div>
 
@@ -387,8 +391,8 @@
     <div class="contact-block reveal">
       <h4>Follow</h4>
       <p>
-        <a href="https://wa.me/972599269356">WhatsApp</a> &middot;
-        <a href="https://www.youtube.com/@AnasHodaliArchitecture">Youtube</a>
+        <a href="https://wa.me/972599269356" target="_blank" rel="noopener noreferrer">WhatsApp</a> &middot;
+        <a href="https://www.youtube.com/@AnasHodaliArchitecture" target="_blank" rel="noopener noreferrer">Youtube</a>
       </p>
     </div>
   </div>
@@ -422,8 +426,8 @@
 
     <div class="footer-col reveal">
       <h4>Follow</h4>
-      <a href="https://wa.me/972599269356">WhatsApp</a>
-      <a href="https://www.youtube.com/@AnasHodaliArchitecture">Youtube</a>
+      <a href="https://wa.me/972599269356" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <a href="https://www.youtube.com/@AnasHodaliArchitecture" target="_blank" rel="noopener noreferrer">Youtube</a>
     </div>
   </div>
 
@@ -456,6 +460,24 @@
       <!-- populated per-project by renderOverlay() in js/main.js -->
     </div>
   </div>
+</div>
+
+<!-- =========================================================
+     PHOTO LIGHTBOX — fullscreen single-photo view with prev/next, opened by
+     clicking any real photo inside the project overlay (.ov-photo). Driven
+     by the photo list renderOverlay() builds in js/main.js, so it pages
+     through every real photo for whichever project is currently open.
+========================================================== -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close photo" type="button">
+    <span></span><span></span>
+  </button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous photo" type="button">&larr;</button>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next photo" type="button">&rarr;</button>
+  <figure class="lightbox-stage">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  </figure>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
 </div>
 
 <script src="js/projects-data.js"></script>

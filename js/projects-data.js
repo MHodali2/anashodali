@@ -488,7 +488,7 @@ window.PROJECTS = {
 
   bazzar: {
     title: "Bazzar",
-    titleAr: "البازار",
+    titleAr: "البزار",
     location: "Al-Baloo', Palestine",
     heroImage: "assets/images/bazzar.webp",
     heroImageAlt: "Bazzar — exterior view",
@@ -557,7 +557,7 @@ window.PROJECTS = {
 
   "tallet-bahar": {
     title: "Tallet Bahar",
-    titleAr: "تلة بحر",
+    titleAr: "طلة بحر",
     location: "Ramallah, Palestine",
     heroImage: "assets/images/tallet-bahar.webp",
     heroImageAlt: "Tallet Bahar — exterior view",
@@ -593,7 +593,7 @@ window.PROJECTS = {
 
   "nabali-al-faris": {
     title: "Nabali Al-Faris",
-    titleAr: "نابلسي الفارس",
+    titleAr: "نبالي والفارس",
     location: "Ramallah, Palestine",
     heroImage: "assets/images/nabali-al-faris.webp",
     heroImageAlt: "Nabali Al-Faris — exterior view",

@@ -26,7 +26,7 @@
 /* ---------- Reset ---------- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   font-family: var(--font);
@@ -34,6 +34,7 @@ body {
   color: var(--charcoal);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 img { display: block; max-width: 100%; }
@@ -1547,6 +1548,106 @@ body.overlay-locked { overflow: hidden; }
 
 .ov-back:hover { color: var(--orange-light); border-color: var(--orange-light); }
 
+/* -- photo lightbox: fullscreen single-photo view with prev/next, opened by
+   clicking any real photo inside the overlay (.ov-photo) -- */
+.ov-photo { cursor: zoom-in; }
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 9, 8, 0.94);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.lightbox.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox-stage { max-width: min(88vw, 1400px); max-height: 86vh; margin: 0; }
+
+.lightbox-img {
+  display: block;
+  max-width: min(88vw, 1400px);
+  max-height: 86vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 28px;
+  right: 32px;
+  z-index: 410;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.lightbox-close:hover { background: rgba(217, 84, 30, 0.28); border-color: rgba(217, 84, 30, 0.55); }
+
+.lightbox-close span {
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background: var(--white);
+}
+
+.lightbox-close span:first-child { transform: rotate(45deg); }
+.lightbox-close span:last-child { transform: rotate(-45deg); }
+
+.lightbox-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 410;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--white);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.lightbox-nav:hover { background: rgba(217, 84, 30, 0.28); border-color: rgba(217, 84, 30, 0.55); }
+.lightbox-prev { left: 24px; }
+.lightbox-next { right: 24px; }
+.lightbox-nav[hidden] { display: none; }
+
+.lightbox-counter {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 410;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
 @media (max-width: 860px) {
   .overlay-topline { padding: 20px 24px; }
   .overlay-body { padding: 10px 24px 120px; }
@@ -1561,6 +1662,12 @@ body.overlay-locked { overflow: hidden; }
 
   .ov-gallery { grid-template-columns: repeat(2, 1fr); }
   .ov-gtile, .ov-gtile--tall, .ov-gtile--wide { grid-column: span 1; grid-row: span 1; aspect-ratio: 4 / 3; margin-top: 0; }
+
+  .lightbox-close { top: 16px; right: 16px; }
+  .lightbox-nav { width: 40px; height: 40px; font-size: 16px; }
+  .lightbox-prev { left: 10px; }
+  .lightbox-next { right: 10px; }
+  .lightbox-stage, .lightbox-img { max-width: 94vw; max-height: 78vh; }
 }
 
 /* ==========================================================================

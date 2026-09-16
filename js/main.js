@@ -302,6 +302,13 @@
     var bodyEl = document.getElementById("overlayBody");
     var closeTimer = null;
 
+    // Real photos for whichever project is currently open, in the order
+    // they appear on the page — rebuilt by renderOverlay() every time a
+    // card is clicked. Each .ov-photo <img> carries a data-photo-index
+    // into this array so the lightbox knows what to show and can page
+    // through the rest with prev/next.
+    var currentPhotos = [];
+
     function escapeHtml(s) {
       if (s == null) return "";
       return String(s)
@@ -318,9 +325,13 @@
 
     // Renders one opener/spread-2 image slot: a real <img> if the project
     // supplies one for it, otherwise the tone-colored placeholder block.
-    function ovImageFigure(project, extraClass, src, alt, tone) {
+    // Real photos get registered into `photos` (the running list for this
+    // render) so the lightbox can find and page through them.
+    function ovImageFigure(project, extraClass, src, alt, tone, photos) {
       if (src) {
-        return '<figure class="ov-img ' + extraClass + '"><img src="' + src + '" alt="' + escapeHtml(alt || project.title) + '"></figure>';
+        var idx = photos.length;
+        photos.push({ src: src, alt: alt || project.title });
+        return '<figure class="ov-img ' + extraClass + '"><img class="ov-photo" data-photo-index="' + idx + '" src="' + src + '" alt="' + escapeHtml(alt || project.title) + '"></figure>';
       }
       return '<figure class="ov-img ' + extraClass + ' ov-placeholder" data-tone="' + tone + '"><span class="ov-placeholder-label">Image placeholder</span></figure>';
     }
@@ -328,9 +339,11 @@
     // Same idea for one gallery tile: `image` is an optional { src, alt }
     // pulled from project.galleryImages[i]; falls back to the placeholder
     // when that slot has no real photo yet.
-    function ovGalleryFigure(project, extraClass, image, tone) {
+    function ovGalleryFigure(project, extraClass, image, tone, photos) {
       if (image && image.src) {
-        return '<figure class="ov-gtile ' + extraClass + '"><img src="' + image.src + '" alt="' + escapeHtml(image.alt || project.title) + '"></figure>';
+        var idx = photos.length;
+        photos.push({ src: image.src, alt: image.alt || project.title });
+        return '<figure class="ov-gtile ' + extraClass + '"><img class="ov-photo" data-photo-index="' + idx + '" src="' + image.src + '" alt="' + escapeHtml(image.alt || project.title) + '"></figure>';
       }
       return '<figure class="ov-gtile ' + extraClass + ' ov-placeholder" data-tone="' + tone + '"><span class="ov-placeholder-label">Image placeholder</span></figure>';
     }
@@ -342,11 +355,18 @@
 
       var tones = project.tones || [1, 2, 3, 4, 5, 6, 7];
 
+      // Rebuilt fresh on every render; ovImageFigure()/ovGalleryFigure()
+      // push into it below as they render each real photo, and each
+      // pushed <img> is tagged with its index into this array.
+      var photos = [];
+
       var html = "";
 
       html += '<div class="ov-spread">';
-      html += '<figure class="ov-img ov-img--a"><img src="' + project.heroImage + '" alt="' + escapeHtml(project.heroImageAlt || project.title) + '"></figure>';
-      html += ovImageFigure(project, "ov-img--b", project.spreadBImage, project.spreadBImageAlt, tones[0]);
+      var heroIdx = photos.length;
+      photos.push({ src: project.heroImage, alt: project.heroImageAlt || project.title });
+      html += '<figure class="ov-img ov-img--a"><img class="ov-photo" data-photo-index="' + heroIdx + '" src="' + project.heroImage + '" alt="' + escapeHtml(project.heroImageAlt || project.title) + '"></figure>';
+      html += ovImageFigure(project, "ov-img--b", project.spreadBImage, project.spreadBImageAlt, tones[0], photos);
       html += '</div>';
 
       html += '<div class="ov-intro">';
@@ -364,7 +384,7 @@
       html += '</dl>';
 
       html += '<div class="ov-spread-2">';
-      html += ovImageFigure(project, "ov-img--full", project.spread2Image, project.spread2ImageAlt, tones[1]);
+      html += ovImageFigure(project, "ov-img--full", project.spread2Image, project.spread2ImageAlt, tones[1], photos);
       html += '<div class="ov-pull"><p class="ov-pullquote">&ldquo;' + escapeHtml(project.pullquote) + '&rdquo;</p></div>';
       html += '</div>';
 
@@ -384,13 +404,14 @@
       GALLERY_TILE_CLASSES.forEach(function (cls, i) {
         var img = project.galleryImages && project.galleryImages[i];
         if (!img && hasGalleryPhotos) return;
-        html += ovGalleryFigure(project, cls, img, tones[2 + i]);
+        html += ovGalleryFigure(project, cls, img, tones[2 + i], photos);
       });
       html += '</div>';
 
       html += '<button class="ov-back" type="button">&larr; Back to all projects</button>';
 
       bodyEl.innerHTML = html;
+      currentPhotos = photos;
     }
 
     function openOverlay(card, project) {
@@ -423,6 +444,8 @@
     }
 
     function closeOverlay() {
+      closeLightbox();
+
       overlay.style.transition = "transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease";
       overlay.style.transform = "scale(0.94)";
       overlay.style.opacity = "0";
@@ -436,6 +459,52 @@
       }, 450);
     }
 
+    /* ---------------- Photo lightbox (nested inside the overlay) ---------------- */
+    /* Opened by clicking any .ov-photo image rendered above. Pages through
+       currentPhotos, which renderOverlay() rebuilds for whichever project
+       is open, so prev/next always stays scoped to that project's photos. */
+    var lightbox = document.getElementById("lightbox");
+    var lightboxImg = document.getElementById("lightboxImg");
+    var lightboxCounter = document.getElementById("lightboxCounter");
+    var lightboxClose = document.getElementById("lightboxClose");
+    var lightboxPrev = document.getElementById("lightboxPrev");
+    var lightboxNext = document.getElementById("lightboxNext");
+    var lightboxIndex = 0;
+
+    function showLightboxPhoto(i) {
+      if (!currentPhotos.length) return;
+      lightboxIndex = (i + currentPhotos.length) % currentPhotos.length;
+      var photo = currentPhotos[lightboxIndex];
+      lightboxImg.src = photo.src;
+      lightboxImg.alt = photo.alt || "";
+      lightboxCounter.textContent = (lightboxIndex + 1) + " / " + currentPhotos.length;
+      var multiple = currentPhotos.length > 1;
+      lightboxPrev.hidden = !multiple;
+      lightboxNext.hidden = !multiple;
+    }
+
+    function openLightbox(idx) {
+      if (!lightbox || !currentPhotos.length) return;
+      showLightboxPhoto(idx);
+      lightbox.classList.add("is-open");
+    }
+
+    function closeLightbox() {
+      if (!lightbox) return;
+      lightbox.classList.remove("is-open");
+    }
+
+    if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
+    if (lightboxPrev) lightboxPrev.addEventListener("click", function () { showLightboxPhoto(lightboxIndex - 1); });
+    if (lightboxNext) lightboxNext.addEventListener("click", function () { showLightboxPhoto(lightboxIndex + 1); });
+
+    // clicking the dimmed backdrop (not the photo itself) closes it
+    if (lightbox) {
+      lightbox.addEventListener("click", function (e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+    }
+
     document.querySelectorAll(".project-card[data-project]").forEach(function (card) {
       card.addEventListener("click", function () {
         var id = card.getAttribute("data-project");
@@ -447,15 +516,24 @@
 
     if (closeBtn) closeBtn.addEventListener("click", closeOverlay);
 
-    // .ov-back is re-created inside #overlayBody on every render, so this
-    // listens on the stable bodyEl ancestor instead of the button itself
+    // .ov-back and every .ov-photo are re-created inside #overlayBody on
+    // every render, so this listens on the stable bodyEl ancestor instead
+    // of the elements themselves
     if (bodyEl) {
       bodyEl.addEventListener("click", function (e) {
-        if (e.target.closest(".ov-back")) closeOverlay();
+        if (e.target.closest(".ov-back")) { closeOverlay(); return; }
+        var photoEl = e.target.closest(".ov-photo");
+        if (photoEl) openLightbox(parseInt(photoEl.getAttribute("data-photo-index"), 10));
       });
     }
 
     document.addEventListener("keydown", function (e) {
+      if (lightbox && lightbox.classList.contains("is-open")) {
+        if (e.key === "Escape") closeLightbox();
+        else if (e.key === "ArrowLeft") showLightboxPhoto(lightboxIndex - 1);
+        else if (e.key === "ArrowRight") showLightboxPhoto(lightboxIndex + 1);
+        return;
+      }
       if (e.key === "Escape" && overlay.classList.contains("is-open")) closeOverlay();
     });
 
