@@ -575,7 +575,11 @@
       var heroIdx = photos.length;
       photos.push({ src: project.heroImage, alt: project.heroImageAlt || project.title });
       html += '<figure class="ov-img ov-img--a"><img class="ov-photo" data-photo-index="' + heroIdx + '" src="' + project.heroImage + '" alt="' + escapeHtml(project.heroImageAlt || project.title) + '"></figure>';
-      html += ovImageFigure(project, "ov-img--b", project.spreadBImage, project.spreadBImageAlt, tones[0], photos);
+      if (project.spreadBVideo) {
+        html += '<figure class="ov-img ov-img--b ov-video"><iframe src="' + project.spreadBVideo + '" title="' + escapeHtml(project.title) + ' video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></figure>';
+      } else {
+        html += ovImageFigure(project, "ov-img--b", project.spreadBImage, project.spreadBImageAlt, tones[0], photos);
+      }
       html += '</div>';
 
       html += '<div class="ov-intro">';
@@ -609,12 +613,21 @@
       // real photos and placeholders in the same grid reads as broken.
       // Projects with zero real photos still show the full placeholder set
       // as an intentional "gallery coming soon" signal.
-      var hasGalleryPhotos = !!(project.galleryImages && project.galleryImages.length);
-      GALLERY_TILE_CLASSES.forEach(function (cls, i) {
-        var img = project.galleryImages && project.galleryImages[i];
-        if (!img && hasGalleryPhotos) return;
-        html += ovGalleryFigure(project, cls, img, tones[2 + i], photos);
-      });
+      var galleryImages = project.galleryImages || [];
+      var hasGalleryPhotos = !!galleryImages.length;
+      // Slot count follows whichever is longer — the fixed tile-class
+      // pattern (placeholder "gallery coming soon" state) or the project's
+      // own photo count, so projects with more than 5 real photos (e.g. a
+      // floor plan set appended after the site photos) still render every
+      // one instead of being silently truncated at the 5th tile.
+      var gallerySlots = Math.max(GALLERY_TILE_CLASSES.length, galleryImages.length);
+      for (var gi = 0; gi < gallerySlots; gi++) {
+        var img = galleryImages[gi];
+        if (!img && hasGalleryPhotos) continue;
+        var cls = GALLERY_TILE_CLASSES[gi % GALLERY_TILE_CLASSES.length];
+        var tone = tones[2 + gi] || tones[(2 + gi) % tones.length] || 1;
+        html += ovGalleryFigure(project, cls, img, tone, photos);
+      }
       html += '</div>';
 
       html += '<button class="ov-back" type="button">&larr; Back to all projects</button>';

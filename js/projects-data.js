@@ -41,15 +41,18 @@ window.PROJECTS = {
     materialsText: "Board-formed concrete carries the roof's long spans, left exposed inside the hall; the courtyard walls are faced in a warm local stone laid in a coursing pattern that echoes the older buildings surrounding the site. Openings are kept few and deliberate, so daylight arrives as event rather than ambience.",
     // real photography — see assets/images/masjid/. Any of these left unset
     // (or removed later) falls back to the tones[] placeholder in that slot.
-    spreadBImage: "assets/images/masjid/masjid%205.webp",
-    spreadBImageAlt: "Masjid — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (masjid 5.webp)
+    // was moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/RtNbASv5m_M",
     spread2Image: "assets/images/masjid/masjid%20interior%201.webp",
     spread2ImageAlt: "Masjid — interior view",
     galleryImages: [
       { src: "assets/images/masjid/masjid%203.webp", alt: "Masjid — exterior detail" },
       { src: "assets/images/masjid/masjid%204.webp", alt: "Masjid — exterior detail" },
       { src: "assets/images/masjid/masjid%20door.webp", alt: "Masjid — entrance detail" },
-      { src: "assets/images/masjid/masjid%20interior%202.webp", alt: "Masjid — interior detail" }
+      { src: "assets/images/masjid/masjid%20interior%202.webp", alt: "Masjid — interior detail" },
+      { src: "assets/images/masjid/masjid%205.webp", alt: "Masjid — exterior, alternate view" }
     ],
     tones: [4, 7, 1, 2, 6, 3, 4]
   },
@@ -78,14 +81,22 @@ window.PROJECTS = {
     materialsText: "A reinforced concrete frame carries the cantilevered band itself, finished in a pale sand-colored render that reads close to the surrounding stone; interior partitions are lightweight so the plan can be reconfigured room by room as the family's needs change.",
     // real photography — see assets/images/band/. Any of these left unset
     // (or removed later) falls back to the tones[] placeholder in that slot.
-    spreadBImage: "assets/images/band/29.webp",
-    spreadBImageAlt: "Band — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (29.webp) was
+    // moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/RBziDpOJ5BY",
     spread2Image: "assets/images/band/Untitled-13.webp",
     spread2ImageAlt: "Band — wide exterior view",
     galleryImages: [
       { src: "assets/images/band/f5.webp", alt: "Band — exterior detail" },
       { src: "assets/images/band/Untitled-5.webp", alt: "Band — detail view" },
-      { src: "assets/images/band/Untitled-12.webp", alt: "Band — detail view" }
+      { src: "assets/images/band/Untitled-12.webp", alt: "Band — detail view" },
+      { src: "assets/images/band/1.jpeg", alt: "Band — floor plan 1" },
+      { src: "assets/images/band/2.jpeg", alt: "Band — floor plan 2" },
+      { src: "assets/images/band/3.jpeg", alt: "Band — floor plan 3" },
+      { src: "assets/images/band/4.jpeg", alt: "Band — floor plan 4" },
+      { src: "assets/images/band/5.jpeg", alt: "Band — floor plan 5" },
+      { src: "assets/images/band/29.webp", alt: "Band — exterior, alternate view" }
     ],
     tones: [4, 5, 6, 7, 8, 1, 2]
   },
@@ -114,15 +125,18 @@ window.PROJECTS = {
     materialsText: "Load-bearing stone walls, quarried locally, carry most of the structure; where the plan opens up, slender steel columns take over so the courtyard-facing walls can be almost entirely glazed.",
     // real photography — see assets/images/omary/. Any of these left unset
     // (or removed later) falls back to the tones[] placeholder in that slot.
-    spreadBImage: "assets/images/omary/Untitled-4.webp",
-    spreadBImageAlt: "Omary — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (Untitled-4.webp)
+    // was moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/79JLYznOaDk",
     spread2Image: "assets/images/omary/Untitled-5.webp",
     spread2ImageAlt: "Omary — wide exterior view",
     galleryImages: [
       { src: "assets/images/omary/kitchen-dining.webp", alt: "Omary — kitchen and dining" },
       { src: "assets/images/omary/living-terrace.webp", alt: "Omary — living room onto terrace" },
       { src: "assets/images/omary/open-plan.webp", alt: "Omary — open-plan interior" },
-      { src: "assets/images/omary/living-room.webp", alt: "Omary — living room" }
+      { src: "assets/images/omary/living-room.webp", alt: "Omary — living room" },
+      { src: "assets/images/omary/Untitled-4.webp", alt: "Omary — exterior, alternate view" }
     ],
     tones: [6, 7, 8, 1, 2, 3, 4]
   },
@@ -151,8 +165,10 @@ window.PROJECTS = {
     materialsText: "Precast stone-aggregate panels form the perforated screen, hung clear of the concrete frame behind on a simple steel bracket system that also doubles as a maintenance walkway.",
     // real photography — see assets/images/sakhr/. Any of these left unset
     // (or removed later) falls back to the tones[] placeholder in that slot.
-    spreadBImage: "assets/images/sakhr/31.webp",
-    spreadBImageAlt: "Sakhr — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (31.webp) was
+    // moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/JjkJ2-giUJw",
     spread2Image: "assets/images/sakhr/f5.webp",
     spread2ImageAlt: "Sakhr — wide exterior view",
     galleryImages: [
@@ -160,7 +176,10 @@ window.PROJECTS = {
       { src: "assets/images/sakhr/Untitled-9.webp", alt: "Sakhr — exterior detail" },
       { src: "assets/images/sakhr/Untitled-11.webp", alt: "Sakhr — exterior, evening view" },
       { src: "assets/images/sakhr/Untitled-12.webp", alt: "Sakhr — detail view" },
-      { src: "assets/images/sakhr/Untitled-13.webp", alt: "Sakhr — wide exterior view" }
+      { src: "assets/images/sakhr/Untitled-13.webp", alt: "Sakhr — wide exterior view" },
+      { src: "assets/images/sakhr/1.jpeg", alt: "Sakhr — floor plan 1" },
+      { src: "assets/images/sakhr/2.jpeg", alt: "Sakhr — floor plan 2" },
+      { src: "assets/images/sakhr/31.webp", alt: "Sakhr — exterior, alternate view" }
     ],
     tones: [2, 3, 4, 5, 6, 7, 8]
   },
@@ -189,15 +208,18 @@ window.PROJECTS = {
     materialsText: "Each volume is built in exposed reinforced concrete with a shared stone base at street level, tying the compound visually to the older stone houses further down the street.",
     // real photography — see assets/images/jamal/. Any of these left unset
     // (or removed later) falls back to the tones[] placeholder in that slot.
-    spreadBImage: "assets/images/jamal/Untitled-5.webp",
-    spreadBImageAlt: "Abdallah Al-Jamal — aerial view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (Untitled-5.webp)
+    // was moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/bKUdMu8Tpgg",
     spread2Image: "assets/images/jamal/Untitled-4.webp",
     spread2ImageAlt: "Abdallah Al-Jamal — aerial view",
     galleryImages: [
       { src: "assets/images/jamal/8.webp", alt: "Abdallah Al-Jamal — entrance detail" },
       { src: "assets/images/jamal/Untitled-3.webp", alt: "Abdallah Al-Jamal — exterior, alternate view" },
       { src: "assets/images/jamal/Untitled-2.webp", alt: "Abdallah Al-Jamal — exterior, alternate view" },
-      { src: "assets/images/jamal/Untitled-6.webp", alt: "Abdallah Al-Jamal — aerial detail" }
+      { src: "assets/images/jamal/Untitled-6.webp", alt: "Abdallah Al-Jamal — aerial detail" },
+      { src: "assets/images/jamal/Untitled-5.webp", alt: "Abdallah Al-Jamal — aerial view" }
     ],
     tones: [7, 8, 1, 2, 3, 4, 5]
   },
@@ -226,8 +248,10 @@ window.PROJECTS = {
     materialsText: "A conventional concrete frame is dressed in locally quarried stone on both street faces, with render reserved for the more private garden elevation.",
     // real photography — see assets/images/abdallah/. Any of these left unset
     // (or removed later) falls back to the tones[] placeholder in that slot.
-    spreadBImage: "assets/images/abdallah/Untitled-1.webp",
-    spreadBImageAlt: "Abdallah Ewias — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (Untitled-1.webp)
+    // was moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/khVZgtQQOzw",
     spread2Image: "assets/images/abdallah/Untitled-7.webp",
     spread2ImageAlt: "Abdallah Ewias — aerial view",
     galleryImages: [
@@ -235,7 +259,8 @@ window.PROJECTS = {
       { src: "assets/images/abdallah/Untitled-4.webp", alt: "Abdallah Ewias — exterior, evening view" },
       { src: "assets/images/abdallah/Untitled-5.webp", alt: "Abdallah Ewias — rear exterior view" },
       { src: "assets/images/abdallah/Untitled-6.webp", alt: "Abdallah Ewias — pool terrace detail" },
-      { src: "assets/images/abdallah/Untitled-8.webp", alt: "Abdallah Ewias — aerial, evening view" }
+      { src: "assets/images/abdallah/Untitled-8.webp", alt: "Abdallah Ewias — aerial, evening view" },
+      { src: "assets/images/abdallah/Untitled-1.webp", alt: "Abdallah Ewias — exterior, alternate view" }
     ],
     tones: [3, 4, 5, 6, 7, 8, 1]
   },
@@ -300,14 +325,17 @@ window.PROJECTS = {
     materialsText: "A concrete frame carries the transfer structure at the second level; the retail base is fully glazed aluminum storefront, while the residential floors above are finished in the same stone cladding used across the practice's other Ramallah work.",
     // real photography — see assets/images/jaradat/. Any of these left unset
     // (or removed later) falls back to the tones[] placeholder in that slot.
-    spreadBImage: "assets/images/jaradat/Untitled-3.webp",
-    spreadBImageAlt: "Iyyad Jaradat — exterior, alternate view",
+    // prototype: YouTube embed in place of the spread-B image slot (see
+    // renderOverlay() in main.js). The image that used to live in this slot
+    // (Untitled-3.webp) was moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/cpxGmguVZSY",
     spread2Image: "assets/images/jaradat/Untitled-6.webp",
     spread2ImageAlt: "Iyyad Jaradat — aerial, evening view",
     galleryImages: [
       { src: "assets/images/jaradat/Untitled-4.webp", alt: "Iyyad Jaradat — entrance detail" },
       { src: "assets/images/jaradat/Untitled-5.webp", alt: "Iyyad Jaradat — exterior, alternate view" },
-      { src: "assets/images/jaradat/Untitled-7.webp", alt: "Iyyad Jaradat — facade detail" }
+      { src: "assets/images/jaradat/Untitled-7.webp", alt: "Iyyad Jaradat — facade detail" },
+      { src: "assets/images/jaradat/Untitled-3.webp", alt: "Iyyad Jaradat — exterior, alternate view" }
     ],
     tones: [5, 6, 7, 8, 1, 2, 3]
   },
@@ -404,15 +432,18 @@ window.PROJECTS = {
     pullquote: "The street only ever sees half of the house — the garden gets the other half.",
     materialsHeading: "Materials & Structure",
     materialsText: "Load-bearing stone walls face the street, while the garden elevation shifts to a lighter concrete-and-glass assembly that opens the plan outward.",
-    spreadBImage: "assets/images/jalal-hamed/02.webp",
-    spreadBImageAlt: "Jalal Hamed — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (02.webp) was
+    // moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/Zih5UHlcgMg",
     spread2Image: "assets/images/jalal-hamed/03.webp",
     spread2ImageAlt: "Jalal Hamed — wide exterior view",
     galleryImages: [
       { src: "assets/images/jalal-hamed/04.webp", alt: "Jalal Hamed — exterior detail" },
       { src: "assets/images/jalal-hamed/05.webp", alt: "Jalal Hamed — exterior detail" },
       { src: "assets/images/jalal-hamed/06.webp", alt: "Jalal Hamed — exterior, alternate view" },
-      { src: "assets/images/jalal-hamed/07.webp", alt: "Jalal Hamed — evening view" }
+      { src: "assets/images/jalal-hamed/07.webp", alt: "Jalal Hamed — evening view" },
+      { src: "assets/images/jalal-hamed/02.webp", alt: "Jalal Hamed — exterior, alternate view" }
     ],
     tones: [3, 4, 5, 6, 7, 8, 1]
   },
@@ -439,14 +470,17 @@ window.PROJECTS = {
     pullquote: "A deep reveal does the shading work a mechanical louver would — it just never needs maintenance.",
     materialsHeading: "Materials & Structure",
     materialsText: "A stone-clad concrete base carries a lighter render-finished upper floor, with deep-set window reveals cast directly into the concrete frame.",
-    spreadBImage: "assets/images/omar-aaqel/02.webp",
-    spreadBImageAlt: "Omar Aaqel — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (02.webp) was
+    // moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/ocmC07iHSaA",
     spread2Image: "assets/images/omar-aaqel/03.webp",
     spread2ImageAlt: "Omar Aaqel — wide exterior view",
     galleryImages: [
       { src: "assets/images/omar-aaqel/04.webp", alt: "Omar Aaqel — exterior detail" },
       { src: "assets/images/omar-aaqel/05.webp", alt: "Omar Aaqel — exterior detail" },
-      { src: "assets/images/omar-aaqel/06.webp", alt: "Omar Aaqel — exterior, alternate view" }
+      { src: "assets/images/omar-aaqel/06.webp", alt: "Omar Aaqel — exterior, alternate view" },
+      { src: "assets/images/omar-aaqel/02.webp", alt: "Omar Aaqel — exterior, alternate view" }
     ],
     tones: [4, 5, 6, 7, 8, 1, 2]
   },
@@ -543,14 +577,17 @@ window.PROJECTS = {
     pullquote: "Building up instead of out was the whole design decision — everything else followed from it.",
     materialsHeading: "Materials & Structure",
     materialsText: "A compact reinforced concrete frame is finished in a light render, with a stone base marking the entrance at ground level.",
-    spreadBImage: "assets/images/mikkawi/02.webp",
-    spreadBImageAlt: "Mikkawi — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (02.webp) was
+    // moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/XdUxsbTpUBk",
     spread2Image: "assets/images/mikkawi/03.webp",
     spread2ImageAlt: "Mikkawi — wide exterior view",
     galleryImages: [
       { src: "assets/images/mikkawi/04.webp", alt: "Mikkawi — exterior detail" },
       { src: "assets/images/mikkawi/05.webp", alt: "Mikkawi — exterior detail" },
-      { src: "assets/images/mikkawi/06.webp", alt: "Mikkawi — exterior, alternate view" }
+      { src: "assets/images/mikkawi/06.webp", alt: "Mikkawi — exterior, alternate view" },
+      { src: "assets/images/mikkawi/02.webp", alt: "Mikkawi — exterior, alternate view" }
     ],
     tones: [7, 8, 1, 2, 3, 4, 5]
   },
@@ -577,8 +614,10 @@ window.PROJECTS = {
     pullquote: "The slope was never a constraint to solve around — it was the site's best feature.",
     materialsHeading: "Materials & Structure",
     materialsText: "Retaining and structural walls are combined in board-formed concrete, with local stone cladding on the upper terraces to tie the house back to the hillside around it.",
-    spreadBImage: "assets/images/tallet-bahar/02.webp",
-    spreadBImageAlt: "Tallet Bahar — exterior, alternate view",
+    // video embed in place of the spread-B image slot (see renderOverlay()
+    // in main.js). The image that used to live in this slot (02.webp) was
+    // moved down into galleryImages below.
+    spreadBVideo: "https://www.youtube.com/embed/6GrbBBVq5L4?start=63",
     spread2Image: "assets/images/tallet-bahar/03.webp",
     spread2ImageAlt: "Tallet Bahar — wide exterior view",
     galleryImages: [
@@ -586,7 +625,12 @@ window.PROJECTS = {
       { src: "assets/images/tallet-bahar/05.webp", alt: "Tallet Bahar — exterior detail" },
       { src: "assets/images/tallet-bahar/06.webp", alt: "Tallet Bahar — exterior, alternate view" },
       { src: "assets/images/tallet-bahar/07.webp", alt: "Tallet Bahar — terrace detail" },
-      { src: "assets/images/tallet-bahar/08.webp", alt: "Tallet Bahar — evening view" }
+      { src: "assets/images/tallet-bahar/08.webp", alt: "Tallet Bahar — evening view" },
+      { src: "assets/images/tallet-bahar/floor%20plan%201.jpeg", alt: "Tallet Bahar — floor plan 1" },
+      { src: "assets/images/tallet-bahar/floor%20plan%202.jpeg", alt: "Tallet Bahar — floor plan 2" },
+      { src: "assets/images/tallet-bahar/floor%20plan%203.jpeg", alt: "Tallet Bahar — floor plan 3" },
+      { src: "assets/images/tallet-bahar/floor%20plan%204.jpeg", alt: "Tallet Bahar — floor plan 4" },
+      { src: "assets/images/tallet-bahar/02.webp", alt: "Tallet Bahar — exterior, alternate view" }
     ],
     tones: [8, 1, 2, 3, 4, 5, 6]
   },

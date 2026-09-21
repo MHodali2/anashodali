@@ -1564,6 +1564,9 @@ body.overlay-locked { overflow: hidden; }
 
 .ov-img img { width: 100%; height: 100%; object-fit: cover; }
 
+.ov-img--b.ov-video { aspect-ratio: 16 / 9; }
+.ov-video iframe { display: block; width: 100%; height: 100%; border: 0; }
+
 .ov-placeholder {
   display: flex;
   align-items: center;
