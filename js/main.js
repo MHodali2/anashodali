@@ -728,7 +728,8 @@
     }
 
     document.querySelectorAll(".project-card[data-project]").forEach(function (card) {
-      card.addEventListener("click", function () {
+      card.addEventListener("click", function (e) {
+        if (e.target.closest(".project-tour-link")) return; // let the 3D tour link navigate
         var id = card.getAttribute("data-project");
         var project = window.PROJECTS && window.PROJECTS[id];
         if (!project) return;

@@ -1,0 +1,20 @@
+import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import draco3d from 'draco3dgltf';
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({'draco3d.decoder': await draco3d.createDecoderModule()});
+const doc = await io.read(process.argv[2]);
+const root = doc.getRoot();
+let tris=0, prims=0;
+for (const m of root.getListOfMeshes?.() ?? root.listMeshes()) for (const p of m.listPrimitives()){prims++; const i=p.getIndices(); tris += (i? i.getCount(): p.getAttribute('POSITION').getCount())/3;}
+console.log('nodes',root.listNodes().length,'meshes',root.listMeshes().length,'prims',prims,'tris',Math.round(tris));
+console.log('materials',root.listMaterials().length,'textures',root.listTextures().length);
+const texs = root.listTextures().map(t=>{const [w,h]=t.getSize()||[0,0]; return {name:t.getName()||t.getURI(), mime:t.getMimeType(), w,h, kb:Math.round(t.getImage().byteLength/1024)}});
+texs.sort((a,b)=>b.kb-a.kb);
+console.log('texture MB total', (texs.reduce((s,t)=>s+t.kb,0)/1024).toFixed(1));
+console.log('top textures', JSON.stringify(texs.slice(0,15)));
+const sizes={}; texs.forEach(t=>{const k=t.w+'x'+t.h; sizes[k]=(sizes[k]||0)+1}); console.log('size histogram', JSON.stringify(sizes));
+const mats = root.listMaterials().map(m=>({n:m.getName(), c:m.getBaseColorFactor().map(x=>+x.toFixed(2)), met:m.getMetallicFactor(), rough:m.getRoughnessFactor(), map:!!m.getBaseColorTexture(), nrm:!!m.getNormalTexture(), mr:!!m.getMetallicRoughnessTexture(), alpha:m.getAlphaMode(), tr:!!m.getExtension('KHR_materials_transmission')}));
+console.log('mats with basecolor map', mats.filter(m=>m.map).length, '/', mats.length);
+console.log(JSON.stringify(mats.slice(0,40)));
+const names = root.listNodes().map(n=>n.getName()); const pre={}; names.forEach(n=>{const k=n.replace(/[_\s.\d]+.*$/,''); pre[k]=(pre[k]||0)+1});
+console.log('name prefixes', JSON.stringify(Object.entries(pre).sort((a,b)=>b[1]-a[1]).slice(0,25)));

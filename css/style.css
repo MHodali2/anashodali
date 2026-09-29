@@ -178,6 +178,23 @@ ul { list-style: none; }
 .site-header.is-scrolled .nav-link,
 .site-header.no-hero .nav-link { color: var(--charcoal); }
 
+.nav-link--tour {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-link--tour svg { display: block; flex-shrink: 0; }
+
+/* icon-only in the desktop bar; the label shows in the mobile dropdown */
+.nav-tour-label {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .nav-link--current::after { width: 100%; }
 
 .nav-link::after {
@@ -1015,6 +1032,33 @@ a.hero-media {
 .project-card:hover .project-arrow {
   transform: rotate(-45deg) translate(1px, -1px);
   color: var(--orange);
+}
+
+.project-title-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.project-tour-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-top: -4px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: rgba(28, 26, 23, 0.55);
+  transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.project-tour-link:hover,
+.project-tour-link:focus-visible {
+  color: #fff;
+  background: var(--orange);
+  border-color: var(--orange);
 }
 
 .project-location {
@@ -1910,6 +1954,15 @@ body.overlay-locked { overflow: hidden; }
   }
 
   .main-nav .nav-link:last-child { border-bottom: none; }
+
+  .main-nav .nav-link--tour { display: flex; }
+
+  .nav-tour-label {
+    position: static;
+    width: auto; height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
 
   .nav-toggle { display: flex; }
 

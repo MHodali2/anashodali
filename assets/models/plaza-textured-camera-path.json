@@ -1,0 +1,22 @@
+{
+  "_readme": "Camera path for 3d-tour-test.html, textured model (plaza-textured.glb). space:'meta' = plaza-textured-meta.json coords: glTF Y-up, metres, model centred on x/z with the lowest point at y=0 (so scene space == meta space). pos = camera position, look = aim point. Exterior flythrough: SE wide -> south approach -> plaza at eye level -> up the tower -> over the roof -> around N and W -> SW wide.",
+  "space": "meta",
+  "curveType": "centripetal",
+  "pacing": [[0, 0], [1, 1]],
+  "waypoints": [
+    {"pos": [118, 69.33, 112], "look": [-8, 29.33, -6]},
+    {"pos": [66, 49.33, 126], "look": [-10, 27.33, -10]},
+    {"pos": [22, 31.33, 98], "look": [-14, 25.33, -14]},
+    {"pos": [8, 17.33, 62], "look": [-16, 27.33, -18]},
+    {"pos": [4, 14.83, 36], "look": [-18, 31.33, -20]},
+    {"pos": [2, 14.83, 18], "look": [-19, 35.33, -22]},
+    {"pos": [-4, 14.83, 3], "look": [-20, 39.33, -23]},
+    {"pos": [24, 33.33, 34], "look": [-18, 45.33, -22]},
+    {"pos": [44, 61.33, 40], "look": [-18, 55.33, -22]},
+    {"pos": [54, 95.33, 22], "look": [-20, 63.33, -24]},
+    {"pos": [60, 99.33, -40], "look": [-20, 59.33, -24]},
+    {"pos": [-8, 93.33, -92], "look": [-20, 53.33, -22]},
+    {"pos": [-100, 67.33, -56], "look": [-12, 37.33, -10]},
+    {"pos": [-112, 59.33, 44], "look": [-8, 31.33, -6]}
+  ]
+}

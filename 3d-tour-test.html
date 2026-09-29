@@ -13,12 +13,13 @@
 
      PHASE 2  load + light the optimised GLB (Phase 1).
      PHASE 3  CatmullRomCurve3 camera path (plaza-camera-path.json).
-     PHASE 4  scroll -> progress along the path; a clipping plane sections the
-              roof/tower away for the interior, rebuilds for the "look back".
+     PHASE 4  scroll -> progress along the path. (The roof-section clipping plane
+              is kept but disabled: the textured model has no modelled interior,
+              so the tour is an exterior flythrough.)
      PHASE 5  a real scrolling page around it — chapters of text locked to the
               camera, a loading screen, a progress rail, and a
               performance pass (quality tiers + adaptive downgrade).
-              KTX2/Basis: N/A — the source model has no textures.
+              Textures: 9 embedded WebP maps (<= 2048 px), Draco geometry.
 
      Serve over http(s):  python3 -m http.server 8777 --bind 127.0.0.1
 -->
@@ -79,6 +80,91 @@
   #backHome .arrow { transition: transform .2s ease; }
   #backHome:hover .arrow, #backHome:focus-visible .arrow { transform: translateX(-3px); }
 
+  /* ---------- explore (free orbit) toggle + hint ---------- */
+  #exploreBtn {
+    position: fixed; top: 20px; right: 22px; z-index: 7;
+    font: inherit; font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+    padding: 9px 15px; border-radius: 3px; backdrop-filter: blur(6px); cursor: pointer;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  #exploreBtn:hover, #exploreBtn:focus-visible, #exploreBtn[aria-pressed="true"] { border-color: var(--orange); color: var(--orange); }
+  #exploreBar {
+    position: fixed; left: 50%; bottom: 26px; z-index: 7; transform: translate(-50%, 8px);
+    display: flex; align-items: center; gap: 16px; white-space: nowrap;
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 3px;
+    padding: 8px 8px 8px 14px; backdrop-filter: blur(8px);
+    opacity: 0; pointer-events: none; transition: opacity .4s ease, transform .4s ease;
+  }
+  #exploreBar button {
+    font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--ink);
+    background: transparent; border: 1px solid var(--line); border-radius: 3px; padding: 5px 10px; cursor: pointer;
+  }
+  #exploreBar button:hover, #exploreBar button:focus-visible { border-color: var(--orange); color: var(--orange); }
+  #exploreBar .touch { display: none; }
+  @media (pointer: coarse) { #exploreBar .mouse { display: none; } #exploreBar .touch { display: inline; } }
+
+  /* explore mode: hide the story chrome, freeze page scroll, hand the canvas the pointer */
+  html.explore, html.explore body { overflow: hidden; }
+  #story, #veil, #rail { transition: opacity .5s ease, visibility 0s linear 0s; }
+  html.explore #story, html.explore #veil, html.explore #rail {
+    opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .5s ease, visibility 0s linear .5s;
+  }
+  html.explore #exploreBar { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+
+  /* ---------- hotspots: pins (Explore mode only) + info card ---------- */
+  #pins {
+    position: fixed; inset: 0; z-index: 6; overflow: hidden; pointer-events: none;
+    opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility 0s linear .5s;
+  }
+  html.explore #pins { opacity: 1; visibility: visible; transition: opacity .5s ease, visibility 0s; }
+  .pin { position: absolute; left: 0; top: 0; will-change: transform; }
+  .pin.off { visibility: hidden; }
+  .pin button {
+    position: absolute; left: -15px; top: -15px; width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; pointer-events: auto; cursor: pointer;
+    font: inherit; font-size: 11px; font-weight: 500; color: var(--ink);
+    background: var(--panel); border: 1.5px solid var(--orange); backdrop-filter: blur(6px);
+    transition: background .2s, color .2s, transform .2s;
+  }
+  .pin button::after {                       /* soft pulse ring */
+    content: ''; position: absolute; inset: -6px; border-radius: 50%;
+    border: 1px solid var(--orange); opacity: 0; animation: pinPulse 2.6s ease-out infinite;
+  }
+  @keyframes pinPulse { 0% { transform: scale(.7); opacity: .7 } 100% { transform: scale(1.5); opacity: 0 } }
+  .pin button:hover, .pin button:focus-visible { background: var(--orange); color: var(--bg); transform: scale(1.12); }
+  .pin.active button { background: var(--orange); color: var(--bg); }
+  .pin.active button::after { display: none; }
+  .pin .lbl {
+    position: absolute; left: 24px; top: -8px; white-space: nowrap; pointer-events: none;
+    font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink);
+    text-shadow: 0 1px 12px rgba(16,15,12,.9), 0 0 3px rgba(16,15,12,.8);
+  }
+  @media (pointer: coarse) { .pin .lbl { display: none; } }
+
+  #spotCard {
+    position: fixed; left: 22px; bottom: 26px; z-index: 8; width: min(390px, calc(100vw - 44px));
+    background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(12px);
+    border-radius: 3px; padding: 22px 24px 16px;
+    opacity: 0; visibility: hidden; transform: translateY(14px);
+    transition: opacity .45s ease, transform .45s ease, visibility 0s linear .45s;
+  }
+  html.spot #spotCard { opacity: 1; visibility: visible; transform: none; transition: opacity .45s ease .5s, transform .45s ease .5s, visibility 0s; }
+  #spotCard .eyebrow { font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+  #spotCard h2 { font-size: 19px; font-weight: 400; line-height: 1.3; margin-bottom: 10px; }
+  #spotCard p { font-size: 13px; color: var(--ink-dim); margin-bottom: 8px; }
+  #spotCard .foot { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  #spotCard .foot .count { margin-right: auto; font-size: 10px; letter-spacing: .12em; color: var(--ink-faint); }
+  #spotCard .foot button {
+    font: inherit; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink);
+    background: transparent; border: 1px solid var(--line); border-radius: 3px; padding: 5px 10px; cursor: pointer;
+  }
+  #spotCard .foot button:hover, #spotCard .foot button:focus-visible { border-color: var(--orange); color: var(--orange); }
+  html.spot #exploreBar { opacity: 0; pointer-events: none; }
+  @media (max-width: 720px) { #spotCard { left: 14px; bottom: 14px; width: calc(100vw - 28px); padding: 18px 18px 12px; } }
+  @media (prefers-reduced-motion: reduce) { .pin button::after { animation: none; } }
+
   /* ---------- wordmark + tour label ---------- */
   #wordmark {
     position: fixed; top: 64px; left: 23px; z-index: 6;
@@ -123,14 +209,18 @@
   #loader.error .meta { color: var(--ink); }
 
   /* ---------- the scrolling story ---------- */
-  #story { position: relative; z-index: 4; }
-  .step { min-height: 118vh; display: flex; }
+  /* #story is just the scroll track (its height = how long the tour takes to scroll).
+     Each step is pinned to the viewport and faded in/out by updateStory(), so a caption
+     is on screen exactly while the camera is at its checkpoint, not wherever it scrolled to. */
+  #story { position: relative; z-index: 4; height: 1500vh; }
+  .step { position: fixed; inset: 0; display: flex; pointer-events: none; }
   .step .panel {
     align-self: flex-end;
     max-width: 460px;
     margin: 0 0 15vh 6vw;
     opacity: 0; transform: translateY(24px);
     will-change: opacity, transform;
+    pointer-events: none;
   }
   .step .eyebrow {
     font-size: 10px; letter-spacing: .26em; text-transform: uppercase;
@@ -168,7 +258,6 @@
   .step.hero .cue span { display: block; margin-top: 8px; animation: bob 1.7s ease-in-out infinite; }
   @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(5px) } }
 
-  .step.outro { min-height: 128vh; }
   .step.outro .panel { background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(10px); padding: 46px 40px; }
   .step.outro h2 { font-size: clamp(20px, 3vw, 30px); margin-bottom: 16px; }
   .step.outro .facts { list-style: none; margin: 22px 0 26px; border-top: 1px solid var(--line); }
@@ -240,6 +329,8 @@
     .step.hero .panel, .step.outro .panel { padding: 0 6vw; }
     .step.outro .panel { padding: 34px 26px; }
     #backHome { top: 14px; left: 14px; padding: 8px 12px; font-size: 10px; }
+    #exploreBtn { top: 14px; right: 14px; padding: 8px 12px; font-size: 10px; }
+    #exploreBar { bottom: 18px; gap: 10px; font-size: 9.5px; letter-spacing: .08em; }
     #wordmark { font-size: 10px; top: 54px; left: 15px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -254,6 +345,26 @@
 <div id="veil"></div>
 
 <a id="backHome" href="index.html"><span class="arrow">&#8592;</span> Back to site</a>
+
+<button id="exploreBtn" type="button" aria-pressed="false">Explore freely</button>
+<div id="exploreBar">
+  <span class="mouse">Drag to orbit · Scroll to zoom · Right-drag to pan</span>
+  <span class="touch">Drag to orbit · Pinch to zoom · Two fingers to pan</span>
+  <button id="exploreReset" type="button">Reset view</button>
+</div>
+
+<div id="pins"></div>
+<aside id="spotCard" aria-live="polite">
+  <div class="eyebrow" id="spot-eyebrow"></div>
+  <h2 id="spot-title"></h2>
+  <div id="spot-text"></div>
+  <div class="foot">
+    <span class="count" id="spot-count"></span>
+    <button id="spot-prev" type="button" aria-label="Previous hotspot">&#8592;</button>
+    <button id="spot-next" type="button" aria-label="Next hotspot">&#8594;</button>
+    <button id="spot-close" type="button">Close</button>
+  </div>
+</aside>
 
 <div id="wordmark">
   <b>Anas Hodali</b> Architecture
@@ -289,46 +400,44 @@
     </div>
   </section>
 
-  <section class="step" data-at="0.16">
+  <section class="step" data-at="0.10">
     <div class="panel">
-      <div class="eyebrow">01 — Arrival</div>
-      <h2>A deep city-center block, opened up</h2>
-      <p>Bireh Plaza reworks a dense block in the middle of Al-Bireh into ground-floor retail with a public plaza cut straight through it — turning a single deep footprint into a shortcut people actually want to take.</p>
-      <p>The walkthrough comes in from the south, where the tower and the podium first read as one mass.</p>
+      <div class="eyebrow">01 — The block</div>
+      <h2>A tower, a stepped podium, and a plaza at the centre</h2>
+      <p>Bireh Plaza reworks a dense block in the middle of Al-Bireh: an office tower rising from a terraced podium of retail, with an open plaza cut through at ground level.</p>
+      <p>The walkthrough begins high to the south-east, where the whole composition reads at once.</p>
     </div>
   </section>
 
-  <section class="step" data-at="0.32">
+  <section class="step" data-at="0.27">
     <div class="panel">
-      <div class="eyebrow">02 — The cut</div>
+      <div class="eyebrow">02 — Arrival</div>
+      <h2>Coming down to the street</h2>
+      <p>The camera drops toward the southern edge of the site and lines up with the plaza — the point where the public space opens off the surrounding streets.</p>
+    </div>
+  </section>
+
+  <section class="step" data-at="0.42">
+    <div class="panel">
+      <div class="eyebrow">03 — The plaza</div>
       <h2>“A plaza only works if it's also the fastest way to get somewhere.”</h2>
-      <p>Shops line the new plaza at eye level; offices and a small event hall sit above. The plaza itself is treated as the project's real civic contribution — deliberately more generous than the retail alone requires.</p>
+      <p>Shops line the plaza at eye level, stepping back in terraces toward the tower. The plaza is treated as the project's real civic contribution — deliberately more generous than the retail alone requires.</p>
     </div>
   </section>
 
-  <section class="step" data-at="0.55">
+  <section class="step" data-at="0.62">
     <div class="panel">
-      <div class="eyebrow">03 — The west entrance</div>
-      <h2>Crossing the threshold</h2>
-      <p>The route picks the revolving door on the western face as its way in — the one unambiguous civic threshold on the model — and drops to eye level to pass through it.</p>
-      <p>As the camera crosses, the roof and tower section away overhead so the ground floor stays readable.</p>
+      <div class="eyebrow">04 — The tower</div>
+      <h2>Retail below, offices above</h2>
+      <p>From the plaza the view lifts and pulls back along the tower's east face: projecting slab edges mark the floors, and a glazed skin wraps the offices above the podium.</p>
     </div>
   </section>
 
-  <section class="step" data-at="0.72">
+  <section class="step" data-at="0.83">
     <div class="panel">
-      <div class="eyebrow">04 — Under the canopy</div>
-      <h2>The covered arcade</h2>
-      <p>Inside, the path follows the colonnade that runs off the entrance: a rhythm of columns and soffit beams, the shopfronts to one side, the plaza opening out to the other.</p>
-      <p>A steel canopy shades the plaza without enclosing it; the flanking buildings are finished in a warm limestone that ties the project to the older city-center facades around it.</p>
-    </div>
-  </section>
-
-  <section class="step" data-at="0.90">
-    <div class="panel">
-      <div class="eyebrow">05 — Looking back</div>
-      <h2>Retail below, offices above, a route through the middle</h2>
-      <p>The camera lifts back out at the far end and turns to take in the whole block — the piece the plaza was carved out of.</p>
+      <div class="eyebrow">05 — Around the block</div>
+      <h2>Over the roof, and back down</h2>
+      <p>The route crosses above the roof and circles the north and west sides, seeing the tower as the free-standing object it is before coming back to the plaza it sits above.</p>
     </div>
   </section>
 
@@ -388,17 +497,30 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 /* =========================================================================
    CONFIG
    ========================================================================= */
-const MODEL_URL     = 'assets/models/plaza-full.glb';
-const META_URL      = 'assets/models/plaza-meta.json';
-const PATH_JSON_URL = 'assets/models/plaza-camera-path.json';
+const MODEL_URL     = 'assets/models/plaza-textured.glb';
+const META_URL      = 'assets/models/plaza-textured-meta.json';
+const PATH_JSON_URL = 'assets/models/plaza-textured-camera-path.json';
 const DRACO_CDN     = 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/';
 
-const GLASS_NAMES = new Set(['glass', 'Rail glass', 'aq gl', '\\screen',
-                             'Revolving_door_Glass Plate-Glass']);
+const GLASS_NAMES = new Set(['glass', 'Rail_glass', 'Material__1541173878', 'Material__1541173997',
+                             'Revolving_door_Glass_Plate_Glass']);
+
+const DARK_GLASS = true;    // true = smoky dark glass matching the client render
+// [colour, opacity] per glass material. Reference render: tower curtain wall is dark blue-charcoal,
+// shopfront glass is a warm smoky grey, railings are lightly tinted and mostly clear.
+const GLASS_TINT_DEFAULT = [0x1a2028, 0.85];
+const GLASS_TINT = {
+  'Material__1541173878': [0x1b2531, 0.88],                 // tower curtain wall
+  'Material__1541173997': [0x2b2724, 0.85],                 // shopfront glazing
+  'glass':                [0x1a2028, 0.85],
+  'Rail_glass':           [0x5a6b69, 0.40],
+  'Revolving_door_Glass_Plate_Glass': [0x0f141a, 0.80],
+};
 
 const REVEAL_CEIL_ABOVE_M = 7;
 const REVEAL_SWEEP_M      = 74;
 function roofVis(u) {
+  return 1;   // exterior tour: no interior to reveal, building stays whole
   if (u <= 0.40) return 1;
   if (u <  0.58) return 1 - (u - 0.40) / 0.18;
   if (u <  0.86) return 0;
@@ -407,19 +529,20 @@ function roofVis(u) {
 }
 
 const DEFAULT_WAYPOINTS = [
-  { pos: [ 200,  68, -155],   look: [ 22, 40, -18] },
-  { pos: [  70,  54, -195],   look: [ 16, 36, -22] },
-  { pos: [ -95,  40, -150],   look: [  8, 28, -30] },
-  { pos: [-140,  26,  -85],   look: [  5, 19, -37] },
-  { pos: [ -95,  18,  -40],   look: [ 3.5, 13.0, -38.4] },
-  { pos: [ -42, 15.5, -38.4], look: [  4, 12.5, -38.6] },
-  { pos: [ -13, 13.2, -38.6], look: [  6, 12.0, -38.7] },
-  { pos: [ 3.5, 12.0, -38.8], look: [ 16, 11.7, -38.7] },
-  { pos: [  13, 11.9, -38.5], look: [ 28, 11.6, -38.0] },
-  { pos: [  28, 12.0, -37.8], look: [ 44, 11.7, -37.2] },
-  { pos: [  44, 12.1, -36.8], look: [ 56, 11.9, -36.2] },
-  { pos: [  54, 12.3, -36.6], look: [ 60, 12.1, -31.0] },
-  { pos: [  82, 34,   -14 ],  look: [ 20, 28, -22] },
+  { pos: [118, 69.33, 112], look: [-8, 29.33, -6] },
+  { pos: [66, 49.33, 126], look: [-10, 27.33, -10] },
+  { pos: [22, 31.33, 98], look: [-14, 25.33, -14] },
+  { pos: [8, 17.33, 62], look: [-16, 27.33, -18] },
+  { pos: [4, 14.83, 36], look: [-18, 31.33, -20] },
+  { pos: [2, 14.83, 18], look: [-19, 35.33, -22] },
+  { pos: [-4, 14.83, 3], look: [-20, 39.33, -23] },
+  { pos: [24, 33.33, 34], look: [-18, 45.33, -22] },
+  { pos: [44, 61.33, 40], look: [-18, 55.33, -22] },
+  { pos: [54, 95.33, 22], look: [-20, 63.33, -24] },
+  { pos: [60, 99.33, -40], look: [-20, 59.33, -24] },
+  { pos: [-8, 93.33, -92], look: [-20, 53.33, -22] },
+  { pos: [-100, 67.33, -56], look: [-12, 37.33, -10] },
+  { pos: [-112, 59.33, 44], look: [-8, 31.33, -6] },
 ];
 const DEFAULT_PACING = [[0, 0], [1, 1]];
 const CURVE_TYPE = 'centripetal';
@@ -460,8 +583,9 @@ renderer.shadowMap.autoUpdate = false;            // static scene: refreshed onl
 stage.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-const SKY = 0x2a2c30;
-scene.background = new THREE.Color(SKY);
+// golden-hour sky: blue overhead, pale haze low, warm orange only toward the sun
+const SKY_HORIZON = 0xffa868, SKY_HAZE = 0xe6c8c0, SKY_MID = 0x4d8fe8, SKY_ZENITH = 0x1f5cc4;
+scene.background = new THREE.Color(SKY_HAZE);       // fallback; the sky dome below covers it
 
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 20000);
 camera.position.set(120, 90, 140);
@@ -469,11 +593,15 @@ camera.position.set(120, 90, 140);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.06;
-controls.screenSpacePanning = false;
+controls.screenSpacePanning = true;      // pan along the screen plane, so you can move up the tower too
+controls.zoomToCursor = true;            // zoom moves the pivot toward the cursor -> you can travel *through* the scene
 controls.maxPolarAngle = Math.PI * 0.495;
-controls.minDistance = 2;
-controls.maxDistance = 1200;
+controls.minDistance = 0.5;
+controls.maxDistance = 3000;             // must stay inside camera.far and the sky dome (both set in frameEverything)
 controls.enabled = false;
+controls.addEventListener('change', () => {           // keep the pivot (and so the camera) above ground
+  if (controls.target.y < 0.5) controls.target.y = 0.5;
+});
 
 /* =========================================================================
    LIGHTING
@@ -491,6 +619,104 @@ sun.shadow.mapSize.set(Q.shadowMap, Q.shadowMap);
 sun.shadow.bias = -0.0005;
 scene.add(sun);
 scene.add(sun.target);
+
+/* =========================================================================
+   SKY + GROUND
+   Gradient sky dome with clouds, a big textured ground disc, and fog tinted to
+   the horizon haze so the ground melts into the sky. Toggle with ENV_BACKDROP.
+   ========================================================================= */
+const ENV_BACKDROP = true;
+let skyDome = null;                    // resized to fit inside camera.far in frameEverything()
+const GROUND_Y     = -0.4;                    // just under the model's lowest point (y=0)
+if (ENV_BACKDROP) {
+  const sunDir = new THREE.Vector3(-0.7, 0.10, 0.5).normalize();    // low sun for the glow (the shadow-casting light stays high)
+  const skyMat = new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, depthTest: false, fog: false,
+    uniforms: {
+      uHorizon: { value: new THREE.Color(SKY_HORIZON) },
+      uHaze:    { value: new THREE.Color(SKY_HAZE) },
+      uMid:     { value: new THREE.Color(SKY_MID) },
+      uZenith:  { value: new THREE.Color(SKY_ZENITH) },
+      uSun:     { value: sunDir },
+      uOctaves: { value: Q.shadows ? 4 : 2 },            // cloud detail; clouds draw on every tier
+    },
+    vertexShader: `varying vec3 vDir;
+      void main() { vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+    fragmentShader: `uniform vec3 uHorizon, uHaze, uMid, uZenith, uSun; uniform int uOctaves; varying vec3 vDir;
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float vnoise(vec2 p) {
+        vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                   mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+      }
+      float fbm(vec2 p) {
+        float v = 0.0; float a = 0.5;
+        for (int i = 0; i < 4; i++) { if (i >= uOctaves) break; v += a * vnoise(p); p = p * 2.03 + vec2(17.0, 9.0); a *= 0.5; }
+        return v;
+      }
+      void main() {
+        vec3 d = normalize(vDir);
+        float h = clamp(d.y, 0.0, 1.0);
+        float az = max(dot(normalize(vec3(d.x, 0.0, d.z)), normalize(vec3(uSun.x, 0.0, uSun.z))), 0.0);
+        // haze at the horizon, warming to orange toward the sun; blue takes over quickly above it
+        vec3 hor = mix(uHaze, uHorizon, pow(az, 2.0));
+        // most shots look DOWN at the model, so only the lowest few degrees of sky are ever on screen:
+        // keep the haze band thin and get to blue quickly
+        vec3 col = mix(hor, uMid,    smoothstep(0.00, 0.09, h));
+        col      = mix(col, uZenith, smoothstep(0.06, 0.55, h));
+        col += vec3(1.0, 0.55, 0.2) * pow(az, 4.0) * exp(-h * 22.0) * 0.45;             // glow band toward the sun
+        float s = max(dot(d, uSun), 0.0);
+        col += vec3(1.0, 0.85, 0.55) * (pow(s, 80.0) * 1.2 + pow(s, 8.0) * 0.25);       // sun glow
+        // clouds: pale blue-grey in shadow, peach-white where the sun hits them
+        vec2 cp = d.xz / (h + 0.06) * vec2(0.55, 1.2);
+        float f = fbm(cp * 1.15 + vec2(3.0, 1.0));
+        float mask = smoothstep(0.42, 0.66, f) * smoothstep(0.012, 0.07, h) * (1.0 - smoothstep(0.55, 0.95, h));
+        float lit  = pow(az, 1.5);
+        vec3 cloud = mix(uMid * 0.85 + 0.12, vec3(1.0, 0.86, 0.74), lit);
+        cloud += vec3(1.0, 0.55, 0.2) * smoothstep(0.42, 0.52, f) * (1.0 - smoothstep(0.52, 0.66, f)) * 0.5 * lit;   // glowing edges
+        col = mix(col, cloud, mask * 0.9);
+        gl_FragColor = vec4(col, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  });
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(10000, 32, 16), skyMat);
+  dome.renderOrder = -1000; dome.frustumCulled = false;
+  dome.onBeforeRender = (r, sc, cam) => dome.position.copy(cam.position);   // always centred on the viewer
+  skyDome = dome;
+  scene.add(dome);
+
+  // ground: olive-green turf with patchy tonal variation (canvas texture, tiled)
+  const gcv = document.createElement('canvas'); gcv.width = gcv.height = 512;
+  const gx = gcv.getContext('2d');
+  gx.fillStyle = '#6f7a48'; gx.fillRect(0, 0, 512, 512);
+  const tones = ['#5d6b3c', '#7d8a50', '#88865a', '#94896a', '#66753f', '#75803f'];
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;   // deterministic
+  for (let i = 0; i < 1600; i++) {
+    const x = rnd() * 512, y = rnd() * 512, r = 6 + rnd() * rnd() * 70;
+    const c = tones[(rnd() * tones.length) | 0], a = 0.10 + rnd() * 0.22;
+    for (const ox of [-512, 0, 512]) for (const oy of [-512, 0, 512]) {     // wrap so the tile has no seams
+      const g = gx.createRadialGradient(x + ox, y + oy, 0, x + ox, y + oy, r);
+      g.addColorStop(0, c + Math.round(a * 255).toString(16).padStart(2, '0')); g.addColorStop(1, c + '00');
+      gx.fillStyle = g; gx.fillRect(x + ox - r, y + oy - r, r * 2, r * 2);
+    }
+  }
+  for (let i = 0; i < 9000; i++) {                                           // fine grain
+    gx.fillStyle = rnd() < 0.5 ? 'rgba(40,50,25,0.10)' : 'rgba(170,170,110,0.08)';
+    gx.fillRect((rnd() * 512) | 0, (rnd() * 512) | 0, 2, 2);
+  }
+  const gtex = new THREE.CanvasTexture(gcv);
+  gtex.colorSpace = THREE.SRGBColorSpace; gtex.wrapS = gtex.wrapT = THREE.RepeatWrapping;
+  gtex.repeat.set(180, 180); gtex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const ground = new THREE.Mesh(
+    new THREE.CircleGeometry(6000, 72),
+    new THREE.MeshStandardMaterial({ map: gtex, roughness: 1, metalness: 0, envMapIntensity: 0.4 }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = GROUND_Y;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  scene.fog = new THREE.FogExp2(SKY_HAZE, 0.0009);
+}
 
 /* =========================================================================
    DEBUG HELPERS
@@ -552,6 +778,7 @@ function loadModel() {
     frameEverything(size);
     buildEntryMarker();
     buildPath();
+    buildHotspots();
     setupScroll();
     buildStory();
 
@@ -588,11 +815,21 @@ function tuneMaterials(root) {
     (Array.isArray(o.material) ? o.material : [o.material]).forEach((mat) => {
       mat.envMapIntensity = 1.0;
       const name = mat.name || '';
-      if (glass.has(name)) {
+      const wasTransmissive = mat.transmission > 0;
+      if (wasTransmissive) mat.transmission = 0;           // transmission pass is costly; use plain transparency
+      if (glass.has(name) || wasTransmissive) {
         mat.transparent = true;
-        mat.opacity = name.toLowerCase().includes('rail') ? 0.34 : 0.26;
-        mat.roughness = 0.06; mat.metalness = 0.0;
-        mat.depthWrite = false; mat.envMapIntensity = 1.6;
+        if (DARK_GLASS) {
+          const tint = GLASS_TINT[name] || GLASS_TINT_DEFAULT;   // dark smoked glass, like the client render
+          mat.color.setHex(tint[0]);
+          mat.opacity = tint[1];
+          mat.roughness = 0.18; mat.metalness = 0.0;
+          mat.depthWrite = false; mat.envMapIntensity = 0.5;     // low env reflection: no white sheen
+        } else {
+          mat.opacity = name.toLowerCase().includes('rail') ? 0.45 : 0.75;
+          mat.roughness = 0.06; mat.metalness = 0.0;
+          mat.depthWrite = false; mat.envMapIntensity = 1.6;
+        }
         mat.side = THREE.DoubleSide;
       } else if (name === 'water') {
         mat.color.setHex(0x2e5a74);
@@ -602,7 +839,7 @@ function tuneMaterials(root) {
         mat.color.setHex(0x8a5a2b); mat.roughness = 0.72; mat.metalness = 0.0;
       } else if (name === 'Metal' || name === 'SS') {
         mat.metalness = 0.65; mat.roughness = name === 'SS' ? 0.35 : 0.5;
-      } else if (mat.roughness !== undefined && mat.roughness < 0.25) {
+      } else if (mat.roughness !== undefined && mat.roughness < 0.25 && !mat.map) {
         mat.roughness = 0.7;
       }
     });
@@ -645,10 +882,15 @@ function updateReveal(u) {
   renderer.shadowMap.needsUpdate = true;                   // roof moved -> refresh shadow map
 }
 
+const overview = { pos: new THREE.Vector3(), target: new THREE.Vector3() };   // Explore's home view
+
 function frameEverything(size) {
   controls.target.set(0, size.y * 0.32, 0);
   const d = Math.max(size.x, size.z) * 0.95 + size.y * 0.3;
-  camera.far = d * 20; camera.updateProjectionMatrix();
+  overview.target.copy(controls.target);
+  overview.pos.set(0.62, 0.42, 0.66).normalize().multiplyScalar(d * 1.15).add(overview.target);
+  camera.far = d * 30; camera.updateProjectionMatrix();
+  if (skyDome) skyDome.scale.setScalar(camera.far * 0.85 / 10000);   // keep the sky dome inside the far plane
 }
 
 function buildEntryMarker() {
@@ -733,17 +975,62 @@ const gsap = window.gsap, ScrollTrigger = window.ScrollTrigger, Lenis = window.L
 const hasGsap = !!(gsap && ScrollTrigger);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* Tour pacing. Scroll speed along the path is constant, except that it eases down to
+   `slow` x normal speed as the camera passes each text checkpoint (a caption step's
+   data-at) and eases back up after. Story height is derived from these numbers, so
+   tune the feel here. */
+const TOUR = {
+  travelVh: 900,     // scroll distance to fly the whole path at normal speed (original build was ~736)
+  slow: 0.3,         // speed at the middle of a checkpoint, as a fraction of normal
+  slowHalf: 0.07,    // the slowdown eases in/out over this much path progress either side of a checkpoint
+  wheel: 1,          // wheel / trackpad multiplier
+  lerp: 0.09,        // scroll smoothing
+  fadeHalf: 0.10,    // caption fades in/out over this much path progress either side of its checkpoint
+  fullHalf: 0.03,    // ...and is fully visible within this of it
+};
+
 let lenis = null;
-const scrollProxy = { u: 0 };
-function nativeScrollU() {
+const scrollProxy = { u: 0 };            // raw scroll fraction 0..1 (before the slowdown remap)
+function nativeScrollFrac() {
   const h = document.documentElement.scrollHeight - innerHeight;
   return h > 0 ? THREE.MathUtils.clamp(scrollY / h, 0, 1) : 0;
 }
-function scrollU() { return hasGsap ? scrollProxy.u : nativeScrollU(); }
+function scrollU() { return slowU(hasGsap ? scrollProxy.u : nativeScrollFrac()); }
+
+// scroll fraction -> path progress u. Cumulative scroll distance along u (weight = 1/speed).
+const SLOW_N = 2000;
+const slowCum = new Float32Array(SLOW_N + 1);
+let checkpoints = [];                    // u of each caption chapter (not hero / outro)
+let slowBuilt = false;
+function buildSlow() {
+  checkpoints = stepData.slice(1, -1).map((s) => s.at);
+  let acc = 0;
+  for (let i = 0; i <= SLOW_N; i++) {
+    const u = i / SLOW_N;
+    let speed = 1;
+    for (const c of checkpoints) speed = Math.min(speed, 1 - (1 - TOUR.slow) * smoothPulse(u - c, TOUR.slowHalf));
+    if (i) acc += 1 / speed;
+    slowCum[i] = acc;
+  }
+  const totalVh = TOUR.travelVh * acc / SLOW_N;
+  for (let i = 0; i <= SLOW_N; i++) slowCum[i] /= acc;
+  slowBuilt = true;
+  document.getElementById('story').style.height = (totalVh + 100) + 'vh';   // +100 = one viewport of range
+}
+function slowU(s) {                      // scroll fraction -> u
+  if (!slowBuilt) return s;              // not built yet (model still loading)
+  if (s <= 0) return 0;
+  if (s >= 1) return 1;
+  let lo = 0, hi = SLOW_N;
+  while (hi - lo > 1) { const m = (lo + hi) >> 1; if (slowCum[m] <= s) lo = m; else hi = m; }
+  const f = (s - slowCum[lo]) / Math.max(slowCum[hi] - slowCum[lo], 1e-9);
+  return (lo + f) / SLOW_N;
+}
 
 function setupScroll() {
+  buildSlow();
   if (Lenis && !reduceMotion) {
-    lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, touchMultiplier: 1.6, smoothWheel: true });
+    lenis = new Lenis({ lerp: TOUR.lerp, wheelMultiplier: TOUR.wheel, touchMultiplier: 1.6, smoothWheel: true });
     lenis.stop();
     if (hasGsap) lenis.on('scroll', ScrollTrigger.update);
   }
@@ -786,6 +1073,12 @@ function smoothPulse(x, halfWidth) {           // 1 at x=0, 0 by |x|=halfWidth, 
   return t * t * (3 - 2 * t);
 }
 
+// 1 within `hold` of x=0, easing to 0 by `half`
+function plateau(x, hold, half) {
+  const t = THREE.MathUtils.clamp((half - Math.abs(x)) / (half - hold), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
 function updateStory(u) {
   if (Math.abs(u - lastStoryPaint) < 0.001) return;
   lastStoryPaint = u;
@@ -795,10 +1088,10 @@ function updateStory(u) {
     let vis;
     if (i === 0) vis = u < 0.02 ? 1 : smoothPulse(u - 0.0, 0.06);      // hero: fades out fast
     else if (i === stepData.length - 1) vis = u > 0.985 ? 1 : smoothPulse(u - 1.0, 0.05);
-    else vis = smoothPulse(u - s.at, 0.11);
+    else vis = plateau(u - s.at, TOUR.fullHalf, TOUR.fadeHalf);
     s.panel.style.opacity = vis.toFixed(3);
     s.panel.style.transform = `translateY(${((1 - vis) * 24).toFixed(1)}px)`;
-    s.el.style.pointerEvents = vis > 0.5 ? 'auto' : 'none';
+    s.panel.style.pointerEvents = vis > 0.5 ? 'auto' : 'none';
   });
 
   // veil intensifies while a caption chapter is on screen
@@ -830,13 +1123,168 @@ document.getElementById('dev-toggle').addEventListener('click', () => devEl.clas
 function setMode(m) {
   mode = m;
   for (const k in modeBtns) modeBtns[k].classList.toggle('on', k === m);
-  controls.enabled = (m === 'free');
+  controls.enabled = (m === 'free') && !flight;
   renderer.domElement.style.touchAction = (m === 'free') ? 'none' : 'pan-y';
+  setExploreUI(m === 'free');
+  if (m !== 'free') clearSpot();
   if (m === 'scroll') { playing = false; updatePlayBtn(); lenis && lenis.start(); }
   else lenis && lenis.stop();
   if (m === 'manual') applyPath(uNow);
-  else if (m === 'free') { controls.target.copy(lastLook); controls.update(); updateReveal(1); }
+  else if (m === 'free') {
+    if (!flight) { controls.target.copy(lastLook); controls.update(); }
+    updateReveal(1);
+  }
 }
+
+/* ---- Explore (free orbit): public toggle over the same OrbitControls ------ */
+const exploreBtn = document.getElementById('exploreBtn');
+function setExploreUI(on) {
+  document.documentElement.classList.toggle('explore', on);
+  exploreBtn.setAttribute('aria-pressed', String(on));
+  exploreBtn.textContent = on ? 'Back to tour' : 'Explore freely';
+}
+
+// eased camera move; the loop runs it ahead of any mode logic. Reusable for hotspots.
+let flight = null;
+function flyTo(pos, target, dur, done) {
+  flight = {
+    t: 0, dur: reduceMotion ? 0.01 : dur, done,
+    p0: camera.position.clone(), p1: pos.clone(),
+    t0: (mode === 'free' ? controls.target : lastLook).clone(), t1: target.clone(),
+  };
+  controls.enabled = false;
+}
+function tickFlight(dt) {
+  flight.t = Math.min(flight.t + dt / flight.dur, 1);
+  const e = flight.t * flight.t * (3 - 2 * flight.t);
+  camera.position.lerpVectors(flight.p0, flight.p1, e);
+  controls.target.lerpVectors(flight.t0, flight.t1, e);
+  camera.up.set(0, 1, 0);
+  camera.lookAt(controls.target);
+  if (flight.t >= 1) { const f = flight; flight = null; f.done && f.done(); }
+}
+
+function enterExplore() {
+  if (!posCurve || mode === 'free') return;
+  flyTo(overview.pos, overview.target, 1.6, () => { controls.enabled = true; controls.update(); });
+  setMode('free');
+}
+function exitExplore() {
+  if (mode !== 'free') return;
+  const t = pace(scrollU());                       // where the scroll position says the tour should be
+  posCurve.getPoint(t, _p); lookCurve.getPoint(t, _l);
+  clearSpot();
+  setExploreUI(false);                             // story chrome fades back in during the flight
+  flyTo(_p, _l, 1.4, () => setMode('scroll'));
+}
+exploreBtn.addEventListener('click', () => (mode === 'free' ? exitExplore() : enterExplore()));
+document.getElementById('exploreReset').addEventListener('click', () => {
+  if (mode !== 'free') return;
+  clearSpot();
+  flyTo(overview.pos, overview.target, 1.0, () => { controls.enabled = true; controls.update(); });
+});
+
+/* =========================================================================
+   HOTSPOTS  —  pins over the model (Explore mode). Click -> fly there, then
+   sweep slowly back and forth around it while a text card explains the scene.
+   Coordinates are meta space (metres, Y-up). Per spot:
+     at     the point the camera looks at / orbits (the pin sits here too)
+     r, el  orbit radius (m) and elevation above the horizon (deg)
+     az     centre bearing of the sweep (deg; 0 = camera on +Z of the point, 90 = on +X)
+     sweep  half-width of the sweep (deg) — a pendulum, not a full circle, so the
+            camera never passes through the block; period = seconds per full swing
+   Positions are first estimates from the path look-points + meta — tune on screen
+   (press I for the meta-space camera readout while orbiting).
+   ========================================================================= */
+const SPOTS = [
+  { title: 'An open plaza at the centre', label: 'The plaza', at: [5, 11, 6], r: 32, el: 20, az: 15, sweep: 25, period: 26,
+    text: ['Bireh Plaza reworks a dense block in the middle of Al-Bireh, with an open plaza cut through at ground level.',
+           'It is treated as the project’s real civic contribution — deliberately more generous than the retail alone requires.'] },
+  { title: 'Retail below, offices above', label: 'The tower', at: [-20, 60, -24], r: 80, el: 10, az: 45, sweep: 30, period: 34,
+    text: ['An office tower rises from the terraced podium.',
+           'Projecting slab edges mark the floors, and a glazed skin wraps the offices above the podium.'] },
+  { title: 'Terraces for the shops', label: 'Terraces & Stores', at: [-33, 18, -3], r: 40, el: 20, az: 75, sweep: 20, period: 28,
+    text: ['Shops line the plaza at eye level, stepping back in terraces toward the tower.'] },
+  { title: 'Seen from above', label: 'The roof', at: [-20, 79, -24], r: 42, el: 30, az: 200, sweep: 30, period: 30,
+    text: ['From above, the tower reads as the free-standing object it is, rising clear of the podium and the plaza it sits above.'] },
+  { title: 'Where the plaza meets the street', label: 'The street edge', at: [5, 10, 30], r: 26, el: 15, az: 200, sweep: 25, period: 24,
+    text: ['Along the southern edge of the site, the public space opens off the surrounding streets.'] },
+];
+
+const pinsEl = document.getElementById('pins');
+const spotEls = {
+  eyebrow: document.getElementById('spot-eyebrow'), title: document.getElementById('spot-title'),
+  text: document.getElementById('spot-text'), count: document.getElementById('spot-count'),
+};
+let activeSpot = -1, sweep = null;
+const _sv = new THREE.Vector3();
+
+function buildHotspots() {
+  SPOTS.forEach((s, i) => {
+    s.p = toScene(s.at);
+    const el = document.createElement('div');
+    el.className = 'pin';
+    el.innerHTML = `<button type="button" aria-label="${s.label}: ${s.title}">${i + 1}</button><span class="lbl">${s.label}</span>`;
+    el.querySelector('button').addEventListener('click', () => openSpot(i));
+    pinsEl.appendChild(el);
+    s.pin = el; s.off = false;
+  });
+}
+
+// camera position on the orbit sphere around a spot
+function spotCamPos(s, azDeg, out) {
+  const az = THREE.MathUtils.degToRad(azDeg), el = THREE.MathUtils.degToRad(s.el);
+  return out.set(Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az)).multiplyScalar(s.r).add(s.p);
+}
+
+function openSpot(i) {
+  if (mode !== 'free') return;
+  const s = SPOTS[i];
+  activeSpot = i; sweep = null;
+  SPOTS.forEach((o, k) => o.pin.classList.toggle('active', k === i));
+  spotEls.eyebrow.textContent = `${String(i + 1).padStart(2, '0')} — ${s.label}`;
+  spotEls.title.textContent = s.title;
+  spotEls.text.innerHTML = s.text.map((t) => `<p>${t}</p>`).join('');
+  spotEls.count.textContent = `${i + 1} / ${SPOTS.length}`;
+  document.documentElement.classList.add('spot');
+  flyTo(spotCamPos(s, s.az, _sv), s.p, 2.2, () => {
+    controls.enabled = true; controls.update();
+    if (!reduceMotion) sweep = { s, t: 0 };
+  });
+}
+function clearSpot() {
+  activeSpot = -1; sweep = null;
+  document.documentElement.classList.remove('spot');
+  SPOTS.forEach((o) => o.pin.classList.remove('active'));
+}
+function closeSpot() {
+  if (activeSpot < 0) return;
+  clearSpot();
+  flyTo(overview.pos, overview.target, 1.6, () => { controls.enabled = true; controls.update(); });
+}
+function tickSweep(dt) {
+  sweep.t += dt;
+  const s = sweep.s, ramp = Math.min(sweep.t / 3, 1), k = ramp * ramp * (3 - 2 * ramp);   // ease in from rest
+  const az = s.az + s.sweep * k * Math.sin((2 * Math.PI * sweep.t) / s.period);
+  spotCamPos(s, az, camera.position);
+}
+controls.addEventListener('start', () => { sweep = null; });     // any drag / zoom / pan hands control back
+
+function updatePins() {
+  camera.updateMatrixWorld();
+  const w = innerWidth, h = innerHeight;
+  for (const s of SPOTS) {
+    _sv.copy(s.p).project(camera);
+    const off = _sv.z > 1 || Math.abs(_sv.x) > 1.05 || Math.abs(_sv.y) > 1.05;
+    if (off !== s.off) { s.off = off; s.pin.classList.toggle('off', off); }
+    if (off) continue;
+    s.pin.style.transform = `translate3d(${((_sv.x * 0.5 + 0.5) * w).toFixed(1)}px,${((-_sv.y * 0.5 + 0.5) * h).toFixed(1)}px,0)`;
+  }
+}
+
+document.getElementById('spot-close').addEventListener('click', closeSpot);
+document.getElementById('spot-prev').addEventListener('click', () => openSpot((activeSpot - 1 + SPOTS.length) % SPOTS.length));
+document.getElementById('spot-next').addEventListener('click', () => openSpot((activeSpot + 1) % SPOTS.length));
 function updatePlayBtn() { playEl.textContent = playing ? '❚❚' : '▶'; }
 
 modeBtns.scroll.addEventListener('click', () => setMode('scroll'));
@@ -924,6 +1372,7 @@ addEventListener('keydown', (e) => {
   else if (k === 's') setMode('scroll');
   else if (k === 'm') setMode('manual');
   else if (k === 'f') setMode('free');
+  else if (k === 'escape' && mode === 'free') (activeSpot >= 0 ? closeSpot() : exitExplore());
   else if (k === 'r') { roofFadeEnabled = !roofFadeEnabled; lastRoofV = -1; updateReveal(uNow); }
   else if (k === 'p' && pathGroup) pathGroup.visible = !pathGroup.visible;
   else if (k === 'x') {
@@ -961,7 +1410,9 @@ renderer.setAnimationLoop((timeMs) => {
   if (document.hidden) return;                    // don't burn frames on a hidden tab
   const dt = clock.getDelta();
 
-  if (mode === 'scroll') {
+  if (flight) {
+    tickFlight(dt);
+  } else if (mode === 'scroll') {
     const u = scrollU();
     uNow = u;
     applyPath(u); updateReveal(u); updateStory(u);
@@ -975,8 +1426,10 @@ renderer.setAnimationLoop((timeMs) => {
     }
     applyPath(uNow); updateReveal(uNow); updateStory(uNow);
   } else {
+    if (sweep) tickSweep(dt);
     controls.update();
   }
+  if (mode === 'free') updatePins();
 
   if (statsEl.classList.contains('show') || hudInfo.classList.contains('show')) {
     vCam.textContent = f2(camera.position);

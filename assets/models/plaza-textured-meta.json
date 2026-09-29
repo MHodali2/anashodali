@@ -1,0 +1,48 @@
+{
+  "generated_by": "docs/gltf-pipeline/opt.mjs (gltf-transform) from 'glb with converted materials.glb' (3ds Max export)",
+  "units": "meters",
+  "coordinate_space": "glTF Y-up (three.js). Model recentred: x/z centred on the bbox, lowest point at y=0, so scene space == meta space (modelOffset ~ 0).",
+  "triangles": 977464,
+  "files": {
+    "model": "plaza-textured.glb",
+    "camera_path": "plaza-textured-camera-path.json"
+  },
+  "full_aabb_yup": {
+    "min": [
+      -62.8,
+      0.0,
+      -44.7
+    ],
+    "max": [
+      62.8,
+      80.2,
+      44.7
+    ],
+    "size": [
+      125.6,
+      80.2,
+      89.4
+    ]
+  },
+  "tower_aabb_yup": {
+    "min": [
+      -36.5,
+      38.0,
+      -32.8
+    ],
+    "max": [
+      -4.2,
+      80.2,
+      -14.6
+    ]
+  },
+  "ground_floor_y": 10,
+  "plaza": "open plaza floor at y~10 between x -20..30, z -14..27; podium blocks ~14-35 m to the north and east; tower roof ~77-80 m",
+  "glass_materials": [
+    "glass",
+    "Rail_glass",
+    "Material__1541173878",
+    "Material__1541173997",
+    "Revolving_door_Glass_Plate_Glass"
+  ]
+}

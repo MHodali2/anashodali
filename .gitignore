@@ -1,1 +1,26 @@
 .DS_Store
+node_modules/
+
+# large source models / Blender backups (site only needs the optimized .glb files)
+assets/models/glb with converted materials.glb
+*.blend
+*.blend1
+*.blend2
+*.max
+*.fbx
+*.3ds
+*.skp
+*.dwg
+*.dxf
+*.rvt
+
+# large media / archives / design sources
+*.psd
+*.ai
+*.zip
+*.rar
+*.7z
+*.mp4
+*.mov
+*.avi
+*.mkv
