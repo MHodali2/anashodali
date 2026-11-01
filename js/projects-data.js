@@ -187,17 +187,17 @@ window.PROJECTS = {
   jamal: {
     title: "ِAbdallah Al-Jamal",
     titleAr: "عبدالله الجمل",
-    location: "Ramallah, Palestine",
+    location: "Salamiyeh, Palestine",
     heroImage: "assets/images/jamal.webp",
     heroImageAlt: "Abdallah Al-Jamal — exterior view",
     kicker: "Case Study — 05 / Residential",
     headline: "Abdallah Al-Jamal: A Family Compound Split Into Three Volumes",
     paragraphs: [
-      "Rather than one large house, the Abdallah Al-Jamal residence in Ramallah is organized as three linked volumes — one for the parents, two for married children's families — arranged around a shared entrance court so each household keeps its own front door.",
+      "Rather than one large house, the Abdallah Al-Jamal residence in Salamiyeh is organized as three linked volumes — one for the parents, two for married children's families — arranged around a shared entrance court so each household keeps its own front door.",
       "A single shared roof terrace ties the three volumes together at the top level, giving the extended family one common outdoor room even as daily life below stays fully separate."
     ],
     facts: [
-      { k: "Location", v: "Ramallah, Palestine" },
+      { k: "Location", v: "Salamiyeh, Palestine" },
       { k: "Program", v: "Residential" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
@@ -302,19 +302,19 @@ window.PROJECTS = {
   },
 
   jaradat: {
-    title: "Iyyad Jaradat",
-    titleAr: "اياد جردات",
-    location: "Ramallah, Palestine",
+    title: "San Fransisco",
+    titleAr: "سان فرانسيسكو",
+    location: "Al-Tireh, Palestine",
     heroImage: "assets/images/jaradat.webp",
-    heroImageAlt: "Iyyad Jaradat — exterior view",
+    heroImageAlt: "San Fransisco — exterior view",
     kicker: "Case Study — 08 / Commercial — Residential",
-    headline: "Iyyad Jaradat: Ground-Floor Commerce Under Housing Above",
+    headline: "San Fransisco: Ground-Floor Commerce Under Housing Above",
     paragraphs: [
-      "The Iyyad Jaradat building in Ramallah stacks a commercial ground floor — sized and glazed for retail — beneath three floors of apartments, with a structural transfer level between them kept honest and visible rather than hidden.",
+      "The San Fransisco building in Al-Tireh stacks a commercial ground floor — sized and glazed for retail — beneath three floors of apartments, with a structural transfer level between them kept honest and visible rather than hidden.",
       "Deep balconies on the residential floors do double duty as sun-shading for the units below them, so the building manages its own comfort with geometry rather than added equipment."
     ],
     facts: [
-      { k: "Location", v: "Ramallah, Palestine" },
+      { k: "Location", v: "Al-Tireh, Palestine" },
       { k: "Program", v: "Commercial — Residential" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
@@ -330,12 +330,12 @@ window.PROJECTS = {
     // (Untitled-3.webp) was moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/cpxGmguVZSY",
     spread2Image: "assets/images/jaradat/Untitled-6.webp",
-    spread2ImageAlt: "Iyyad Jaradat — aerial, evening view",
+    spread2ImageAlt: "San Fransisco — aerial, evening view",
     galleryImages: [
-      { src: "assets/images/jaradat/Untitled-4.webp", alt: "Iyyad Jaradat — entrance detail" },
-      { src: "assets/images/jaradat/Untitled-5.webp", alt: "Iyyad Jaradat — exterior, alternate view" },
-      { src: "assets/images/jaradat/Untitled-7.webp", alt: "Iyyad Jaradat — facade detail" },
-      { src: "assets/images/jaradat/Untitled-3.webp", alt: "Iyyad Jaradat — exterior, alternate view" }
+      { src: "assets/images/jaradat/Untitled-4.webp", alt: "San Fransisco — entrance detail" },
+      { src: "assets/images/jaradat/Untitled-5.webp", alt: "San Fransisco — exterior, alternate view" },
+      { src: "assets/images/jaradat/Untitled-7.webp", alt: "San Fransisco — facade detail" },
+      { src: "assets/images/jaradat/Untitled-3.webp", alt: "San Fransisco — exterior, alternate view" }
     ],
     tones: [5, 6, 7, 8, 1, 2, 3]
   },
@@ -375,20 +375,20 @@ window.PROJECTS = {
   },
 
   "imad-mshosher": {
-    title: "Imad Mshosher",
-    titleAr: "عماد مشوشر",
+    title: "Sateh Marhaba Club",
+    titleAr: "نادي سطح مرحبا",
     location: "Sateh Marhaba, Palestine",
     heroImage: "assets/images/imad-mshosher.webp",
-    heroImageAlt: "Imad Mshosher — exterior view",
-    kicker: "Case Study — 10 / Residential",
-    headline: "Imad Mshosher: A Stair Reworked as the House's Organizing Spine",
+    heroImageAlt: "Sateh Marhaba Club — exterior view",
+    kicker: "Case Study — 10 / Cultural",
+    headline: "Sateh Marhaba Club: A Stair Reworked as the House's Organizing Spine",
     paragraphs: [
       "Stepped across several levels to hold onto its views, this residence reorganizes the stair from a circulation afterthought into the spine that ties each floor's living space back to the entrance below.",
       "Each level opens toward a different outlook, letting the section of the house do the work that a wider footprint would otherwise have needed."
     ],
     facts: [
       { k: "Location", v: "Sateh Marhaba, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Cultural" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2025 –" }
@@ -397,15 +397,15 @@ window.PROJECTS = {
     materialsHeading: "Materials & Structure",
     materialsText: "A concrete frame carries the stepped levels, with a stone base at street level giving way to a lighter render finish on the upper, more open floors.",
     spreadBImage: "assets/images/imad-mshosher/02.webp",
-    spreadBImageAlt: "Imad Mshosher — exterior, alternate view",
+    spreadBImageAlt: "Sateh Marhaba Club — exterior, alternate view",
     spread2Image: "assets/images/imad-mshosher/03.webp",
-    spread2ImageAlt: "Imad Mshosher — wide exterior view",
+    spread2ImageAlt: "Sateh Marhaba Club — wide exterior view",
     galleryImages: [
-      { src: "assets/images/imad-mshosher/04.webp", alt: "Imad Mshosher — exterior detail" },
-      { src: "assets/images/imad-mshosher/05.webp", alt: "Imad Mshosher — exterior detail" },
-      { src: "assets/images/imad-mshosher/06.webp", alt: "Imad Mshosher — exterior, alternate view" },
-      { src: "assets/images/imad-mshosher/07.webp", alt: "Imad Mshosher — exterior, evening view" },
-      { src: "assets/images/imad-mshosher/08.webp", alt: "Imad Mshosher — aerial view" }
+      { src: "assets/images/imad-mshosher/04.webp", alt: "Sateh Marhaba Club — exterior detail" },
+      { src: "assets/images/imad-mshosher/05.webp", alt: "Sateh Marhaba Club — exterior detail" },
+      { src: "assets/images/imad-mshosher/06.webp", alt: "Sateh Marhaba Club — exterior, alternate view" },
+      { src: "assets/images/imad-mshosher/07.webp", alt: "Sateh Marhaba Club — exterior, evening view" },
+      { src: "assets/images/imad-mshosher/08.webp", alt: "Sateh Marhaba Club — aerial view" }
     ],
     tones: [2, 3, 4, 5, 6, 7, 8]
   },
@@ -595,17 +595,17 @@ window.PROJECTS = {
   "tallet-bahar": {
     title: "Tallet Bahar",
     titleAr: "طلة بحر",
-    location: "Ramallah, Palestine",
+    location: "Masayef, Palestine",
     heroImage: "assets/images/tallet-bahar.webp",
     heroImageAlt: "Tallet Bahar — exterior view",
     kicker: "Case Study — 16 / Residential",
     headline: "Tallet Bahar: A House Stepped Into the Hillside",
     paragraphs: [
-      "Tallet Bahar follows the slope of its Ramallah hillside site rather than cutting a flat platform into it, stepping the house down the grade in line with the terrain.",
+      "Tallet Bahar follows the slope of its Masayef hillside site rather than cutting a flat platform into it, stepping the house down the grade in line with the terrain.",
       "Terraces on each level open the house outward toward the valley view, so the section — not the facade — carries most of the design's ambition."
     ],
     facts: [
-      { k: "Location", v: "Ramallah, Palestine" },
+      { k: "Location", v: "Masayef, Palestine" },
       { k: "Program", v: "Residential" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
@@ -638,17 +638,17 @@ window.PROJECTS = {
   "nabali-al-faris": {
     title: "Nabali Al-Faris",
     titleAr: "نبالي والفارس",
-    location: "Ramallah, Palestine",
+    location: "Al-Bireh, Palestine",
     heroImage: "assets/images/nabali-al-faris.webp",
     heroImageAlt: "Nabali Al-Faris — exterior view",
     kicker: "Case Study — 17 / Residential",
     headline: "Nabali Al-Faris: A House Planned Around a Shared Courtyard",
     paragraphs: [
-      "This Ramallah family house is planned around a shared central courtyard, keeping the surrounding rooms naturally lit and cross-ventilated without relying on a deep street-facing facade.",
+      "This Al-Bireh family house is planned around a shared central courtyard, keeping the surrounding rooms naturally lit and cross-ventilated without relying on a deep street-facing facade.",
       "The courtyard becomes the house's real living room in the warmer months, with the perimeter rooms able to open fully onto it."
     ],
     facts: [
-      { k: "Location", v: "Ramallah, Palestine" },
+      { k: "Location", v: "Al-Bireh, Palestine" },
       { k: "Program", v: "Residential" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
