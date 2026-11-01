@@ -241,9 +241,6 @@
     var cards = Array.prototype.slice.call(document.querySelectorAll(".project-card[data-project]"));
     if (!cards.length) return;
 
-    function titleCase(slug) {
-      return slug.replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
-    }
     function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
     // derive + cache each card's filter facets straight off its existing markup
@@ -374,7 +371,16 @@
     }
 
     buildDropdown("year", groups.map(function (g) { return g.id.replace("year-", ""); }), function (y) { return y; });
-    buildDropdown("typology", Object.keys(typologies).sort(), titleCase);
+    // fixed set of five typologies, in display order (not derived from the cards,
+    // so every option is always listed even if no project carries it yet)
+    var typologyLabels = {
+      "residential": "Residential",
+      "private-residence": "Private residence",
+      "public": "Public",
+      "commercial": "Commercial",
+      "interior-design": "Interior Design"
+    };
+    buildDropdown("typology", Object.keys(typologyLabels), function (t) { return typologyLabels[t]; });
     buildDropdown("location", Object.keys(locations).sort(), function (n) { return n; });
 
     document.addEventListener("click", function (e) {
@@ -596,8 +602,16 @@
       });
       html += '</dl>';
 
-      html += '<div class="ov-spread-2">';
-      html += ovImageFigure(project, "ov-img--full", project.spread2Image, project.spread2ImageAlt, tones[1], photos);
+      // `omitPlaceholders` projects (too few real photos to fill every slot)
+      // drop the unfilled wide-image slot and the empty gallery entirely
+      // instead of showing "Image placeholder" tiles.
+      var omitPlaceholders = !!project.omitPlaceholders;
+      var skipSpread2Image = omitPlaceholders && !project.spread2Image;
+
+      html += '<div class="ov-spread-2' + (skipSpread2Image ? ' ov-spread-2--solo' : '') + '">';
+      if (!skipSpread2Image) {
+        html += ovImageFigure(project, "ov-img--full", project.spread2Image, project.spread2ImageAlt, tones[1], photos);
+      }
       html += '<div class="ov-pull"><p class="ov-pullquote">&ldquo;' + escapeHtml(project.pullquote) + '&rdquo;</p></div>';
       html += '</div>';
 
@@ -606,29 +620,38 @@
       html += '<p class="ov-text">' + escapeHtml(project.materialsText) + '</p>';
       html += '</div>';
 
-      html += '<div class="ov-gallery-heading"><span class="eyebrow">Gallery</span></div>';
-      html += '<div class="ov-gallery">';
-      // Projects with at least one real gallery photo skip any unfilled
-      // slots instead of padding them out with a placeholder tile — mixing
-      // real photos and placeholders in the same grid reads as broken.
-      // Projects with zero real photos still show the full placeholder set
-      // as an intentional "gallery coming soon" signal.
       var galleryImages = project.galleryImages || [];
-      var hasGalleryPhotos = !!galleryImages.length;
-      // Slot count follows whichever is longer — the fixed tile-class
-      // pattern (placeholder "gallery coming soon" state) or the project's
-      // own photo count, so projects with more than 5 real photos (e.g. a
-      // floor plan set appended after the site photos) still render every
-      // one instead of being silently truncated at the 5th tile.
-      var gallerySlots = Math.max(GALLERY_TILE_CLASSES.length, galleryImages.length);
-      for (var gi = 0; gi < gallerySlots; gi++) {
-        var img = galleryImages[gi];
-        if (!img && hasGalleryPhotos) continue;
-        var cls = GALLERY_TILE_CLASSES[gi % GALLERY_TILE_CLASSES.length];
-        var tone = tones[2 + gi] || tones[(2 + gi) % tones.length] || 1;
-        html += ovGalleryFigure(project, cls, img, tone, photos);
+      var skipGallery = omitPlaceholders && !galleryImages.length;
+
+      if (!skipGallery) {
+        html += '<div class="ov-gallery-heading"><span class="eyebrow">Gallery</span></div>';
+        html += '<div class="ov-gallery">';
+        // Projects with at least one real gallery photo skip any unfilled
+        // slots instead of padding them out with a placeholder tile — mixing
+        // real photos and placeholders in the same grid reads as broken.
+        // Projects with zero real photos still show the full placeholder set
+        // as an intentional "gallery coming soon" signal.
+        var hasGalleryPhotos = !!galleryImages.length;
+        // optional YouTube embeds lead the gallery as 16:9 tiles — the first
+        // runs full width, the rest split the next row
+        (project.galleryVideos || []).forEach(function (src, vi) {
+          html += '<figure class="ov-gtile ov-gtile--video' + (vi === 0 ? ' ov-gtile--lead' : '') + '"><iframe src="' + src + '" title="' + escapeHtml(project.title) + ' video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></figure>';
+        });
+        // Slot count follows whichever is longer — the fixed tile-class
+        // pattern (placeholder "gallery coming soon" state) or the project's
+        // own photo count, so projects with more than 5 real photos (e.g. a
+        // floor plan set appended after the site photos) still render every
+        // one instead of being silently truncated at the 5th tile.
+        var gallerySlots = Math.max(GALLERY_TILE_CLASSES.length, galleryImages.length);
+        for (var gi = 0; gi < gallerySlots; gi++) {
+          var img = galleryImages[gi];
+          if (!img && hasGalleryPhotos) continue;
+          var cls = GALLERY_TILE_CLASSES[gi % GALLERY_TILE_CLASSES.length];
+          var tone = tones[2 + gi] || tones[(2 + gi) % tones.length] || 1;
+          html += ovGalleryFigure(project, cls, img, tone, photos);
+        }
+        html += '</div>';
       }
-      html += '</div>';
 
       html += '<button class="ov-back" type="button">&larr; Back to all projects</button>';
 

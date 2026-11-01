@@ -18,11 +18,11 @@
 window.PROJECTS = {
 
   masjid: {
-    title: "Masjid",
-    titleAr: "مسجد",
+    title: "Masjid Al-Akhawayn",
+    titleAr: "مسجد الأخوين",
     location: "Birzeit, Palestine",
     heroImage: "assets/images/masjid.webp",
-    heroImageAlt: "Masjid — exterior view",
+    heroImageAlt: "Masjid Al-Akhawayn — exterior view",
     kicker: "Case Study — 01 / Public",
     headline: "Prayer Hall as Threshold: Reworking the Village Mosque",
     paragraphs: [
@@ -31,7 +31,7 @@ window.PROJECTS = {
     ],
     facts: [
       { k: "Location", v: "Birzeit, Palestine" },
-      { k: "Program", v: "Public — Religious" },
+      { k: "Program", v: "Public" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2024 –" }
@@ -46,32 +46,32 @@ window.PROJECTS = {
     // was moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/RtNbASv5m_M",
     spread2Image: "assets/images/masjid/masjid%20interior%201.webp",
-    spread2ImageAlt: "Masjid — interior view",
+    spread2ImageAlt: "Masjid Al-Akhawayn — interior view",
     galleryImages: [
-      { src: "assets/images/masjid/masjid%203.webp", alt: "Masjid — exterior detail" },
-      { src: "assets/images/masjid/masjid%204.webp", alt: "Masjid — exterior detail" },
-      { src: "assets/images/masjid/masjid%20door.webp", alt: "Masjid — entrance detail" },
-      { src: "assets/images/masjid/masjid%20interior%202.webp", alt: "Masjid — interior detail" },
-      { src: "assets/images/masjid/masjid%205.webp", alt: "Masjid — exterior, alternate view" }
+      { src: "assets/images/masjid/masjid%203.webp", alt: "Masjid Al-Akhawayn — exterior detail" },
+      { src: "assets/images/masjid/masjid%204.webp", alt: "Masjid Al-Akhawayn — exterior detail" },
+      { src: "assets/images/masjid/masjid%20door.webp", alt: "Masjid Al-Akhawayn — entrance detail" },
+      { src: "assets/images/masjid/masjid%20interior%202.webp", alt: "Masjid Al-Akhawayn — interior detail" },
+      { src: "assets/images/masjid/masjid%205.webp", alt: "Masjid Al-Akhawayn — exterior, alternate view" }
     ],
     tones: [4, 7, 1, 2, 6, 3, 4]
   },
 
   band: {
-    title: "Band",
+    title: "B’nd",
     titleAr: "بند",
     location: "Al-Bireh, Palestine",
     heroImage: "assets/images/band.webp",
-    heroImageAlt: "Band — exterior view",
-    kicker: "Case Study — 02 / Residential",
-    headline: "Band: A Residence Organized Around a Single Ribbon of Circulation",
+    heroImageAlt: "B’nd — exterior view",
+    kicker: "Case Study — 02 / Residential — Interior Design",
+    headline: "B’nd: A Residence Organized Around a Single Ribbon of Circulation",
     paragraphs: [
-      "Set on a narrow infill lot in Al-Bireh, Band takes its name from the folded concrete band that wraps stair, corridor and balcony into one continuous move — freeing every room around it to be planned on its own terms rather than around a fixed hallway.",
+      "Set on a narrow infill lot in Al-Bireh, B’nd takes its name from the folded concrete band that wraps stair, corridor and balcony into one continuous move — freeing every room around it to be planned on its own terms rather than around a fixed hallway.",
       "The ribbon steps outward at each floor to shade the one below, so the building manages its own solar gain before any mechanical system has to; the ground floor stays porous to the street, with the family's more private spaces stacked above and set back from view."
     ],
     facts: [
       { k: "Location", v: "Al-Bireh, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Residential — Interior Design" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2023 –" }
@@ -86,31 +86,31 @@ window.PROJECTS = {
     // moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/RBziDpOJ5BY",
     spread2Image: "assets/images/band/Untitled-13.webp",
-    spread2ImageAlt: "Band — wide exterior view",
+    spread2ImageAlt: "B’nd — wide exterior view",
     galleryImages: [
-      { src: "assets/images/band/f5.webp", alt: "Band — exterior detail" },
-      { src: "assets/images/band/Untitled-5.webp", alt: "Band — detail view" },
-      { src: "assets/images/band/Untitled-12.webp", alt: "Band — detail view" },
-      { src: "assets/images/band/1.jpeg", alt: "Band — floor plan 1" },
-      { src: "assets/images/band/2.jpeg", alt: "Band — floor plan 2" },
-      { src: "assets/images/band/3.jpeg", alt: "Band — floor plan 3" },
-      { src: "assets/images/band/4.jpeg", alt: "Band — floor plan 4" },
-      { src: "assets/images/band/5.jpeg", alt: "Band — floor plan 5" },
-      { src: "assets/images/band/29.webp", alt: "Band — exterior, alternate view" }
+      { src: "assets/images/band/f5.webp", alt: "B’nd — exterior detail" },
+      { src: "assets/images/band/Untitled-5.webp", alt: "B’nd — detail view" },
+      { src: "assets/images/band/Untitled-12.webp", alt: "B’nd — detail view" },
+      { src: "assets/images/band/1.jpeg", alt: "B’nd — floor plan 1" },
+      { src: "assets/images/band/2.jpeg", alt: "B’nd — floor plan 2" },
+      { src: "assets/images/band/3.jpeg", alt: "B’nd — floor plan 3" },
+      { src: "assets/images/band/4.jpeg", alt: "B’nd — floor plan 4" },
+      { src: "assets/images/band/5.jpeg", alt: "B’nd — floor plan 5" },
+      { src: "assets/images/band/29.webp", alt: "B’nd — exterior, alternate view" }
     ],
     tones: [4, 5, 6, 7, 8, 1, 2]
   },
 
   omary: {
-    title: "Omary",
-    titleAr: "عمري",
+    title: "Mirsal",
+    titleAr: "مرسال",
     location: "Al-Baloo', Palestine",
     heroImage: "assets/images/omary.webp",
-    heroImageAlt: "Omary — exterior view",
+    heroImageAlt: "Mirsal — exterior view",
     kicker: "Case Study — 03 / Residential",
-    headline: "Omary: A Courtyard House Stepped Into a Sloped Site",
+    headline: "Mirsal: A Courtyard House Stepped Into a Sloped Site",
     paragraphs: [
-      "Omary sits on a steeply sloped plot in Al-Baloo', and rather than fighting the grade with retaining walls, the house steps down it in three shallow terraces, each holding its own outdoor room.",
+      "Mirsal sits on a steeply sloped plot in Al-Baloo', and rather than fighting the grade with retaining walls, the house steps down it in three shallow terraces, each holding its own outdoor room.",
       "Bedrooms sit at the quiet upper terrace, living spaces open onto the mid-level courtyard, and a smaller guest suite occupies the lowest terrace with its own separate entrance — letting three generations share one address without sharing every room."
     ],
     facts: [
@@ -130,15 +130,435 @@ window.PROJECTS = {
     // was moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/79JLYznOaDk",
     spread2Image: "assets/images/omary/Untitled-5.webp",
-    spread2ImageAlt: "Omary — wide exterior view",
+    spread2ImageAlt: "Mirsal — wide exterior view",
     galleryImages: [
-      { src: "assets/images/omary/kitchen-dining.webp", alt: "Omary — kitchen and dining" },
-      { src: "assets/images/omary/living-terrace.webp", alt: "Omary — living room onto terrace" },
-      { src: "assets/images/omary/open-plan.webp", alt: "Omary — open-plan interior" },
-      { src: "assets/images/omary/living-room.webp", alt: "Omary — living room" },
-      { src: "assets/images/omary/Untitled-4.webp", alt: "Omary — exterior, alternate view" }
+      { src: "assets/images/omary/living-room.webp", alt: "Mirsal — exterior, street view" },
+      { src: "assets/images/omary/Untitled-4.webp", alt: "Mirsal — exterior, alternate view" }
     ],
     tones: [6, 7, 8, 1, 2, 3, 4]
+  },
+
+  vivian: {
+    title: "Vivian",
+    titleAr: "فيفيان",
+    location: "Al-Baloo', Palestine",
+    heroImage: "assets/images/vivian.webp",
+    heroImageAlt: "Vivian — open-plan living, dining and kitchen",
+    kicker: "Case Study — 18 / Interior Design",
+    headline: "Vivian: One Apartment, Designed From the Inside Out",
+    paragraphs: [
+      "Vivian is a single apartment within Mirsal, and the project is entirely about its interior: kitchen, dining and living are read as one continuous room, with glazed walls pulling the garden terrace into the daily life of the space.",
+      "A restrained palette of white, charcoal and walnut keeps the plan calm, while linear ceiling lighting, a bookshelf column and a few deliberate pieces of colour give each zone its own character without breaking the openness."
+    ],
+    facts: [
+      { k: "Location", v: "Al-Baloo', Palestine" },
+      { k: "Program", v: "Interior Design" },
+      { k: "Status", v: "In Design Development" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2023 –" }
+    ],
+    pullquote: "The furniture does the zoning, so the room never has to be cut up.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "Large-format grey marble-effect floor tiles run through every zone; matte charcoal joinery and walnut accents frame the kitchen and shelving, set against white ceilings with concealed linear lighting.",
+    // real photography — see assets/images/vivian/. Interior renders moved
+    // here from Mirsal's gallery (Vivian is one apartment inside Mirsal).
+    spreadBImage: "assets/images/vivian/kitchen-dining.webp",
+    spreadBImageAlt: "Vivian — living room onto the terrace",
+    spread2Image: "assets/images/vivian/open-plan.webp",
+    spread2ImageAlt: "Vivian — living area",
+    galleryImages: [
+      { src: "assets/images/vivian/dining-kitchen.webp", alt: "Vivian — kitchen and dining" },
+      { src: "assets/images/vivian/living-terrace.webp", alt: "Vivian — open-plan interior" }
+    ],
+    tones: [6, 7, 8, 1, 2, 3, 4]
+  },
+
+  jalal: {
+    title: "Silwad Private Residence #2",
+    titleAr: "منزل خاص سلواد ٢",
+    location: "Silwad, Palestine",
+    heroImage: "assets/images/jalal.webp",
+    heroImageAlt: "Silwad Private Residence #2 — front elevation and garage",
+    kicker: "Case Study — 19 / Private residence",
+    headline: "Silwad Private Residence #2: White Stone, Arched Openings, Timber Screens",
+    paragraphs: [
+      "This Silwad house is a two-storey family home built from white stone in two textures: smooth dressed blocks for the main walls and rougher bush-hammered stone for the entrance piers and stair tower. Pairs of arched windows and a stepped cornice line give the street elevations a traditional rhythm.",
+      "On the ground floor a covered terrace opens to the garden under the upper floor, and the boundary wall carries perforated timber screens and gates, so the house stays private from the street while still showing its stonework."
+    ],
+    facts: [
+      { k: "Location", v: "Silwad, Palestine" },
+      { k: "Program", v: "Private residence" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2024" }
+    ],
+    pullquote: "Smooth stone for the walls, rough stone for the piers — one material, two textures.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "White dressed stone clads the walls, with bush-hammered stone on the entrance piers and stair tower. Window frames are dark metal, doors, gates and the roof pergola are timber, and the boundary wall carries geometric perforated timber screens.",
+    // real photography — see assets/images/jalal/. The hero (jalal.webp) is
+    // the front elevation; the aerial view sits in the gallery.
+    spreadBImage: "assets/images/jalal/02.webp",
+    spreadBImageAlt: "Silwad Private Residence #2 — side elevation and covered terrace",
+    spread2Image: "assets/images/jalal/03.webp",
+    spread2ImageAlt: "Silwad Private Residence #2 — street view",
+    galleryImages: [
+      { src: "assets/images/jalal/04.webp", alt: "Silwad Private Residence #2 — aerial view" }
+    ],
+    tones: [2, 3, 4, 5, 6, 7, 8]
+  },
+
+  jalil: {
+    title: "Jalil",
+    titleAr: "جليل",
+    location: "Surda, Palestine",
+    heroImage: "assets/images/jalil.webp",
+    heroImageAlt: "Jalil — street elevation with ground-floor shops",
+    kicker: "Case Study — 20 / Commercial — Residential",
+    headline: "Jalil: Shops at the Street, Apartments Stacked Above",
+    paragraphs: [
+      "Jalil is a mixed-use building in Surda. A row of glazed shopfronts runs along the street at ground level, and the apartments above are set back behind deep balconies framed in stone, so the public floor and the private floors read as two distinct layers.",
+      "Stepped balconies, a timber-clad corner bay and tall stone frames break up the long facade. At the top, a stone-framed roof terrace with a timber pergola finishes the building and gives the upper apartments private outdoor space."
+    ],
+    facts: [
+      { k: "Location", v: "Surda, Palestine" },
+      { k: "Program", v: "Commercial — Residential" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2022" }
+    ],
+    pullquote: "The shops belong to the street; the balconies belong to the apartments above.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "Pale limestone cladding in two tones is paired with timber slats, dark metal fascias and glass balustrades. Linear LED strips run under each balcony slab, and the roof terrace carries a timber pergola and planted edges.",
+    // real photography — see assets/images/jalil/. The hero (jalil.webp) is
+    // the daytime street view; the remaining five renders fill the overlay.
+    spreadBImage: "assets/images/jalil/02.webp",
+    spreadBImageAlt: "Jalil — street elevation at dusk",
+    spread2Image: "assets/images/jalil/04.webp",
+    spread2ImageAlt: "Jalil — front elevation",
+    galleryImages: [
+      { src: "assets/images/jalil/03.webp", alt: "Jalil — tower and stone-framed balconies" },
+      { src: "assets/images/jalil/05.webp", alt: "Jalil — corner view with shopfronts" },
+      { src: "assets/images/jalil/06.webp", alt: "Jalil — facade detail from below" }
+    ],
+    tones: [5, 6, 7, 8, 1, 2, 3]
+  },
+
+  meet: {
+    title: "Meet Moot",
+    titleAr: "ميت موت",
+    location: "Masyoun, Palestine",
+    heroImage: "assets/images/meet.webp",
+    heroImageAlt: "Meet Moot — restaurant entrance and timber drum",
+    kicker: "Case Study — 21 / Commercial",
+    headline: "Meet Moot: A Restaurant Built From Three Distinct Volumes",
+    paragraphs: [
+      "Meet Moot is a freestanding restaurant in Masyoun, made of three volumes set side by side: a round drum clad in horizontal timber, a glazed dining hall under a dark rectangular frame, and a white stone block with a cantilevered upper floor that holds the second dining level.",
+      "The building sits on a sloping street and steps up with it. A planted terrace with outdoor seating wraps the entrance, and parking is tucked under the stone block, so cars stay out of the dining frontage."
+    ],
+    facts: [
+      { k: "Location", v: "Masyoun, Palestine" },
+      { k: "Program", v: "Commercial" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2022" }
+    ],
+    pullquote: "Timber for the drum, glass for the hall, white stone for the block.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "Horizontal timber cladding covers the drum and the cantilevered band, set against white stone cladding, dark charcoal frames and full-height glazing. Backlit signage and fine LED lines pick out the entrance and the terrace edge.",
+    // real photography — see assets/images/meet/. The hero (meet.webp) is the
+    // branded street view. 01-03 are the same views with placeholder
+    // "Resturant" signage, kept as the earlier design-stage renders.
+    spreadBImage: "assets/images/meet/06.webp",
+    spreadBImageAlt: "Meet Moot — corner view with cantilevered upper floor",
+    spread2Image: "assets/images/meet/05.webp",
+    spread2ImageAlt: "Meet Moot — street elevation",
+    galleryImages: [
+      { src: "assets/images/meet/01.webp", alt: "Meet Moot — entrance view, design-stage signage" },
+      { src: "assets/images/meet/02.webp", alt: "Meet Moot — street elevation, design-stage signage" },
+      { src: "assets/images/meet/03.webp", alt: "Meet Moot — corner view, design-stage signage" }
+    ],
+    tones: [4, 5, 6, 7, 8, 1, 2]
+  },
+
+  salaymeh: {
+    title: "Multi-Story Residence",
+    titleAr: "سكن متعدد الطوابق",
+    location: "Kofr Aqab, Palestine",
+    heroImage: "assets/images/salaymeh.webp",
+    heroImageAlt: "Multi-Story Residence — front elevation with balconies",
+    kicker: "Case Study — 22 / Residential",
+    headline: "Multi-Story Residence: A Stone Block With a Stacked Balcony Spine",
+    paragraphs: [
+      "This five-storey residential building in Kofr Aqab is clad in white stone, with one stone-framed column of balconies running up the entrance side. Each floor gets its own glass-balustraded outdoor room, and the rest of the facade is kept plain, with regular window openings and a tall glazed slot marking the stair core.",
+      "An external stair connects the entrance level to the upper floors. The top storey is set back as a penthouse with a private roof terrace, and landscaped planters and paved parking sit around the base of the building."
+    ],
+    facts: [
+      { k: "Location", v: "Kofr Aqab, Palestine" },
+      { k: "Program", v: "Residential" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2022" }
+    ],
+    pullquote: "One column of balconies carries all the character; the rest of the block stays quiet.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "White limestone cladding in a smooth coursed finish, with rougher bush-hammered stone on the balcony frames. Glass balustrades, dark metal window frames and a full-height glazed slot over the stair core complete the facade.",
+    // real photography — see assets/images/salaymeh/. The hero
+    // (salaymeh.webp) is the front elevation; the aerial view sits in the gallery.
+    spreadBImage: "assets/images/salaymeh/03.webp",
+    spreadBImageAlt: "Multi-Story Residence — side elevation and garden terrace",
+    spread2Image: "assets/images/salaymeh/04.webp",
+    spread2ImageAlt: "Multi-Story Residence — entrance side and external stair",
+    galleryImages: [
+      { src: "assets/images/salaymeh/01.webp", alt: "Multi-Story Residence — aerial view" }
+    ],
+    tones: [6, 7, 8, 1, 2, 3, 4]
+  },
+
+  yabrood: {
+    title: "Yabrood Villa",
+    titleAr: "فيلا يبرود",
+    location: "Yabrood, Palestine",
+    heroImage: "assets/images/yabrood.webp",
+    heroImageAlt: "Yabrood Villa — entrance side and pool terrace",
+    kicker: "Case Study — 23 / Private residence",
+    headline: "Yabrood Villa: Stacked Stone Volumes Around a Glass-Edged Pool",
+    paragraphs: [
+      "This villa in Yabrood is composed of white stone volumes stacked and offset against each other, each capped with a thick dark marble-faced slab that serves as both roof and canopy. The street side stays low and calm, with a raised stone-and-marble entrance terrace and a timber-clad entry bay.",
+      "On the garden side the house opens up. An infinity pool with a glass edge sits at the first-floor level over the garage, next to an open dining and lounge terrace that spills out of the sliding glazing. Balconies with glass balustrades step out from the upper floors."
+    ],
+    facts: [
+      { k: "Location", v: "Yabrood, Palestine" },
+      { k: "Program", v: "Private residence" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2022" }
+    ],
+    pullquote: "The street sees a calm stone house; the garden gets the pool and the terrace.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "White limestone in smooth and bush-hammered finishes, dark veined marble on the roof slabs, canopies and entrance steps, timber cladding on the entry bay, and glass balustrades and sliding glazing throughout. The pool is tiled in blue mosaic and has a glass edge.",
+    // real photography — see assets/images/yabrood/. The hero (yabrood.webp)
+    // is the corner view; 05 is a near-duplicate of it from the same camera.
+    spreadBImage: "assets/images/yabrood/04.webp",
+    spreadBImageAlt: "Yabrood Villa — garden elevation with pool and garage",
+    spread2Image: "assets/images/yabrood/03.webp",
+    spread2ImageAlt: "Yabrood Villa — entrance elevation",
+    galleryImages: [
+      { src: "assets/images/yabrood/01.webp", alt: "Yabrood Villa — side elevation and roof terrace" },
+      { src: "assets/images/yabrood/05.webp", alt: "Yabrood Villa — corner view" }
+    ],
+    tones: [7, 8, 1, 2, 3, 4, 5]
+  },
+
+  moafaq: {
+    title: "Private Garden",
+    titleAr: "حديقة خاصة",
+    location: "Al-Baloo', Palestine",
+    heroImage: "assets/images/moafaq.webp",
+    heroImageAlt: "Private Garden — aerial view of the garden and pavilion",
+    kicker: "Case Study — 24 / Landscape",
+    headline: "Private Garden: A Formal Garden Climbing Toward a Classical Pavilion",
+    paragraphs: [
+      "This private garden in Al-Baloo' is laid out on a sloping plot in front of a classical residence. A wide dark stair rises from the street gate to a white arched pavilion at the top, and everything else is arranged around that central axis.",
+      "On one side, a sunken circular fire pit is ringed by terraced planting beds that step up the slope like an amphitheatre. On the other, a gravel court with clipped shrubs in white planters leads to a tiered fountain. A balustraded path links both halves, and a stone-and-iron fence encloses the whole garden."
+    ],
+    facts: [
+      { k: "Location", v: "Al-Baloo', Palestine" },
+      { k: "Program", v: "Landscape" },
+      { k: "Status", v: "In Design Development" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2022" }
+    ],
+    pullquote: "One stair on one axis, with the fire pit on one side and the fountain on the other.",
+    materialsHeading: "Materials & Planting",
+    materialsText: "White stone balustrades, steps and fence piers with black wrought-iron railings. The central stair is dark stone, and the gravel court is planted with clipped shrubs in white planters. Date palms, cypress and pines frame the pavilion, and the terraced beds are filled with red flowering plants and lit by globe lamps.",
+    // real photography — see assets/images/moafaq/. The hero (moafaq.webp)
+    // is the front aerial view; the second aerial sits in the gallery.
+    spreadBImage: "assets/images/moafaq/05.webp",
+    spreadBImageAlt: "Private Garden — street view of the entrance stair and pavilion",
+    spread2Image: "assets/images/moafaq/03.webp",
+    spread2ImageAlt: "Private Garden — aerial view from the corner",
+    galleryImages: [
+      { src: "assets/images/moafaq/02.webp", alt: "Private Garden — fountain court and pavilion" },
+      { src: "assets/images/moafaq/04.webp", alt: "Private Garden — fire-pit amphitheatre from the street" },
+      { src: "assets/images/moafaq/06.webp", alt: "Private Garden — pavilion arcade and residence beyond" },
+      { src: "assets/images/moafaq/07.webp", alt: "Private Garden — corner view along the boundary fence" }
+    ],
+    tones: [8, 1, 2, 3, 4, 5, 6]
+  },
+
+  abdelsamad: {
+    title: "Residential Building Surda",
+    titleAr: "عمارة سكنية سردا",
+    location: "Surda, Palestine",
+    heroImage: "assets/images/abdelsamad.webp",
+    heroImageAlt: "Residential Building Surda — street corner and entrance",
+    kicker: "Case Study — 25 / Residential",
+    headline: "Residential Building Surda: A Stone Block Split by a Glazed Stair Tower",
+    paragraphs: [
+      "This five-storey apartment building in Surda is clad in white dressed stone, with charcoal panels between the window bays and a tall tilted stone fin that cuts through the facade. A glazed stair tower sits inside the fin, so the vertical circulation shows from the street and marks the entrance.",
+      "Corner balconies with glass balustrades and downlights are stacked up the main facade, and a black pergola crowns the roof terrace. The building sits on an open parking level behind a railed stone boundary wall, with a small garden terrace at the corner."
+    ],
+    facts: [
+      { k: "Location", v: "Surda, Palestine" },
+      { k: "Program", v: "Residential" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2021" }
+    ],
+    pullquote: "The stair is not hidden in the core — it is the first thing you see from the street.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "White dressed and bush-hammered stone, charcoal stone-effect panels, dark metal window frames and glass balustrades. The boundary wall has stone piers with horizontal black railings and lantern lights, and the stair tower is fully glazed.",
+    // real photography — see assets/images/abdelsamad/. Only two renders
+    // exist so far, so omitPlaceholders hides the empty wide-image slot and
+    // gallery. Remove it once more photography is added.
+    omitPlaceholders: true,
+    spreadBImage: "assets/images/abdelsamad/02.webp",
+    spreadBImageAlt: "Residential Building Surda — balconies and garden terrace",
+    tones: [3, 4, 5, 6, 7, 8, 1]
+  },
+
+  brothers: {
+    title: "Brothers",
+    titleAr: "برذرز",
+    location: "Al-Bireh, Palestine",
+    heroImage: "assets/images/brothers.webp",
+    heroImageAlt: "Brothers — corner view with the street-level showroom",
+    kicker: "Case Study — 26 / Commercial — Residential",
+    headline: "Brothers: A Glass Showroom Block Beside a Stone Residential Wing",
+    paragraphs: [
+      "Brothers is a mixed-use building on a corner site in Al-Bireh. A glazed showroom sits at street level, with the building name and a large illuminated sign on the facade. Above it, the commercial floors are wrapped in a curtain wall, and long glass-edged balcony slabs step out at different depths.",
+      "Beside it, a white stone wing holds the residential floors, with a regular grid of windows and small balconies. Tall perforated dark-metal fins rise at the corners and frame the building from the street, and the roofline is finished with cantilevered canopies and roof terraces."
+    ],
+    facts: [
+      { k: "Location", v: "Al-Bireh, Palestine" },
+      { k: "Program", v: "Commercial — Residential" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2021" }
+    ],
+    pullquote: "Glass for the showroom and offices, stone for the homes, one perforated screen to tie them together.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "A glass curtain wall with grey-tinted glazing on the commercial floors, white dressed stone on the residential wing, and dark perforated metal screens with geometric patterns on the corner fins. Balconies have glass balustrades, and the roofline carries slim cantilevered canopies.",
+    // real photography — see assets/images/brothers/. The renders show
+    // third-party branding (a car-maker's showroom sign) on the ground floor.
+    // Three views, each rendered in two lighting variants: 01/04 (rear
+    // elevation), 02/05 (tall front view) and hero + 06 (corner view).
+    spreadBImage: "assets/images/brothers/02.webp",
+    spreadBImageAlt: "Brothers — front elevation with showroom and balcony floors",
+    spread2Image: "assets/images/brothers/01.webp",
+    spread2ImageAlt: "Brothers — residential wing and entrance",
+    galleryImages: [
+      { src: "assets/images/brothers/04.webp", alt: "Brothers — residential wing and entrance, alternate sky" },
+      { src: "assets/images/brothers/05.webp", alt: "Brothers — front elevation, alternate sky" },
+      { src: "assets/images/brothers/06.webp", alt: "Brothers — corner view, alternate sky" }
+    ],
+    tones: [4, 5, 6, 7, 8, 1, 2]
+  },
+
+  israr: {
+    title: "Private Residence Surda",
+    titleAr: "منزل خاص سردا",
+    location: "Surda, Palestine",
+    heroImage: "assets/images/israr.webp",
+    heroImageAlt: "Private Residence Surda — front elevation and entrance portico",
+    kicker: "Case Study — 27 / Private residence",
+    headline: "Private Residence Surda: An Andalusian-Inspired Stone House",
+    paragraphs: [
+      "This family house in Surda draws on Andalusian and Moorish detailing, built in white stone. Horseshoe arches on slender paired columns frame the windows and the entrance portico, and the stepped cornice repeats across the walls and at every roofline.",
+      "Carved geometric screens fill the narrow windows, balcony rails and roof parapets, and bands of painted tile sit above the doorways. Terracotta hip roofs cover the lower wings, and a pair of timber pergolas shade the first-floor terrace. A carved timber door marks the covered entrance."
+    ],
+    facts: [
+      { k: "Location", v: "Surda, Palestine" },
+      { k: "Program", v: "Private residence" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2020" }
+    ],
+    pullquote: "Every opening is an arch, and every screen is a pattern.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "White limestone in coursed blocks with carved stepped cornices, terracotta roof tiles, painted ceramic tile bands, carved stone and timber geometric screens, and a carved timber entrance door. Window frames are dark metal, and the terraces are shaded by dark timber pergolas.",
+    // real photography — see assets/images/israr/. The hero (israr.webp) is
+    // the full front elevation; 01 is a portrait detail of the garden side.
+    spreadBImage: "assets/images/israr/02.webp",
+    spreadBImageAlt: "Private Residence Surda — entrance portico with carved timber door",
+    spread2Image: "assets/images/israr/03.webp",
+    spread2ImageAlt: "Private Residence Surda — corner view with external stair",
+    galleryImages: [
+      { src: "assets/images/israr/01.webp", alt: "Private Residence Surda — garden side, balcony and arched windows" }
+    ],
+    tones: [5, 6, 7, 8, 1, 2, 3]
+  },
+
+  masri: {
+    title: "Residential Building Sharafeh",
+    titleAr: "عمارة سكنية شرفة",
+    location: "Sharafeh, Palestine",
+    heroImage: "assets/images/masri.webp",
+    heroImageAlt: "Residential Building Sharafeh — corner view with ground-floor shops",
+    kicker: "Case Study — 28 / Commercial — Residential",
+    headline: "Residential Building Sharafeh: Apartments Above a Row of Shops",
+    paragraphs: [
+      "This five-storey apartment building in Sharafeh stands on a corner site, with a row of shopfronts at ground level and the apartments stacked above. The upper floors are a patchwork of white stone, sand-coloured stone, charcoal panels and timber, which breaks the long facade into several narrower vertical bays.",
+      "Balconies with dark metal railings are stacked on the corner facade, and the side elevations use regular punched windows with small Juliet balconies. At the rear, the building stands on columns over an open parking level, and the top floor is set back as a roof terrace."
+    ],
+    facts: [
+      { k: "Location", v: "Sharafeh, Palestine" },
+      { k: "Program", v: "Commercial — Residential" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2020" }
+    ],
+    pullquote: "Four materials, split into narrow bays, so one long facade reads as several buildings.",
+    materialsHeading: "Materials & Finishes",
+    materialsText: "White dressed stone and sand-coloured limestone cladding, charcoal concrete-effect balcony slabs, horizontal timber panels and dark metal balcony railings and window frames. The ground-floor shopfronts are dark glass with lit fascia signs.",
+    // real photography — see assets/images/masri/. Only three renders exist
+    // so far, so the gallery falls back to the "Image placeholder" tiles
+    // until more photography is added. The renders show retail brand logos
+    // on the shop fascias.
+    spreadBImage: "assets/images/masri/02.webp",
+    spreadBImageAlt: "Residential Building Sharafeh — street elevation with shops and balconies",
+    spread2Image: "assets/images/masri/01.webp",
+    spread2ImageAlt: "Residential Building Sharafeh — rear elevation over the parking level",
+    tones: [6, 7, 8, 1, 2, 3, 4]
+  },
+
+  faris: {
+    title: "Private Villa",
+    titleAr: "فيلا خاصة",
+    location: "Al-Baloo', Palestine",
+    heroImage: "assets/images/faris.webp",
+    heroImageAlt: "Private Villa — street elevation with timber gates",
+    kicker: "Case Study — 29 / Private residence",
+    headline: "Private Villa: A Stone House Stepping Up Its Sloping Street",
+    paragraphs: [
+      "This villa in Al-Baloo' is built in white dressed stone with stepped cornices, set on a plot that rises along the street. A tall timber entrance door with a pyramid pattern sits behind a lower gate bay, and timber panels and a cantilevered first-floor terrace with glass balustrade break up the stone walls.",
+      "The garden is organised in terraces. Stone retaining walls with concealed lighting step up past planted beds, a barbecue patio sits in a sheltered side court, and a roof terrace under a timber pergola has loungers and pebble planting. Tall cypress and poplar trees screen the boundary, and a cut-out stone name plate marks the gate."
+    ],
+    facts: [
+      { k: "Location", v: "Al-Baloo', Palestine" },
+      { k: "Program", v: "Private residence" },
+      { k: "Status", v: "Completed" },
+      { k: "Site Area", v: "— placeholder" },
+      { k: "Year", v: "2020" }
+    ],
+    pullquote: "The house steps with the street, and the garden steps with the house.",
+    materialsHeading: "Materials & Landscape",
+    materialsText: "White dressed and bush-hammered stone with stepped cornices, timber cladding and slatted timber gates, dark glazing and a glass-balustraded terrace. In the garden, stone retaining walls carry concealed LED strips, with white pebbles and paving, timber pergolas and planting of cypress, lavender, peonies and hydrangeas.",
+    // real photography — see assets/images/faris/. The hero (faris.webp) is
+    // the straight street elevation. A ninth source render (faris8) was a
+    // byte-for-byte copy of 06 and is not included.
+    spreadBImage: "assets/images/faris/06.webp",
+    spreadBImageAlt: "Private Villa — street elevation from the corner",
+    spread2Image: "assets/images/faris/09.webp",
+    spread2ImageAlt: "Private Villa — side elevation and garden terrace",
+    galleryImages: [
+      { src: "assets/images/faris/01.webp", alt: "Private Villa — lit stair and terraced planters" },
+      { src: "assets/images/faris/02.webp", alt: "Private Villa — barbecue patio" },
+      { src: "assets/images/faris/03.webp", alt: "Private Villa — pergola roof terrace" },
+      { src: "assets/images/faris/04.webp", alt: "Private Villa — side garden path" },
+      { src: "assets/images/faris/05.webp", alt: "Private Villa — driveway and retaining wall" }
+    ],
+    tones: [7, 8, 1, 2, 3, 4, 5]
   },
 
   sakhr: {
@@ -147,7 +567,7 @@ window.PROJECTS = {
     location: "Al-Bireh, Palestine",
     heroImage: "assets/images/sakhr.webp",
     heroImageAlt: "Sakhr — exterior view",
-    kicker: "Case Study — 04 / Residential",
+    kicker: "Case Study — 04 / Residential — Interior Design",
     headline: "Sakhr: Load-Bearing Stone Reworked as a Perforated Screen",
     paragraphs: [
       "Sakhr — ‘rock’ in Arabic — takes the load-bearing stone construction common across Al-Bireh and turns it into the building's primary architectural idea rather than just its structure: a perforated stone screen wraps the south and west faces, filtering light before it ever reaches the glazing behind it.",
@@ -155,7 +575,7 @@ window.PROJECTS = {
     ],
     facts: [
       { k: "Location", v: "Al-Bireh, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Residential — Interior Design" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2023 –" }
@@ -185,20 +605,20 @@ window.PROJECTS = {
   },
 
   jamal: {
-    title: "ِAbdallah Al-Jamal",
-    titleAr: "عبدالله الجمل",
+    title: "Salamiyeh Private Residence",
+    titleAr: "منزل خاص سلامية",
     location: "Salamiyeh, Palestine",
     heroImage: "assets/images/jamal.webp",
-    heroImageAlt: "Abdallah Al-Jamal — exterior view",
-    kicker: "Case Study — 05 / Residential",
-    headline: "Abdallah Al-Jamal: A Family Compound Split Into Three Volumes",
+    heroImageAlt: "Salamiyeh Private Residence — exterior view",
+    kicker: "Case Study — 05 / Private residence",
+    headline: "Salamiyeh Private Residence: A Family Compound Split Into Three Volumes",
     paragraphs: [
-      "Rather than one large house, the Abdallah Al-Jamal residence in Salamiyeh is organized as three linked volumes — one for the parents, two for married children's families — arranged around a shared entrance court so each household keeps its own front door.",
+      "Rather than one large house, the Salamiyeh Private Residence is organized as three linked volumes — one for the parents, two for married children's families — arranged around a shared entrance court so each household keeps its own front door.",
       "A single shared roof terrace ties the three volumes together at the top level, giving the extended family one common outdoor room even as daily life below stays fully separate."
     ],
     facts: [
       { k: "Location", v: "Salamiyeh, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Private residence" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2024 –" }
@@ -213,32 +633,32 @@ window.PROJECTS = {
     // was moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/bKUdMu8Tpgg",
     spread2Image: "assets/images/jamal/Untitled-4.webp",
-    spread2ImageAlt: "Abdallah Al-Jamal — aerial view",
+    spread2ImageAlt: "Salamiyeh Private Residence — aerial view",
     galleryImages: [
-      { src: "assets/images/jamal/8.webp", alt: "Abdallah Al-Jamal — entrance detail" },
-      { src: "assets/images/jamal/Untitled-3.webp", alt: "Abdallah Al-Jamal — exterior, alternate view" },
-      { src: "assets/images/jamal/Untitled-2.webp", alt: "Abdallah Al-Jamal — exterior, alternate view" },
-      { src: "assets/images/jamal/Untitled-6.webp", alt: "Abdallah Al-Jamal — aerial detail" },
-      { src: "assets/images/jamal/Untitled-5.webp", alt: "Abdallah Al-Jamal — aerial view" }
+      { src: "assets/images/jamal/8.webp", alt: "Salamiyeh Private Residence — entrance detail" },
+      { src: "assets/images/jamal/Untitled-3.webp", alt: "Salamiyeh Private Residence — exterior, alternate view" },
+      { src: "assets/images/jamal/Untitled-2.webp", alt: "Salamiyeh Private Residence — exterior, alternate view" },
+      { src: "assets/images/jamal/Untitled-6.webp", alt: "Salamiyeh Private Residence — aerial detail" },
+      { src: "assets/images/jamal/Untitled-5.webp", alt: "Salamiyeh Private Residence — aerial view" }
     ],
     tones: [7, 8, 1, 2, 3, 4, 5]
   },
 
   abdallah: {
-    title: "Abdallah Ewias",
-    titleAr: "عبدالله عويس",
+    title: "Al-Bireh Private Residence #3",
+    titleAr: "منزل خاص البيرة ٣",
     location: "Al-Bireh, Palestine",
     heroImage: "assets/images/abdallah.webp",
-    heroImageAlt: "Abdallah Ewias — exterior view",
-    kicker: "Case Study — 06 / Residential",
-    headline: "Abdallah Ewias: A Corner Site Turned Into Two Fronts",
+    heroImageAlt: "Al-Bireh Private Residence #3 — exterior view",
+    kicker: "Case Study — 06 / Private residence — Interior Design",
+    headline: "Al-Bireh Private Residence #3: A Corner Site Turned Into Two Fronts",
     paragraphs: [
-      "On a corner lot in Al-Bireh, most houses pick one street to face and treat the other as a side elevation. Abdallah Ewias instead gives both streets a genuine front — two entrances, two living rooms with their own outlook — folded around a shared internal stair.",
+      "On a corner lot in Al-Bireh, most houses pick one street to face and treat the other as a side elevation. The house instead gives both streets a genuine front — two entrances, two living rooms with their own outlook — folded around a shared internal stair.",
       "The fold in the plan created an unplanned triangular garden at the back of the site, now the house's most-used outdoor room precisely because it wasn't the point of the design."
     ],
     facts: [
       { k: "Location", v: "Al-Bireh, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Private residence — Interior Design" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2023 –" }
@@ -253,14 +673,20 @@ window.PROJECTS = {
     // was moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/khVZgtQQOzw",
     spread2Image: "assets/images/abdallah/Untitled-7.webp",
-    spread2ImageAlt: "Abdallah Ewias — aerial view",
+    spread2ImageAlt: "Al-Bireh Private Residence #3 — aerial view",
     galleryImages: [
-      { src: "assets/images/abdallah/Untitled-3.webp", alt: "Abdallah Ewias — exterior, alternate view" },
-      { src: "assets/images/abdallah/Untitled-4.webp", alt: "Abdallah Ewias — exterior, evening view" },
-      { src: "assets/images/abdallah/Untitled-5.webp", alt: "Abdallah Ewias — rear exterior view" },
-      { src: "assets/images/abdallah/Untitled-6.webp", alt: "Abdallah Ewias — pool terrace detail" },
-      { src: "assets/images/abdallah/Untitled-8.webp", alt: "Abdallah Ewias — aerial, evening view" },
-      { src: "assets/images/abdallah/Untitled-1.webp", alt: "Abdallah Ewias — exterior, alternate view" }
+      { src: "assets/images/abdallah/Untitled-3.webp", alt: "Al-Bireh Private Residence #3 — exterior, alternate view" },
+      { src: "assets/images/abdallah/Untitled-4.webp", alt: "Al-Bireh Private Residence #3 — exterior, evening view" },
+      { src: "assets/images/abdallah/Untitled-5.webp", alt: "Al-Bireh Private Residence #3 — rear exterior view" },
+      { src: "assets/images/abdallah/Untitled-6.webp", alt: "Al-Bireh Private Residence #3 — pool terrace detail" },
+      { src: "assets/images/abdallah/Untitled-8.webp", alt: "Al-Bireh Private Residence #3 — aerial, evening view" },
+      { src: "assets/images/abdallah/Untitled-1.webp", alt: "Al-Bireh Private Residence #3 — exterior, alternate view" }
+    ],
+    // YouTube embeds shown at the end of the gallery (see renderOverlay())
+    galleryVideos: [
+      "https://www.youtube.com/embed/3hi9hVfq3jk",
+      "https://www.youtube.com/embed/RPxQm4qlXWA",
+      "https://www.youtube.com/embed/WROf0CR8Ukk"
     ],
     tones: [3, 4, 5, 6, 7, 8, 1]
   },
@@ -271,7 +697,7 @@ window.PROJECTS = {
     location: "City Center, Al-Bireh, Palestine",
     heroImage: "assets/images/bireh-plaza.webp",
     heroImageAlt: "Bireh Plaza — exterior view",
-    kicker: "Case Study — 07 / Cultural — Commercial",
+    kicker: "Case Study — 07 / Public — Commercial",
     headline: "Bireh Plaza: Reopening Al-Bireh's City Center to Foot Traffic",
     paragraphs: [
       "Bireh Plaza reworks a dense city-center block into ground-floor retail with a public plaza cut through its middle — turning what was a single deep building footprint into a shortcut pedestrians actually want to take.",
@@ -279,7 +705,7 @@ window.PROJECTS = {
     ],
     facts: [
       { k: "Location", v: "City Center, Al-Bireh, Palestine" },
-      { k: "Program", v: "Cultural — Commercial" },
+      { k: "Program", v: "Public — Commercial" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2024 –" }
@@ -341,20 +767,20 @@ window.PROJECTS = {
   },
 
   "imm-jad-sarsour": {
-    title: "Imm Jad Sarsour",
-    titleAr: "ام جاد صرصور",
+    title: "Al-Bireh Private Residence",
+    titleAr: "منزل خاص البيرة",
     location: "Al-Bireh, Palestine",
     heroImage: "assets/images/imm-jad-sarsour.webp",
-    heroImageAlt: "Imm Jad Sarsour — exterior view",
-    kicker: "Case Study — 09 / Residential",
-    headline: "Imm Jad Sarsour: A Compact Plan Built Around Southern Light",
+    heroImageAlt: "Al-Bireh Private Residence — exterior view",
+    kicker: "Case Study — 09 / Private residence",
+    headline: "Al-Bireh Private Residence: A Compact Plan Built Around Southern Light",
     paragraphs: [
       "This Al-Bireh residence works from a compact, efficient footprint, planning the living spaces to capture southern light through the day rather than relying on a larger floor area to feel generous.",
       "The street elevation stays quiet and deliberately understated, keeping the family's daily life oriented inward toward the garden and the more private faces of the house."
     ],
     facts: [
       { k: "Location", v: "Al-Bireh, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Private residence" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2025 –" }
@@ -363,32 +789,32 @@ window.PROJECTS = {
     materialsHeading: "Materials & Structure",
     materialsText: "A reinforced concrete frame is finished in a pale render, with stone reserved for the entrance surround to mark the front door without overstating it.",
     spreadBImage: "assets/images/imm-jad-sarsour/02.webp",
-    spreadBImageAlt: "Imm Jad Sarsour — exterior, alternate view",
+    spreadBImageAlt: "Al-Bireh Private Residence — exterior, alternate view",
     spread2Image: "assets/images/imm-jad-sarsour/03.webp",
-    spread2ImageAlt: "Imm Jad Sarsour — wide exterior view",
+    spread2ImageAlt: "Al-Bireh Private Residence — wide exterior view",
     galleryImages: [
-      { src: "assets/images/imm-jad-sarsour/04.webp", alt: "Imm Jad Sarsour — exterior detail" },
-      { src: "assets/images/imm-jad-sarsour/05.webp", alt: "Imm Jad Sarsour — exterior detail" },
-      { src: "assets/images/imm-jad-sarsour/06.webp", alt: "Imm Jad Sarsour — exterior, alternate view" }
+      { src: "assets/images/imm-jad-sarsour/04.webp", alt: "Al-Bireh Private Residence — exterior detail" },
+      { src: "assets/images/imm-jad-sarsour/05.webp", alt: "Al-Bireh Private Residence — exterior detail" },
+      { src: "assets/images/imm-jad-sarsour/06.webp", alt: "Al-Bireh Private Residence — exterior, alternate view" }
     ],
     tones: [1, 2, 3, 4, 5, 6, 7]
   },
 
   "imad-mshosher": {
-    title: "Sateh Marhaba Club",
-    titleAr: "نادي سطح مرحبا",
+    title: "Country Club Al-Bireh",
+    titleAr: "كانتري كلوب البيرة",
     location: "Sateh Marhaba, Palestine",
     heroImage: "assets/images/imad-mshosher.webp",
-    heroImageAlt: "Sateh Marhaba Club — exterior view",
-    kicker: "Case Study — 10 / Cultural",
-    headline: "Sateh Marhaba Club: A Stair Reworked as the House's Organizing Spine",
+    heroImageAlt: "Country Club Al-Bireh — exterior view",
+    kicker: "Case Study — 10 / Public",
+    headline: "Country Club Al-Bireh: A Stair Reworked as the House's Organizing Spine",
     paragraphs: [
       "Stepped across several levels to hold onto its views, this residence reorganizes the stair from a circulation afterthought into the spine that ties each floor's living space back to the entrance below.",
       "Each level opens toward a different outlook, letting the section of the house do the work that a wider footprint would otherwise have needed."
     ],
     facts: [
       { k: "Location", v: "Sateh Marhaba, Palestine" },
-      { k: "Program", v: "Cultural" },
+      { k: "Program", v: "Public" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2025 –" }
@@ -397,34 +823,34 @@ window.PROJECTS = {
     materialsHeading: "Materials & Structure",
     materialsText: "A concrete frame carries the stepped levels, with a stone base at street level giving way to a lighter render finish on the upper, more open floors.",
     spreadBImage: "assets/images/imad-mshosher/02.webp",
-    spreadBImageAlt: "Sateh Marhaba Club — exterior, alternate view",
+    spreadBImageAlt: "Country Club Al-Bireh — exterior, alternate view",
     spread2Image: "assets/images/imad-mshosher/03.webp",
-    spread2ImageAlt: "Sateh Marhaba Club — wide exterior view",
+    spread2ImageAlt: "Country Club Al-Bireh — wide exterior view",
     galleryImages: [
-      { src: "assets/images/imad-mshosher/04.webp", alt: "Sateh Marhaba Club — exterior detail" },
-      { src: "assets/images/imad-mshosher/05.webp", alt: "Sateh Marhaba Club — exterior detail" },
-      { src: "assets/images/imad-mshosher/06.webp", alt: "Sateh Marhaba Club — exterior, alternate view" },
-      { src: "assets/images/imad-mshosher/07.webp", alt: "Sateh Marhaba Club — exterior, evening view" },
-      { src: "assets/images/imad-mshosher/08.webp", alt: "Sateh Marhaba Club — aerial view" }
+      { src: "assets/images/imad-mshosher/04.webp", alt: "Country Club Al-Bireh — exterior detail" },
+      { src: "assets/images/imad-mshosher/05.webp", alt: "Country Club Al-Bireh — exterior detail" },
+      { src: "assets/images/imad-mshosher/06.webp", alt: "Country Club Al-Bireh — exterior, alternate view" },
+      { src: "assets/images/imad-mshosher/07.webp", alt: "Country Club Al-Bireh — exterior, evening view" },
+      { src: "assets/images/imad-mshosher/08.webp", alt: "Country Club Al-Bireh — aerial view" }
     ],
     tones: [2, 3, 4, 5, 6, 7, 8]
   },
 
   "jalal-hamed": {
-    title: "Jalal Hamed",
-    titleAr: "جلال حامد",
+    title: "Silwad Private Residence",
+    titleAr: "منزل خاص سلواد",
     location: "Silwad, Palestine",
     heroImage: "assets/images/jalal-hamed.webp",
-    heroImageAlt: "Jalal Hamed — exterior view",
-    kicker: "Case Study — 11 / Residential",
-    headline: "Jalal Hamed: A Restrained Street Front, an Open Garden Face",
+    heroImageAlt: "Silwad Private Residence — exterior view",
+    kicker: "Case Study — 11 / Private residence",
+    headline: "Silwad Private Residence: A Restrained Street Front, an Open Garden Face",
     paragraphs: [
       "This Silwad house is organized around a central stair hall that anchors every room to a single, legible core, keeping circulation short even as the plan grows.",
       "The street elevation is kept restrained and mostly solid, reserving the more open, glazed face of the house for the private garden at the rear."
     ],
     facts: [
       { k: "Location", v: "Silwad, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Private residence" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2025 –" }
@@ -437,32 +863,32 @@ window.PROJECTS = {
     // moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/Zih5UHlcgMg",
     spread2Image: "assets/images/jalal-hamed/03.webp",
-    spread2ImageAlt: "Jalal Hamed — wide exterior view",
+    spread2ImageAlt: "Silwad Private Residence — wide exterior view",
     galleryImages: [
-      { src: "assets/images/jalal-hamed/04.webp", alt: "Jalal Hamed — exterior detail" },
-      { src: "assets/images/jalal-hamed/05.webp", alt: "Jalal Hamed — exterior detail" },
-      { src: "assets/images/jalal-hamed/06.webp", alt: "Jalal Hamed — exterior, alternate view" },
-      { src: "assets/images/jalal-hamed/07.webp", alt: "Jalal Hamed — evening view" },
-      { src: "assets/images/jalal-hamed/02.webp", alt: "Jalal Hamed — exterior, alternate view" }
+      { src: "assets/images/jalal-hamed/04.webp", alt: "Silwad Private Residence — exterior detail" },
+      { src: "assets/images/jalal-hamed/05.webp", alt: "Silwad Private Residence — exterior detail" },
+      { src: "assets/images/jalal-hamed/06.webp", alt: "Silwad Private Residence — exterior, alternate view" },
+      { src: "assets/images/jalal-hamed/07.webp", alt: "Silwad Private Residence — evening view" },
+      { src: "assets/images/jalal-hamed/02.webp", alt: "Silwad Private Residence — exterior, alternate view" }
     ],
     tones: [3, 4, 5, 6, 7, 8, 1]
   },
 
   "omar-aaqel": {
-    title: "Omar Aaqel",
-    titleAr: "عمر عقل",
+    title: "Al-Bireh Private Residence #2",
+    titleAr: "منزل خاص البيرة ٢",
     location: "Al-Bireh, Palestine",
     heroImage: "assets/images/omar-aaqel.webp",
-    heroImageAlt: "Omar Aaqel — exterior view",
-    kicker: "Case Study — 12 / Residential",
-    headline: "Omar Aaqel: A Compact, Energy-Conscious Family House",
+    heroImageAlt: "Al-Bireh Private Residence #2 — exterior view",
+    kicker: "Case Study — 12 / Private residence",
+    headline: "Al-Bireh Private Residence #2: A Compact, Energy-Conscious Family House",
     paragraphs: [
       "Designed around a compact, energy-conscious plan, this Al-Bireh house uses deep window reveals to cut solar gain without giving up daylight in the main living spaces.",
       "A simple stone base grounds the building at street level, letting the more open upper floor read as a lighter volume set above it."
     ],
     facts: [
       { k: "Location", v: "Al-Bireh, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Private residence" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2024 –" }
@@ -475,31 +901,31 @@ window.PROJECTS = {
     // moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/ocmC07iHSaA",
     spread2Image: "assets/images/omar-aaqel/03.webp",
-    spread2ImageAlt: "Omar Aaqel — wide exterior view",
+    spread2ImageAlt: "Al-Bireh Private Residence #2 — wide exterior view",
     galleryImages: [
-      { src: "assets/images/omar-aaqel/04.webp", alt: "Omar Aaqel — exterior detail" },
-      { src: "assets/images/omar-aaqel/05.webp", alt: "Omar Aaqel — exterior detail" },
-      { src: "assets/images/omar-aaqel/06.webp", alt: "Omar Aaqel — exterior, alternate view" },
-      { src: "assets/images/omar-aaqel/02.webp", alt: "Omar Aaqel — exterior, alternate view" }
+      { src: "assets/images/omar-aaqel/04.webp", alt: "Al-Bireh Private Residence #2 — exterior detail" },
+      { src: "assets/images/omar-aaqel/05.webp", alt: "Al-Bireh Private Residence #2 — exterior detail" },
+      { src: "assets/images/omar-aaqel/06.webp", alt: "Al-Bireh Private Residence #2 — exterior, alternate view" },
+      { src: "assets/images/omar-aaqel/02.webp", alt: "Al-Bireh Private Residence #2 — exterior, alternate view" }
     ],
     tones: [4, 5, 6, 7, 8, 1, 2]
   },
 
   "abo-khalid": {
-    title: "Abo Khalid",
-    titleAr: "ابو خالد",
+    title: "Deir Dibwan Private Residence",
+    titleAr: "منزل خاص دير دبوان",
     location: "Deir Dibwan, Palestine",
     heroImage: "assets/images/abo-khalid.webp",
-    heroImageAlt: "Abo Khalid — exterior view",
-    kicker: "Case Study — 13 / Residential",
-    headline: "Abo Khalid: A Double-Height Hall as the House's Light Well",
+    heroImageAlt: "Deir Dibwan Private Residence — exterior view",
+    kicker: "Case Study — 13 / Private residence",
+    headline: "Deir Dibwan Private Residence: A Double-Height Hall as the House's Light Well",
     paragraphs: [
       "Built around a central double-height hall, this Deir Dibwan residence draws light down into the ground-floor living spaces from above, rather than relying on street-facing windows alone.",
       "The hall also acts as the house's main gathering space, visually connecting the ground floor to the bedrooms on the level above."
     ],
     facts: [
       { k: "Location", v: "Deir Dibwan, Palestine" },
-      { k: "Program", v: "Residential" },
+      { k: "Program", v: "Private residence" },
       { k: "Status", v: "In Design Development" },
       { k: "Site Area", v: "— placeholder" },
       { k: "Year", v: "2023 –" }
@@ -508,14 +934,14 @@ window.PROJECTS = {
     materialsHeading: "Materials & Structure",
     materialsText: "A reinforced concrete frame carries the double-height void, with a stone-clad street facade and a skylight assembly set into the roof above the hall.",
     spreadBImage: "assets/images/abo-khalid/02.webp",
-    spreadBImageAlt: "Abo Khalid — exterior, alternate view",
+    spreadBImageAlt: "Deir Dibwan Private Residence — exterior, alternate view",
     spread2Image: "assets/images/abo-khalid/03.webp",
-    spread2ImageAlt: "Abo Khalid — wide exterior view",
+    spread2ImageAlt: "Deir Dibwan Private Residence — wide exterior view",
     galleryImages: [
-      { src: "assets/images/abo-khalid/04.webp", alt: "Abo Khalid — exterior detail" },
-      { src: "assets/images/abo-khalid/05.webp", alt: "Abo Khalid — exterior detail" },
-      { src: "assets/images/abo-khalid/06.webp", alt: "Abo Khalid — exterior, alternate view" },
-      { src: "assets/images/abo-khalid/07.webp", alt: "Abo Khalid — evening view" }
+      { src: "assets/images/abo-khalid/04.webp", alt: "Deir Dibwan Private Residence — exterior detail" },
+      { src: "assets/images/abo-khalid/05.webp", alt: "Deir Dibwan Private Residence — exterior detail" },
+      { src: "assets/images/abo-khalid/06.webp", alt: "Deir Dibwan Private Residence — exterior, alternate view" },
+      { src: "assets/images/abo-khalid/07.webp", alt: "Deir Dibwan Private Residence — evening view" }
     ],
     tones: [5, 6, 7, 8, 1, 2, 3]
   },
@@ -556,15 +982,15 @@ window.PROJECTS = {
   },
 
   mikkawi: {
-    title: "Mikkawi",
-    titleAr: "مكاوي",
+    title: "360 Residence",
+    titleAr: "إسكان ٣٦٠",
     location: "Masayef, Palestine",
     heroImage: "assets/images/mikkawi.webp",
-    heroImageAlt: "Mikkawi — exterior view",
+    heroImageAlt: "360 Residence — exterior view",
     kicker: "Case Study — 15 / Residential",
-    headline: "Mikkawi: A Vertical Plan That Keeps the Garden Large",
+    headline: "360 Residence: A Vertical Plan That Keeps the Garden Large",
     paragraphs: [
-      "Mikkawi trades a larger footprint for a taller, more vertical plan, stacking bedrooms above an open ground floor to leave as much of the lot as possible for the garden around it.",
+      "360 Residence trades a larger footprint for a taller, more vertical plan, stacking bedrooms above an open ground floor to leave as much of the lot as possible for the garden around it.",
       "The compact massing also keeps construction and maintenance costs proportionate to a smaller family home, without shrinking the rooms themselves."
     ],
     facts: [
@@ -582,12 +1008,12 @@ window.PROJECTS = {
     // moved down into galleryImages below.
     spreadBVideo: "https://www.youtube.com/embed/XdUxsbTpUBk",
     spread2Image: "assets/images/mikkawi/03.webp",
-    spread2ImageAlt: "Mikkawi — wide exterior view",
+    spread2ImageAlt: "360 Residence — wide exterior view",
     galleryImages: [
-      { src: "assets/images/mikkawi/04.webp", alt: "Mikkawi — exterior detail" },
-      { src: "assets/images/mikkawi/05.webp", alt: "Mikkawi — exterior detail" },
-      { src: "assets/images/mikkawi/06.webp", alt: "Mikkawi — exterior, alternate view" },
-      { src: "assets/images/mikkawi/02.webp", alt: "Mikkawi — exterior, alternate view" }
+      { src: "assets/images/mikkawi/04.webp", alt: "360 Residence — exterior detail" },
+      { src: "assets/images/mikkawi/05.webp", alt: "360 Residence — exterior detail" },
+      { src: "assets/images/mikkawi/06.webp", alt: "360 Residence — exterior, alternate view" },
+      { src: "assets/images/mikkawi/02.webp", alt: "360 Residence — exterior, alternate view" }
     ],
     tones: [7, 8, 1, 2, 3, 4, 5]
   },
@@ -636,13 +1062,13 @@ window.PROJECTS = {
   },
 
   "nabali-al-faris": {
-    title: "Nabali Al-Faris",
-    titleAr: "نبالي والفارس",
+    title: "Qasyoon",
+    titleAr: "قاسيون",
     location: "Al-Bireh, Palestine",
     heroImage: "assets/images/nabali-al-faris.webp",
-    heroImageAlt: "Nabali Al-Faris — exterior view",
+    heroImageAlt: "Qasyoon — exterior view",
     kicker: "Case Study — 17 / Residential",
-    headline: "Nabali Al-Faris: A House Planned Around a Shared Courtyard",
+    headline: "Qasyoon: A House Planned Around a Shared Courtyard",
     paragraphs: [
       "This Al-Bireh family house is planned around a shared central courtyard, keeping the surrounding rooms naturally lit and cross-ventilated without relying on a deep street-facing facade.",
       "The courtyard becomes the house's real living room in the warmer months, with the perimeter rooms able to open fully onto it."
@@ -658,13 +1084,13 @@ window.PROJECTS = {
     materialsHeading: "Materials & Structure",
     materialsText: "Load-bearing stone walls wrap the courtyard on all sides, with timber-framed openings sized to each room's exposure rather than repeated uniformly.",
     spreadBImage: "assets/images/nabali-al-faris/02.webp",
-    spreadBImageAlt: "Nabali Al-Faris — exterior, alternate view",
+    spreadBImageAlt: "Qasyoon — exterior, alternate view",
     spread2Image: "assets/images/nabali-al-faris/03.webp",
-    spread2ImageAlt: "Nabali Al-Faris — wide exterior view",
+    spread2ImageAlt: "Qasyoon — wide exterior view",
     galleryImages: [
-      { src: "assets/images/nabali-al-faris/04.webp", alt: "Nabali Al-Faris — exterior detail" },
-      { src: "assets/images/nabali-al-faris/05.webp", alt: "Nabali Al-Faris — exterior detail" },
-      { src: "assets/images/nabali-al-faris/06.webp", alt: "Nabali Al-Faris — exterior, alternate view" }
+      { src: "assets/images/nabali-al-faris/04.webp", alt: "Qasyoon — exterior detail" },
+      { src: "assets/images/nabali-al-faris/05.webp", alt: "Qasyoon — exterior detail" },
+      { src: "assets/images/nabali-al-faris/06.webp", alt: "Qasyoon — exterior, alternate view" }
     ],
     tones: [1, 2, 3, 4, 5, 6, 7]
   }
